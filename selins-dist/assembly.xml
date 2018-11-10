@@ -1,0 +1,39 @@
+﻿<assembly
+	xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+	<id>bin</id>
+	<formats>
+		<!-- 打包文件类型zip,tar.gz,tar.bz2,jar,dir,war-->
+		<format>tar.gz</format>
+	</formats>
+	<dependencySets>
+		<dependencySet>
+			<useProjectArtifact>true</useProjectArtifact>
+			<outputDirectory>lib</outputDirectory>
+			<scope>runtime</scope>
+		</dependencySet>
+	</dependencySets>
+	<fileSets>
+		<fileSet>
+			<!-- 说明文件输出路径 -->
+			<outputDirectory>/</outputDirectory>
+			<directory>../cluster-application/target/</directory>
+			<includes>
+				<include>cluster-application-${project.version}.jar</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<!-- 说明文件输出路径 -->
+			<outputDirectory>/</outputDirectory>
+			<directory>../</directory>
+			<includes>
+				<include>README.md</include>
+				<include>bin/*</include>
+				<include>etc/conf/*</include>
+				<include>etc/native/*</include>
+				<include>etc/resources/*</include>
+			</includes>
+		</fileSet>
+	</fileSets>
+</assembly>

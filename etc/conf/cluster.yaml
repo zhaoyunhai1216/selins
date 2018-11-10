@@ -1,0 +1,18 @@
+cluster.zookeeper.servers: "62.234.114.155:2181"
+
+cluster.zookeeper.root: "/cluster"
+
+cluster.host: "127.0.0.1"
+
+cluster.port: 8080
+
+cluster.rack: rack0
+
+# %JSTORM_HOME% is the jstorm home directory
+cluster.worker.dir: "D://workers/"
+# please set absolute path, default path is JSTORM_HOME/logs
+cluster.log.dir: "D://logs/"
+
+cluster.appstore.port: 2060
+
+cluster.appstore.dir: "D://appstore/"
