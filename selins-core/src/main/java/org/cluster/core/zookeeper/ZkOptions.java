@@ -7,6 +7,7 @@ import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 import org.cluster.core.backtype.bean.AppResource;
 import org.cluster.core.commons.Configuration;
+import org.cluster.core.scheduler.AssetsState;
 import org.cluster.core.utils.UtilCommons;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -165,6 +166,18 @@ public class ZkOptions {
     /**
      * 获取目前正在服务得节点信息
      */
+    public static List<AssetsState> getNodeState(CuratorFramework curator) throws Exception {
+        JSONArray nodes = ZkOptions.getNodes(ZkConnector.getInstance().getZkCurator());
+        List<AssetsState> nodeStates = new ArrayList<>();
+        for (int i = 0; i < nodes.size(); i++) {
+            nodeStates.add(new AssetsState(nodes.getJSONObject(i).getString("brokerID"), nodes.getJSONObject(i).getString("host")
+                    , nodes.getJSONObject(i).getInteger("port"), nodes.getJSONObject(i).getString("category")));
+        }
+        return nodeStates;
+    }
+    /**
+     * 获取目前正在服务得节点信息
+     */
     public static JSONObject getWorker(CuratorFramework curator, String workerID) throws Exception {
         JSONArray workerJson = ZkOptions.getWorkers(ZkConnector.getInstance().getZkCurator());
         for (int i = 0; i < workerJson.size(); i++) {
@@ -216,6 +229,38 @@ public class ZkOptions {
         ArrayList<AppResource> applications = new ArrayList<>();
         for (String child : childs) {
             applications.add(JSONObject.parseObject(ZkConnector.getInstance().getZkCurator().getData().forPath(zkDir + "/" + child), AppResource.class));
+
+        }
+        return applications;
+    }
+
+    /**
+     * 获取所有部署的application应用列表信息, 然后返回信息列表，提供给后续使用
+     */
+    public static List<String> getRunningApplicationsID(CuratorFramework curator) throws Exception {
+        String zkDir = Configuration.getInstance().getConf().getString("cluster.zookeeper.root") + "/appstore";
+        List<String> childs = ZkConnector.getInstance().getZkCurator().getChildren().forPath(zkDir);
+        ArrayList<String> applications = new ArrayList<>();
+        for (String child : childs) {
+            AppResource res = JSONObject.parseObject(ZkConnector.getInstance().getZkCurator().getData().forPath(zkDir + "/" + child), AppResource.class);
+            if(res.getState() != 1)continue;
+            applications.add(res.getId());
+
+        }
+        return applications;
+    }
+
+    /**
+     * 获取所有部署的application应用列表信息, 然后返回信息列表，提供给后续使用
+     */
+    public static List<AppResource> getRunningApplications(CuratorFramework curator) throws Exception {
+        String zkDir = Configuration.getInstance().getConf().getString("cluster.zookeeper.root") + "/appstore";
+        List<String> childs = ZkConnector.getInstance().getZkCurator().getChildren().forPath(zkDir);
+        ArrayList<AppResource> applications = new ArrayList<>();
+        for (String child : childs) {
+            AppResource res = JSONObject.parseObject(ZkConnector.getInstance().getZkCurator().getData().forPath(zkDir + "/" + child), AppResource.class);
+            if(res.getState() != 1)continue;
+            applications.add(res);
 
         }
         return applications;

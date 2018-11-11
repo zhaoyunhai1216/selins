@@ -282,27 +282,6 @@ public class UtilCommons {
 
     }
 
-    /**
-     * 获取所有可以运行程序的节点, 并返回排序后的节点列表信息, 供分配任务使用
-     *
-     * @return List
-     * @throws Exception
-     */
-    public static List<AssetsState> getAssetsState() throws Exception {
-        JSONArray nodes = ZkOptions.getNodes(ZkConnector.getInstance().getZkCurator());
-        List<AssetsState> states = new ArrayList<>();
-        for (int i = 0; i < nodes.size(); i++) {
-            states.add(new AssetsState(nodes.getJSONObject(i).getString("brokerID"), nodes.getJSONObject(i).getString("host")
-                    , nodes.getJSONObject(i).getInteger("port"), nodes.getJSONObject(i).getString("category")));
-        }
-        HashMap<String, List<String>> workerMap = new HashMap<>();
-        JSONArray workerJson = ZkOptions.getWorkers(ZkConnector.getInstance().getZkCurator());
-        for (int i = 0; i < workerJson.size(); i++) {
-            workerMap.computeIfAbsent(workerJson.getJSONObject(i).getString("ids"), x -> new ArrayList<>()).add(workerJson.getJSONObject(i).toJSONString());
-        }
-        return states.stream().filter(x -> x.getCategory().equals("default")).map(x -> x.setWorkerSize(workerMap.getOrDefault(x.getBrokerID(), new ArrayList<>()).size())).sorted().collect(Collectors.toList());
-    }
-
 
     public static void main(String[] args) throws Exception {
         //byte[] b = UtilCommons.zipDirectory(new File("D:\\cluster-test-1.0-SNAPSHOT"), "/");

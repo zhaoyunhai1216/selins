@@ -1,13 +1,10 @@
-package org.cluster.core.tracker;
+package org.cluster.core.scheduler;
 
-import com.alibaba.fastjson.JSONObject;
 import org.cluster.core.zookeeper.ZkConnector;
 import org.cluster.core.zookeeper.ZkOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -44,8 +41,9 @@ public enum ApplicationTracker {
      */
     public void tracker() throws Exception {
         if (ZkOptions.isMaster(ZkConnector.getInstance().getZkCurator())) {
-            TrackerOptions.shutdownOnLegacy();
-            TrackerOptions.checkWorker();
+            DefaultScheduler.checkLegacyWorker();
+            DefaultScheduler.checkShutdownWorker();
+            DefaultScheduler.checkStartWorker();
         }
     }
 

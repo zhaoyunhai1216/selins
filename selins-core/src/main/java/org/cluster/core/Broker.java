@@ -2,7 +2,7 @@ package org.cluster.core;
 
 import org.cluster.core.cluster.rpc.ClusterRMI;
 import org.cluster.core.commons.Configuration;
-import org.cluster.core.tracker.ApplicationTracker;
+import org.cluster.core.scheduler.ApplicationTracker;
 import org.cluster.core.zookeeper.ZkConnector;
 import org.cluster.core.zookeeper.ZkOptions;
 import org.slf4j.Logger;

@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.io.FileUtils;
 import org.cluster.core.backtype.bean.AppResource;
 import org.cluster.core.commons.Configuration;
-import org.cluster.core.tracker.StateMemory;
+import org.cluster.core.commons.StateMemory;
 import org.cluster.core.utils.UtilCommons;
 import org.cluster.core.zookeeper.ZkConnector;
 import org.cluster.core.zookeeper.ZkOptions;

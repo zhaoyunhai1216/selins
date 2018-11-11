@@ -1,9 +1,7 @@
 package org.cluster.core.cluster.rpc;
 
-import org.cluster.core.backtype.bean.AppResource;
 import org.cluster.core.scheduler.*;
-import org.cluster.core.tracker.StateMemory;
-import org.cluster.core.zookeeper.ZkOptions;
+import org.cluster.core.commons.StateMemory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

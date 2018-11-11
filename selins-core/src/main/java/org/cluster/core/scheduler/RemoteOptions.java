@@ -27,7 +27,7 @@ public class RemoteOptions {
      * 重新启动worker,调用远程Broker接口,调度重启worker
      */
     public static void startApplication(AppResource appResource) throws Exception {
-        List<AssetsState> assets = UtilCommons.getAssetsState();
+        List<AssetsState> assets = DefaultScheduler.getAssetsState();
         for (int i = 0; i < appResource.getNumWorkers(); i++) {
             startWorker(appResource.getId(), i, appResource.getNumWorkers(), assets);
         }
