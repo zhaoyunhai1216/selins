@@ -33,7 +33,7 @@ public class SpoutTest extends BaseSpout {
             e.printStackTrace();
         }
         collector.emit("test","Timi","23");
-        System.out.println("spout nextTuple");
+        //System.out.println("spout nextTuple");
     }
     /**
      * 日志定义 Logger

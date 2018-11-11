@@ -33,7 +33,7 @@ public class DefaultScheduler {
             String[] params = workerJson.getJSONObject(i).getString("workerId").split("\\_");
             if (applications.contains(params[0])) {
                 RemoteOptions.killWorker(workerJson.getJSONObject(i).getString("host"), params[0], Integer.parseInt(params[1]), Integer.parseInt(params[2]));
-                logger.info("[Tracker] Worker <" + workerJson.getJSONObject(i).getString("workerId") + "> was found and the kill was completed");
+                logger.info("[Tracker] Shutdown Worker <" + workerJson.getJSONObject(i).getString("workerId") + "> was found and the kill was completed");
             }
         }
     }
@@ -50,7 +50,7 @@ public class DefaultScheduler {
             for (int i = 0; i < res.getNumWorkers(); i++) {
                 if (!workerList.contains(res.getId() + "_" + i + "_" + +res.getNumWorkers())) {
                     RemoteOptions.startWorker(res.getId(), i, res.getNumWorkers(), assets);
-                    logger.info("[Tracker] Worker <" + res.getId() + "_" + i + "_" + +res.getNumWorkers() + "> was found and the start was completed");
+                    logger.info("[Tracker] Start Worker <" + res.getId() + "_" + i + "_" + +res.getNumWorkers() + "> was found and the start was completed");
                 }
             }
         }
@@ -66,7 +66,7 @@ public class DefaultScheduler {
             String[] params = workerJson.getJSONObject(i).getString("workerId").split("\\_");
             if(workerSet.contains(workerJson.getJSONObject(i).getString("workerId"))){
                 RemoteOptions.killWorker(workerJson.getJSONObject(i).getString("host"), params[0], Integer.parseInt(params[1]), Integer.parseInt(params[2]));
-                logger.info("[Tracker] Worker <" + workerJson.getJSONObject(i).getString("workerId") + "> was found and the kill was completed");
+                logger.info("[Tracker] Legacy Worker <" + workerJson.getJSONObject(i).getString("workerId") + "> was found and the kill was completed");
             }
         }
     }

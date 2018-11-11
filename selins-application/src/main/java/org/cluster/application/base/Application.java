@@ -27,6 +27,7 @@ public abstract class Application {
         ZkUtils.build(options.getZkWorkerDir(options.getOptionValue(Environment.CLUSTER_WORKERUID)), UtilCommons.getWorkerState(options));
         LoggerManager.launcher(options);
         define(options);
+        System.out.println(options.getOptionValue(Environment.CLUSTER_WORKERUID));
         ZkUtils.update(ZkCurator.getInstance().getZkCurator(), options.getZkWorkerDir(options.getOptionValue(Environment.CLUSTER_WORKERUID)), UtilCommons.getWorkerState(options).getBytes());
     }
 

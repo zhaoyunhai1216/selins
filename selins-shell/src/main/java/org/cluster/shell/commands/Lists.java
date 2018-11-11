@@ -8,9 +8,13 @@ import org.cluster.core.backtype.bean.AppResource;
 import org.cluster.core.commons.Configuration;
 import org.cluster.core.utils.TabCommons;
 import org.cluster.core.zookeeper.ZkConnector;
+import org.cluster.shell.Commands;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -62,11 +66,13 @@ public class Lists {
         String zkDir = Configuration.getInstance().getConf().getString("cluster.zookeeper.root") + "/worker";
         List<String> childs = ZkConnector.getInstance().getZkCurator().getChildren().forPath(zkDir);
         List<String[]> columnValues = new ArrayList<>();
-        columnValues.add(new String[]{"worker id", "process", "host", "port", "startTime", "exectors"});
+        columnValues.add(new String[]{"worker id", "process", "host", "startTime", "runtime", "exectors", "threadCount", "cpu","memory"});
         for (String child : childs) {
             JSONObject json = JSONObject.parseObject(new String(ZkConnector.getInstance().getZkCurator().getData().forPath(zkDir + "/" + child)));
             columnValues.add(new String[]{json.getString("workerId"), json.getString("process")
-                    , json.getString("host"), json.getString("port"), json.getString("startTime"), String.valueOf(json.getInteger("exectors").intValue())});
+                    , json.getString("host"), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(json.getLong("startTime"))), String.valueOf(json.getInteger("runtime").intValue()/60000)
+                    , String.valueOf(json.getInteger("exectors").intValue()), String.valueOf(json.getInteger("threadCount").intValue()),json.getString("cpu"), json.getString("memory")
+            });
         }
         logger.info("Workers\n" + new TabCommons(columnValues).toString());
     }
@@ -87,6 +93,18 @@ public class Lists {
         logger.info("Brokers\n" + new TabCommons(columnValues).toString());
     }
 
+    public static void main(String[] args) throws Exception {
+        /**
+         * 加载配置文件信息
+         */
+        Configuration.init("/Users/zhaoyunhai/程序/selins//etc/conf/cluster.yaml");
+        /**
+         * 负责启动连接zookeeper,传入zookeeper地址
+         */
+        ZkConnector.getInstance().init(Configuration.getInstance().getConf().getString("cluster.zookeeper.servers"));
+
+        new Lists().worker(args);
+    }
 
     /**
      * 日志定义 Logger
