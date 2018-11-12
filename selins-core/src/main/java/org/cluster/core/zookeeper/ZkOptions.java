@@ -175,6 +175,7 @@ public class ZkOptions {
         }
         return nodeStates;
     }
+
     /**
      * 获取目前正在服务得节点信息
      */
@@ -213,6 +214,14 @@ public class ZkOptions {
     }
 
     /**
+     * 检查节点是否存在
+     */
+    public static boolean checkWorkerExists(CuratorFramework curator, String workerUid) throws Exception {
+        String zkDir = Configuration.getInstance().getConf().getString("cluster.zookeeper.root") + "/worker/" + workerUid;
+        return curator.checkExists().forPath(zkDir) != null;
+    }
+
+    /**
      * 获取目前正在服务得主节点信息
      */
     public static String getAppStore(CuratorFramework curator) throws Exception {
@@ -243,7 +252,7 @@ public class ZkOptions {
         ArrayList<String> applications = new ArrayList<>();
         for (String child : childs) {
             AppResource res = JSONObject.parseObject(ZkConnector.getInstance().getZkCurator().getData().forPath(zkDir + "/" + child), AppResource.class);
-            if(res.getState() != 1)continue;
+            if (res.getState() != 1) continue;
             applications.add(res.getId());
 
         }
@@ -259,7 +268,7 @@ public class ZkOptions {
         ArrayList<AppResource> applications = new ArrayList<>();
         for (String child : childs) {
             AppResource res = JSONObject.parseObject(ZkConnector.getInstance().getZkCurator().getData().forPath(zkDir + "/" + child), AppResource.class);
-            if(res.getState() != 1)continue;
+            if (res.getState() != 1) continue;
             applications.add(res);
 
         }

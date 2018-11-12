@@ -8,6 +8,7 @@ import com.dyuproject.protostuff.Schema;
 import com.dyuproject.protostuff.runtime.RuntimeSchema;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.cluster.core.backtype.bean.AppResource;
 import org.cluster.core.commons.Configuration;
 import org.cluster.core.scheduler.AssetsState;
 import org.cluster.core.zookeeper.ZkConnector;
@@ -21,6 +22,7 @@ import org.xerial.snappy.Snappy;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -200,26 +202,28 @@ public class UtilCommons {
         }
     }
 
-    public static void startCommand(String shellDir, String workDir, String host, String appID, String appClass, String jvmOpts, int seq, int total, String yaml) throws Exception {
+    public static void startCommand(String workId, String[] args) throws Exception {
         // Set the necessary command to execute the application master
         Vector<CharSequence> vargs = new Vector<CharSequence>(30);
-        vargs.add("cd " + shellDir + ";");
+        vargs.add("cd " + Configuration.getBaseDir() + "bin;");
         vargs.add("sh ./worker-start.sh");
-        vargs.add("\"" + workDir + "\""); //workDir
-        vargs.add("\"" + host + "\""); //port
-        vargs.add("\"" + appID + "\""); //appID
-        vargs.add("\"" + appClass + "\""); //appClass
-        vargs.add("\"" + jvmOpts + "\""); //jvmOpts
-        vargs.add("\"" + String.valueOf(seq) + "\""); //seq
-        vargs.add("\"" + String.valueOf(total) + "\""); //total
-        vargs.add("\"" + yaml + "\""); //yaml
+        vargs.addAll(Arrays.asList(args));
         // Get final commmand
         StringBuilder command = new StringBuilder();
         for (CharSequence str : vargs) {
             command.append(str).append(" ");
         }
         logger.info(command.toString());
-        UtilCommons.execCommand(command.toString());
+        Thread thread = new Thread(() -> {
+            execCommand(command.toString());
+        });
+        thread.setDaemon(true);
+        thread.start();
+        while (thread.isAlive() && !ZkOptions.checkWorkerExists(ZkConnector.getInstance().getZkCurator(), workId)) {
+            TimeUnit.SECONDS.sleep(1);
+            logger.info("[Env] Worker <" + workId + "> is starting, please wait.");
+        }
+        logger.info("[Env] Worker <" + workId + "> is start finish.");
     }
 
     public static void killCommand(String processID) throws Exception {
@@ -235,10 +239,8 @@ public class UtilCommons {
         UtilCommons.execCommand(command.toString());
     }
 
-
-    public static void execCommand(String command) throws Exception {
+    public static void execCommand(String command) {
         Process p = null;
-        BufferedReader input = null, error = null;
         try {
             if (System.getProperty("os.name").toLowerCase().startsWith("win")) {
                 p = Runtime.getRuntime().exec(new String[]{"cmd", "/c", command});
@@ -249,14 +251,21 @@ public class UtilCommons {
             logger.info(IOUtils.toString(p.getInputStream(), "GBK"));
             logger.info(IOUtils.toString(p.getErrorStream(), "GBK"));
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage(), e);
         } finally {
-            IOUtils.closeQuietly(input);
-            IOUtils.closeQuietly(error);
             if (p != null) {
                 p.destroy();
             }
         }
+    }
+
+    public static String[] getWorkerParameters(String appID, int seq, int total) throws Exception {
+        String workDir = Configuration.getInstance().getConf().getString("cluster.worker.dir");
+        AppResource res = ZkOptions.getAppZkResource(appID);
+        String host = Configuration.getInstance().getConf().getString("cluster.host");
+        return new String[]{workDir, appID + "_" + seq + "_" + total, res.getJvmOpts(), "--host=" + host, "--appID=" + res.getId()
+                , "--appMain=" + res.getAppMain(), "--seq=" + seq, "--total=" + total, "--yaml=" + Configuration.getBaseDir() + "etc"};
     }
 
     /**

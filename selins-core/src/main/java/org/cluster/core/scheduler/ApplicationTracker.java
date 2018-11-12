@@ -42,7 +42,7 @@ public enum ApplicationTracker {
     public void tracker() throws Exception {
         if (ZkOptions.isMaster(ZkConnector.getInstance().getZkCurator())) {
             //DefaultScheduler.checkLegacyWorker();
-            DefaultScheduler.checkShutdownWorker();
+            //DefaultScheduler.checkShutdownWorker();
             DefaultScheduler.checkStartWorker();
         }
     }

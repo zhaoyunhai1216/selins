@@ -2,6 +2,7 @@ package org.cluster.core.scheduler;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.cluster.core.backtype.bean.AppResource;
 import org.cluster.core.commons.Configuration;
@@ -13,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.UUID;
 
 /**
  * @Auther: 赵云海
@@ -26,10 +28,7 @@ public class LocalOptions {
      * 在zookeeper集群中, 获取application的运行参数信息, 然后保存到内容中用于调度提供参数
      */
     public static void startWorker(String appID, int seq, int total) throws Exception {
-        String workDir = Configuration.getInstance().getConf().getString("cluster.worker.dir") + appID + "_" + seq + "_" + total;
-        AppResource res = ZkOptions.getAppZkResource(appID);
-        String host = Configuration.getInstance().getConf().getString("cluster.host");
-        UtilCommons.startCommand(Configuration.getBaseDir() + "/bin", workDir, host, appID, res.getAppMain(), res.getJvmOpts(), seq, total, Configuration.getBaseDir() + "/etc");
+        UtilCommons.startCommand(appID + "_" + seq + "_" + total, UtilCommons.getWorkerParameters(appID, seq, total));
     }
 
     /**

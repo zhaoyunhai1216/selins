@@ -8,7 +8,6 @@ package org.cluster.application.commons;
  */
 public enum Environment {
     BROKER_HOST("broker.host"),
-    CLUSTER_WORKERUID("worker.uid"),
     CLUSTER_CONF_DIR("conf.dir"),
     APPLICATION_ID("application.id"),
     APPLICATION_SEQ("application.seq"),

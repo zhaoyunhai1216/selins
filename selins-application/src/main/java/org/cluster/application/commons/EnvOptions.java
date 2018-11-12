@@ -23,12 +23,11 @@ public class EnvOptions extends JSONObject {
      */
     public EnvOptions(CommandLine cliParser) throws Exception {
         put(Environment.BROKER_HOST.key(), cliParser.getOptionValue("host", "127.0.0.1"));
-        put(Environment.CLUSTER_WORKERUID.key(), UUID.randomUUID().toString());
         put(Environment.CLUSTER_CONF_DIR.key(), cliParser.getOptionValue("yaml"));
         put(Environment.APPLICATION_ID.key(), cliParser.getOptionValue("appID", UUID.randomUUID().toString()));
         put(Environment.APPLICATION_SEQ.key(), cliParser.getOptionValue("seq", "0"));
         put(Environment.APPLICATION_TOATL.key(), cliParser.getOptionValue("total", "1"));
-        put(Environment.APPLICATION_MAIN.key(), cliParser.getOptionValue("appClass"));
+        put(Environment.APPLICATION_MAIN.key(), cliParser.getOptionValue("appMain"));
         EnvCommons.setEnvironment(getOptionValue(Environment.CLUSTER_CONF_DIR.key()));
 
         for (String key : cliParser.getArgs()) {

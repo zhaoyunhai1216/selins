@@ -24,11 +24,10 @@ public abstract class Application {
      * 程序application定义方法, 用于定义应用的处理结构
      */
     public void init(EnvOptions options) throws Exception {
-        ZkUtils.build(options.getZkWorkerDir(options.getOptionValue(Environment.CLUSTER_WORKERUID)), UtilCommons.getWorkerState(options));
+        ZkUtils.build(options.getZkWorkerDir(options.getWorkerID()), UtilCommons.getWorkerState(options));
         LoggerManager.launcher(options);
         define(options);
-        System.out.println(options.getOptionValue(Environment.CLUSTER_WORKERUID));
-        ZkUtils.update(ZkCurator.getInstance().getZkCurator(), options.getZkWorkerDir(options.getOptionValue(Environment.CLUSTER_WORKERUID)), UtilCommons.getWorkerState(options).getBytes());
+        ZkUtils.update(ZkCurator.getInstance().getZkCurator(), options.getZkWorkerDir(options.getWorkerID()), UtilCommons.getWorkerState(options).getBytes());
     }
 
     /**

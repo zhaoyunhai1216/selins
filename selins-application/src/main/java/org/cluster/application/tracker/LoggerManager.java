@@ -51,7 +51,7 @@ public class LoggerManager {
             public void run() {
                 try {
                     String data = UtilCommons.getWorkerState(options);
-                    ZkUtils.update(ZkCurator.getInstance().getZkCurator(), options.getZkWorkerDir(options.getOptionValue(Environment.CLUSTER_WORKERUID)), data.getBytes());
+                    ZkUtils.update(ZkCurator.getInstance().getZkCurator(), options.getZkWorkerDir(options.getWorkerID()), data.getBytes());
                     state(options);
                 } catch (Exception e) {
                     e.printStackTrace();

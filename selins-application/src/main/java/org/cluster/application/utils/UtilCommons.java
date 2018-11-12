@@ -258,9 +258,10 @@ public class UtilCommons {
      * @return
      */
     public static EnvOptions getCliParser(String[] args) throws Exception {
+        System.out.println(Arrays.toString(args));
         Options opts = new Options()
                 .addOption("host", true, "The host.").addOption("appID", true, "The Application id.")
-                .addOption("appClass", true, "The Application id.").addOption("seq", true, "The help parameter.")
+                .addOption("appMain", true, "The Application id.").addOption("seq", true, "The help parameter.")
                 .addOption("total", true, "The JVM parameter.").addOption("yaml", true, "Yaml configuration file.");
         return new EnvOptions(new GnuParser().parse(opts, args));
     }
