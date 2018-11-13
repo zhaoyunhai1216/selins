@@ -40,6 +40,7 @@ public class LocalOptions {
             workerJson = ZkOptions.getWorker(ZkConnector.getInstance().getZkCurator(), appID + "_" + seq + "_" + total);
             UtilCommons.killCommand(workerJson.getString("process"));
         } catch (Exception e) {
+            e.printStackTrace();
             logger.warn(e.getMessage(), e);
         }
         LocalOptions.deleteWorkerResources(appID, seq, total);

@@ -182,8 +182,9 @@ public class ZkOptions {
     public static JSONObject getWorker(CuratorFramework curator, String workerID) throws Exception {
         JSONArray workerJson = ZkOptions.getWorkers(ZkConnector.getInstance().getZkCurator());
         for (int i = 0; i < workerJson.size(); i++) {
-            if (workerJson.getJSONObject(i).getString("workerId").equals(workerID)) ;
-            return workerJson.getJSONObject(i);
+            if (workerJson.getJSONObject(i).getString("workerId").equals(workerID)) {
+                return workerJson.getJSONObject(i);
+            }
         }
         throw new Exception("<" + workerID + "> This node is not available.");
     }

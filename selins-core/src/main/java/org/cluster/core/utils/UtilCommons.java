@@ -248,8 +248,9 @@ public class UtilCommons {
                 p = Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", command});
             }
             p.waitFor();
-            logger.info(IOUtils.toString(p.getInputStream(), "GBK"));
-            logger.info(IOUtils.toString(p.getErrorStream(), "GBK"));
+            logger.info(IOUtils.toString(p.getInputStream(),"GBK"));
+            logger.info(IOUtils.toString(p.getErrorStream(),"GBK"));
+            logger.info("[ENV] Command <" + command + "> is destroy.");
         } catch (Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage(), e);

@@ -31,7 +31,7 @@ public class DefaultScheduler {
         JSONArray workerJson = ZkOptions.getWorkers(ZkConnector.getInstance().getZkCurator());
         for (int i = 0; i < workerJson.size(); i++) {
             String[] params = workerJson.getJSONObject(i).getString("workerId").split("\\_");
-            if (applications.contains(params[0])) {
+            if (!applications.contains(params[0])) {
                 RemoteOptions.killWorker(workerJson.getJSONObject(i).getString("host"), params[0], Integer.parseInt(params[1]), Integer.parseInt(params[2]));
                 logger.info("[Tracker] Shutdown Worker <" + workerJson.getJSONObject(i).getString("workerId") + "> was found and the kill was completed");
             }
@@ -82,9 +82,9 @@ public class DefaultScheduler {
         HashMap<String, List<String>> workerMap = new HashMap<>();
         JSONArray workerJson = ZkOptions.getWorkers(ZkConnector.getInstance().getZkCurator());
         for (int i = 0; i < workerJson.size(); i++) {
-            workerMap.computeIfAbsent(workerJson.getJSONObject(i).getString("ids"), x -> new ArrayList<>()).add(workerJson.getJSONObject(i).toJSONString());
+            workerMap.computeIfAbsent(workerJson.getJSONObject(i).getString("host"), x -> new ArrayList<>()).add(workerJson.getJSONObject(i).toJSONString());
         }
-        return states.stream().filter(x -> x.getCategory().equals("default")).map(x -> x.setWorkerSize(workerMap.getOrDefault(x.getBrokerID(), new ArrayList<>()).size())).sorted().collect(Collectors.toList());
+        return states.stream().filter(x -> x.getCategory().equals("default")).map(x -> x.setWorkerSize(workerMap.getOrDefault(x.getHost(), new ArrayList<>()).size())).sorted().collect(Collectors.toList());
     }
 
 
