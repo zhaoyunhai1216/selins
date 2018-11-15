@@ -1,7 +1,9 @@
 package org.cluster.appstore.utils;
 
 import com.alibaba.fastjson.JSONObject;
+import org.apache.zookeeper.CreateMode;
 import org.cluster.core.commons.Configuration;
+import org.cluster.core.zookeeper.ZkConnector;
 import org.cluster.core.zookeeper.ZkOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +34,17 @@ public class UtilCommons {
                 .fluentPut("startTime", System.currentTimeMillis()).toJSONString());
     }
 
+    /**
+     * 获取唯一id信息
+     * @return
+     * @throws Exception
+     */
+    public static int getId() throws Exception {
+        String dir = Configuration.getInstance().getConf().getString("cluster.zookeeper.root") + "/seq";
+        String seqJson = "{\"timestamp\":"+System.currentTimeMillis()+"}";
+        ZkOptions.create(ZkConnector.getInstance().getZkCurator(),dir,seqJson.getBytes(), CreateMode.PERSISTENT);
+        return ZkConnector.getInstance().getZkCurator().setData().forPath(dir, seqJson.getBytes()).getVersion();
+    }
     /**
      * 日志定义 Logger
      */

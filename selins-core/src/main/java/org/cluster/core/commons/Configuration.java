@@ -37,7 +37,6 @@ public class Configuration {
         try {
             this.conf = new Yaml().loadAs(FileUtils.openInputStream(new File(conf)), JSONObject.class);
             this.conf.put("yaml", conf);
-            this.conf.put("brokerID", UUID.randomUUID().toString());
         } catch (IOException e) {
             e.printStackTrace();
             logger.error(e.getMessage(), e);

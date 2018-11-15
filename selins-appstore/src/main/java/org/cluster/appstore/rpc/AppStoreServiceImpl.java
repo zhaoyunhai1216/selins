@@ -2,6 +2,7 @@ package org.cluster.appstore.rpc;
 
 import com.alibaba.fastjson.JSONObject;
 import org.cluster.appstore.commons.AppsOptions;
+import org.cluster.appstore.utils.UtilCommons;
 import org.cluster.core.cluster.rpc.AppStoreService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +37,7 @@ public class AppStoreServiceImpl extends UnicastRemoteObject implements AppStore
      */
     @Override
     public void deploy(String jvmOpts, String mainClass, int numWorkers, String category, byte[] b) throws Exception {
-        String appID = UUID.randomUUID().toString();
+        String appID = UtilCommons.getAppName(mainClass) + "-" + UtilCommons.getId();
         AppsOptions.createResources(appID, b);
         AppsOptions.createZkResources(appID, mainClass, jvmOpts, numWorkers, category);
         logger.info("The application <" + appID + "> was successfully deploy");

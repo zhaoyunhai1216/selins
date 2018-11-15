@@ -21,7 +21,6 @@ public class Broker {
      * 程序主方法, 负责调度及启动程序
      */
     public static void main(String[] args) throws Exception {
-        //args = new String[]{"E:\\工作空间\\ccinfra-real-cmpt-yn\\etc\\conf\\cluster.yaml"};
         /**
          * 加载配置文件信息
          */

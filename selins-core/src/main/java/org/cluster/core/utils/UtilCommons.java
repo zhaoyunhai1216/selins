@@ -8,6 +8,7 @@ import com.dyuproject.protostuff.Schema;
 import com.dyuproject.protostuff.runtime.RuntimeSchema;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.zookeeper.CreateMode;
 import org.cluster.core.backtype.bean.AppResource;
 import org.cluster.core.commons.Configuration;
 import org.cluster.core.scheduler.AssetsState;
@@ -292,6 +293,17 @@ public class UtilCommons {
 
     }
 
+    /**
+     * 获取唯一id信息
+     * @return
+     * @throws Exception
+     */
+    public static int getId() throws Exception {
+        String dir = Configuration.getInstance().getConf().getString("cluster.zookeeper.root") + "/seq";
+        String seqJson = "{\"timestamp\":"+System.currentTimeMillis()+"}";
+        ZkOptions.create(ZkConnector.getInstance().getZkCurator(),dir,seqJson.getBytes(), CreateMode.PERSISTENT);
+        return ZkConnector.getInstance().getZkCurator().setData().forPath(dir, seqJson.getBytes()).getVersion();
+    }
 
     public static void main(String[] args) throws Exception {
         //byte[] b = UtilCommons.zipDirectory(new File("D:\\cluster-test-1.0-SNAPSHOT"), "/");

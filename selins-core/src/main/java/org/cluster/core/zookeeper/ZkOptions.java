@@ -39,6 +39,18 @@ public class ZkOptions {
         }
     }
 
+    public static void main(String[] args) throws Exception {
+        /**
+         * 加载配置文件信息
+         */
+        Configuration.init("E:\\工作空间\\ccinfra-real-cmpt-yn\\etc\\conf\\cluster.yaml");
+        /**
+         * 负责启动连接zookeeper,传入zookeeper地址
+         */
+        ZkConnector.getInstance().init(Configuration.getInstance().getConf().getString("cluster.zookeeper.servers"));
+        System.out.println(UtilCommons.getId());
+    }
+
     /**
      * 创建zookeeper节点目录
      */
@@ -76,6 +88,7 @@ public class ZkOptions {
      * 构建Master的zookeeper路径
      */
     public static void initZkTrackerDir() throws Exception {
+        Configuration.getInstance().getConf().put("brokerID", UtilCommons.getId());
         String zkDir = Configuration.getInstance().getConf().getString("cluster.zookeeper.root") + "/ids/" + Configuration.getInstance().getConf().getString("brokerID");
         ZkOptions.build(zkDir, UtilCommons.getBrokerState());
     }
