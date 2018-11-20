@@ -7,13 +7,10 @@ import org.apache.commons.cli.Options;
 import org.cluster.core.backtype.bean.AppResource;
 import org.cluster.core.commons.Configuration;
 import org.cluster.core.utils.TabCommons;
-import org.cluster.core.zookeeper.ZkConnector;
-import org.cluster.shell.Commands;
+import org.cluster.core.zookeeper.ZkCurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -48,12 +45,12 @@ public class Lists {
      * 命令主函数, 执行shell命令后调用此方法
      */
     public void application(String[] args) throws Exception {
-        String zkDir = Configuration.getInstance().getConf().getString("cluster.zookeeper.root") + "/appstore";
-        List<String> childs = ZkConnector.getInstance().getZkCurator().getChildren().forPath(zkDir);
+        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/appstore";
+        List<String> childs = ZkCurator.getInstance().getZkCurator().getChildren().forPath(zkDir);
         List<String[]> columnValues = new ArrayList<>();
         columnValues.add(new String[]{"application id", "state", "name", "jvmOpts", "numWorkers", "category"});
         for (String child : childs) {
-            AppResource res = JSONObject.parseObject(ZkConnector.getInstance().getZkCurator().getData().forPath(zkDir + "/" + child), AppResource.class);
+            AppResource res = JSONObject.parseObject(ZkCurator.getInstance().getZkCurator().getData().forPath(zkDir + "/" + child), AppResource.class);
             columnValues.add(new String[]{res.getId(), (res.getState() == 0 ? "Deploy" : "Running"), res.getName(), res.getJvmOpts(), String.valueOf(res.getNumWorkers()),res.getCategory()});
         }
         logger.info("Applications\n" + new TabCommons(columnValues).toString());
@@ -63,12 +60,12 @@ public class Lists {
      * 命令主函数, 执行shell命令后调用此方法
      */
     public void worker(String[] args) throws Exception {
-        String zkDir = Configuration.getInstance().getConf().getString("cluster.zookeeper.root") + "/worker";
-        List<String> childs = ZkConnector.getInstance().getZkCurator().getChildren().forPath(zkDir);
+        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/worker";
+        List<String> childs = ZkCurator.getInstance().getZkCurator().getChildren().forPath(zkDir);
         List<String[]> columnValues = new ArrayList<>();
         columnValues.add(new String[]{"worker id", "process", "host", "startTime", "runtime", "exectors", "threadCount", "cpu","memory"});
         for (String child : childs) {
-            JSONObject json = JSONObject.parseObject(new String(ZkConnector.getInstance().getZkCurator().getData().forPath(zkDir + "/" + child)));
+            JSONObject json = JSONObject.parseObject(new String(ZkCurator.getInstance().getZkCurator().getData().forPath(zkDir + "/" + child)));
             columnValues.add(new String[]{json.getString("workerId"), json.getString("process")
                     , json.getString("host"), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(json.getLong("startTime"))), String.valueOf(json.getInteger("runtime").intValue()/60000)
                     , String.valueOf(json.getInteger("exectors").intValue()), String.valueOf(json.getInteger("threadCount").intValue()),json.getString("cpu"), json.getString("memory")
@@ -81,12 +78,12 @@ public class Lists {
      * 命令主函数, 执行shell命令后调用此方法
      */
     public void broker(String[] args) throws Exception {
-        String zkDir = Configuration.getInstance().getConf().getString("cluster.zookeeper.root") + "/ids";
-        List<String> childs = ZkConnector.getInstance().getZkCurator().getChildren().forPath(zkDir);
+        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/ids";
+        List<String> childs = ZkCurator.getInstance().getZkCurator().getChildren().forPath(zkDir);
         List<String[]> columnValues = new ArrayList<>();
         columnValues.add(new String[]{"host", "port", "startTime", "rack", "category", "processors", "memory", "hdd", "jdk"});
         for (String child : childs) {
-            JSONObject json = JSONObject.parseObject(new String(ZkConnector.getInstance().getZkCurator().getData().forPath(zkDir + "/" + child)));
+            JSONObject json = JSONObject.parseObject(new String(ZkCurator.getInstance().getZkCurator().getData().forPath(zkDir + "/" + child)));
             columnValues.add(new String[]{json.getString("host"), json.getString("port"), json.getString("startTime"), json.getString("rack")
                     , json.getString("category"), json.getString("processors"), json.getString("totalMemory"), json.getString("totalFileSystem") + "G", json.getString("jdk")});
         }
@@ -101,7 +98,7 @@ public class Lists {
         /**
          * 负责启动连接zookeeper,传入zookeeper地址
          */
-        ZkConnector.getInstance().init(Configuration.getInstance().getConf().getString("cluster.zookeeper.servers"));
+        ZkCurator.getInstance().init(Configuration.getInstance().getString("cluster.zookeeper.servers"));
 
         new Lists().worker(args);
     }

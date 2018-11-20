@@ -1,7 +1,7 @@
 package org.cluster.core.scheduler;
 
-import org.cluster.core.zookeeper.ZkConnector;
-import org.cluster.core.zookeeper.ZkOptions;
+import org.cluster.core.zookeeper.ZkCurator;
+import org.cluster.core.zookeeper.ZkUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +40,7 @@ public enum ApplicationTracker {
      * @throws Exception
      */
     public void tracker() throws Exception {
-        if (ZkOptions.isMaster(ZkConnector.getInstance().getZkCurator())) {
+        if (ZkUtils.isMaster(ZkCurator.getInstance().getZkCurator())) {
             DefaultScheduler.checkLegacyWorker();
             DefaultScheduler.checkShutdownWorker();
             DefaultScheduler.checkStartWorker();

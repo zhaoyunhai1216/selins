@@ -39,4 +39,9 @@ public interface ClusterService extends Remote {
      * 接收本机器的各个worker上报的状态信息
      */
     void acceptState(String workerID, String state) throws Exception;
+
+    /**
+     * 均衡指定类型的worker
+     */
+    void rebalance(String category) throws Exception;
 }

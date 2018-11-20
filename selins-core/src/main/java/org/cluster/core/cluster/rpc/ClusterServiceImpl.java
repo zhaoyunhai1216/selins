@@ -83,7 +83,13 @@ public class ClusterServiceImpl extends UnicastRemoteObject implements ClusterSe
         LocalOptions.acceptState(workerID, state);
     }
 
-
+    /**
+     * 停止应用的某个节点
+     */
+    @Override
+    public void rebalance(String category) throws Exception {
+        LocalOptions.rebalance(category);
+    }
     /**
      * 日志定义 Logger
      */

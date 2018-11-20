@@ -8,7 +8,7 @@ import org.cluster.core.cluster.rpc.ClusterService;
 import org.cluster.core.commons.Configuration;
 import org.cluster.core.utils.TabCommons;
 import org.cluster.core.utils.UtilCommons;
-import org.cluster.core.zookeeper.ZkConnector;
+import org.cluster.core.zookeeper.ZkCurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,11 +35,11 @@ public class State {
             System.out.println(opts.getOptions());
             return;
         }
-        String zkDir = Configuration.getInstance().getConf().getString("cluster.zookeeper.root") + "/ids";
-        List<String> childs = ZkConnector.getInstance().getZkCurator().getChildren().forPath(zkDir);
+        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/ids";
+        List<String> childs = ZkCurator.getInstance().getZkCurator().getChildren().forPath(zkDir);
         Map<String, List<String[]>> targets = new HashMap<>();
         for (String child : childs) {
-            JSONObject json = JSONObject.parseObject(new String(ZkConnector.getInstance().getZkCurator().getData().forPath(zkDir + "/" + child)));
+            JSONObject json = JSONObject.parseObject(new String(ZkCurator.getInstance().getZkCurator().getData().forPath(zkDir + "/" + child)));
             ClusterService service = (ClusterService) Naming.lookup("rmi://" + InetAddress.getByName(json.getString("host")).getHostAddress() + ":" + json.getString("port") + "/Broker");
             Map<String, Map<String, Map<String, String>>> state = JSONObject.parseObject(service.getState(),Map.class);
             UtilCommons.megrMap(targets,state.get(cliParser.getOptionValue("appID")));

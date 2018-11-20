@@ -2,19 +2,18 @@ package org.cluster.core.scheduler;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
-import org.cluster.core.backtype.bean.AppResource;
+import org.cluster.core.backtype.bean.WorkerState;
 import org.cluster.core.commons.Configuration;
 import org.cluster.core.commons.StateMemory;
 import org.cluster.core.utils.UtilCommons;
-import org.cluster.core.zookeeper.ZkConnector;
-import org.cluster.core.zookeeper.ZkOptions;
+import org.cluster.core.zookeeper.ZkCurator;
+import org.cluster.core.zookeeper.ZkUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.UUID;
+import java.util.List;
 
 /**
  * @Auther: 赵云海
@@ -35,10 +34,10 @@ public class LocalOptions {
      * 在zookeeper集群中, 获取application的运行参数信息, 然后保存到内容中用于调度提供参数
      */
     public static void killWorker(String appID, int seq, int total) throws Exception {
-        JSONObject workerJson = null;
+        WorkerState workerState =  null;
         try {
-            workerJson = ZkOptions.getWorker(ZkConnector.getInstance().getZkCurator(), appID + "_" + seq + "_" + total);
-            UtilCommons.killCommand(workerJson.getString("process"));
+            workerState = ZkUtils.getWorker(ZkCurator.getInstance().getZkCurator(), appID + "_" + seq + "_" + total);
+            UtilCommons.killCommand(workerState.getProcess());
         } catch (Exception e) {
             e.printStackTrace();
             logger.warn(e.getMessage(), e);
@@ -50,7 +49,7 @@ public class LocalOptions {
      * 在集群的appstore中, 同步application的运行文件信息,然后解压存储到本地用于启动运行
      */
     public static void saveWorkerResources(String appID, int seq, int total, byte[] zipBytes) throws Exception {
-        String workdir = Configuration.getInstance().getConf().getString("cluster.worker.dir");
+        String workdir = Configuration.getInstance().getString("cluster.worker.dir");
         FileUtils.deleteDirectory(new File(workdir + appID));
         UtilCommons.unZipDirectory(workdir + appID + "_" + seq + "_" + total, zipBytes);
     }
@@ -59,7 +58,7 @@ public class LocalOptions {
      * 在集群的appstore中, 同步application的运行文件信息,然后解压存储到本地用于启动运行
      */
     public static void deleteWorkerResources(String appID, int seq, int total) throws Exception {
-        String workDir = Configuration.getInstance().getConf().getString("cluster.worker.dir");
+        String workDir = Configuration.getInstance().getString("cluster.worker.dir");
         FileUtils.deleteDirectory(new File(workDir + appID + "_" + seq + "_" + total));
     }
 
@@ -81,6 +80,13 @@ public class LocalOptions {
         }
     }
 
+    /**
+     * 在zookeeper集群中, 获取application的运行参数信息, 然后保存到内容中用于调度提供参数
+     */
+    public static void rebalance(String category) throws Exception {
+        DefaultScheduler.checkWorkerLocation(category);
+        DefaultScheduler.rebalanceWorkers(category);
+    }
     /**
      * 日志定义 Logger
      */

@@ -28,6 +28,7 @@ public class Help {
                             "        start\n" +
                             "        kill\n" +
                             "        state\n" +
+                            "        rebalance --category = <?>\n" +
                             "        list --command = <application/worker/broker>\n" +
                             "Help:\n" +
                             "        help\n" +

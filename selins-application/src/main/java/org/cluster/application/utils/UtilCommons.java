@@ -259,8 +259,8 @@ public class UtilCommons {
      */
     public static EnvOptions getCliParser(String[] args) throws Exception {
         System.out.println(Arrays.toString(args));
-        Options opts = new Options()
-                .addOption("host", true, "The host.").addOption("appID", true, "The Application id.")
+        Options opts = new Options().addOption("host", true, "The host.")
+                .addOption("category", true, "The category.").addOption("appID", true, "The Application id.")
                 .addOption("appMain", true, "The Application id.").addOption("seq", true, "The help parameter.")
                 .addOption("total", true, "The JVM parameter.").addOption("yaml", true, "Yaml configuration file.");
         return new EnvOptions(new GnuParser().parse(opts, args));
@@ -272,6 +272,7 @@ public class UtilCommons {
     public static String getWorkerState(EnvOptions config) throws Exception {
         JSONObject jsonString = new JSONObject()
                 .fluentPut("workerId", config.getWorkerID()).fluentPut("host", config.getString(Environment.BROKER_HOST))
+                .fluentPut("category", config.getOptionValue(Environment.APPLICATION_CATEGORY))
                 .fluentPut("process", ManagementFactory.getRuntimeMXBean().getName().split("@")[0])
                 .fluentPut("runtime", ManagementFactory.getRuntimeMXBean().getUptime())
                 .fluentPut("startTime", ManagementFactory.getRuntimeMXBean().getStartTime())

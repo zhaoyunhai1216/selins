@@ -3,8 +3,8 @@ package org.cluster.appstore.utils;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.zookeeper.CreateMode;
 import org.cluster.core.commons.Configuration;
-import org.cluster.core.zookeeper.ZkConnector;
-import org.cluster.core.zookeeper.ZkOptions;
+import org.cluster.core.zookeeper.ZkCurator;
+import org.cluster.core.zookeeper.ZkUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,10 +27,10 @@ public class UtilCommons {
      * 构建Master的zookeeper路径
      */
     public static void initZkMetaDir() throws Exception {
-        String zkDir = Configuration.getInstance().getConf().getString("cluster.zookeeper.root") + "/appmeta";
-        ZkOptions.build(zkDir, new JSONObject()
-                .fluentPut("host", Configuration.getInstance().getConf().getString("cluster.host"))
-                .fluentPut("port", Configuration.getInstance().getConf().getInteger("cluster.appstore.port"))
+        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/appmeta";
+        ZkUtils.build(zkDir, new JSONObject()
+                .fluentPut("host", Configuration.getInstance().getString("cluster.host"))
+                .fluentPut("port", Configuration.getInstance().getInteger("cluster.appstore.port"))
                 .fluentPut("startTime", System.currentTimeMillis()).toJSONString());
     }
 
@@ -40,10 +40,10 @@ public class UtilCommons {
      * @throws Exception
      */
     public static int getId() throws Exception {
-        String dir = Configuration.getInstance().getConf().getString("cluster.zookeeper.root") + "/seq";
+        String dir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/seq";
         String seqJson = "{\"timestamp\":"+System.currentTimeMillis()+"}";
-        ZkOptions.create(ZkConnector.getInstance().getZkCurator(),dir,seqJson.getBytes(), CreateMode.PERSISTENT);
-        return ZkConnector.getInstance().getZkCurator().setData().forPath(dir, seqJson.getBytes()).getVersion();
+        ZkUtils.create(ZkCurator.getInstance().getZkCurator(),dir,seqJson.getBytes(), CreateMode.PERSISTENT);
+        return ZkCurator.getInstance().getZkCurator().setData().forPath(dir, seqJson.getBytes()).getVersion();
     }
     /**
      * 日志定义 Logger

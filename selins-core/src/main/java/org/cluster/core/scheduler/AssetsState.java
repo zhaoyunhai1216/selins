@@ -1,6 +1,10 @@
 package org.cluster.core.scheduler;
 
 import com.alibaba.fastjson.JSONObject;
+import org.cluster.core.backtype.bean.WorkerState;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Auther: 赵云海
@@ -9,27 +13,18 @@ import com.alibaba.fastjson.JSONObject;
  * @Description: TODO
  */
 public class AssetsState implements Comparable<AssetsState> {
-    private String brokerID;
     private String host;
     private int port;
     private String category;
-    private int workerSize;
     private int cpu;
     private int memory;
+    private List<WorkerState> workers;
 
-    public AssetsState(String brokerID, String host, int port, String category) {
-        this.brokerID = brokerID;
+    public AssetsState(String host, int port, String category) {
         this.host = host;
         this.port = port;
         this.category = category;
-    }
-
-    public String getBrokerID() {
-        return brokerID;
-    }
-
-    public void setBrokerID(String brokerID) {
-        this.brokerID = brokerID;
+        this.workers = new ArrayList<>();
     }
 
     public String getHost() {
@@ -57,11 +52,15 @@ public class AssetsState implements Comparable<AssetsState> {
     }
 
     public int getWorkerSize() {
-        return workerSize;
+        return this.workers.size();
     }
 
-    public AssetsState setWorkerSize(int workerSize) {
-        this.workerSize = workerSize;
+    public List<WorkerState> getWorkers() {
+        return this.workers;
+    }
+
+    public AssetsState setWorkers(List<WorkerState> workers) {
+        this.workers.addAll(workers);
         return this;
     }
 
@@ -85,9 +84,9 @@ public class AssetsState implements Comparable<AssetsState> {
     @Override
     public int compareTo(AssetsState o) {
         // 比较运行的worker数量
-        if (workerSize > o.getWorkerSize()) {
+        if (this.getWorkerSize() > o.getWorkerSize()) {
             return 1;
-        } else if (workerSize < o.getWorkerSize()) {
+        } else if (this.getWorkerSize() < o.getWorkerSize()) {
             return -1;
         }
         // 比较cpu使用率

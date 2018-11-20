@@ -2,6 +2,7 @@ package org.cluster.core.commons;
 
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.io.FileUtils;
+import org.cluster.core.Broker;
 import org.cluster.core.scheduler.LocalOptions;
 import org.cluster.core.utils.EnvCommons;
 import org.slf4j.Logger;
@@ -18,29 +19,19 @@ import java.util.UUID;
  * @Version: 1.0
  * @Description: TODO
  */
-public class Configuration {
+public class Configuration extends JSONObject {
     /**
      * 一个Cache实例
      */
     private static Configuration clusterYaml;
-    /**
-     * 集群配置文件信息
-     */
-    private JSONObject conf;
 
     /**
      * 构造方法
      */
     public Configuration(String conf) throws Exception {
-        EnvCommons.setEnvironment(this.getClass().getResource("/").getFile() + "/etc");
-        this.conf = new JSONObject();
-        try {
-            this.conf = new Yaml().loadAs(FileUtils.openInputStream(new File(conf)), JSONObject.class);
-            this.conf.put("yaml", conf);
-        } catch (IOException e) {
-            e.printStackTrace();
-            logger.error(e.getMessage(), e);
-        }
+        EnvCommons.setEnvironment(Configuration.getProjectDir() + "/etc");
+        this.put("yaml", conf);
+        this.putAll(new Yaml().loadAs(FileUtils.openInputStream(new File(conf)), JSONObject.class).getInnerMap());
     }
 
     /**
@@ -58,19 +49,17 @@ public class Configuration {
     }
 
     /**
-     * 获取配置文件信息
-     *
-     * @return JSONObject
+     * 根据Environment枚举内容, 获取上下文环境中的内容.
      */
-    public JSONObject getConf() {
-        return conf;
+    public String getString(Environment env) {
+        return String.valueOf(this.getString(env.key()));
     }
 
     /**
      * 获取工程根目录
      */
-    public static String getBaseDir() {
-        return new Object().getClass().getResource("/").getFile();
+    public static String getProjectDir() {
+        return System.getProperty("user.dir");
     }
 
     /**

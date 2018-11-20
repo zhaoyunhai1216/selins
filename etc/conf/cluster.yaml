@@ -8,6 +8,7 @@ cluster.port: 8080
 
 cluster.rack: rack0
 
+cluster.category: default
 # %JSTORM_HOME% is the jstorm home directory
 cluster.worker.dir: "D://workers/"
 # please set absolute path, default path is JSTORM_HOME/logs

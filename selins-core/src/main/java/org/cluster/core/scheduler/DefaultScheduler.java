@@ -1,18 +1,16 @@
 package org.cluster.core.scheduler;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.cluster.core.backtype.bean.AppResource;
-import org.cluster.core.cluster.rpc.ClusterServiceImpl;
-import org.cluster.core.utils.UtilCommons;
-import org.cluster.core.zookeeper.ZkConnector;
-import org.cluster.core.zookeeper.ZkOptions;
+import org.cluster.core.backtype.bean.BrokerState;
+import org.cluster.core.backtype.bean.WorkerState;
+import org.cluster.core.zookeeper.ZkCurator;
+import org.cluster.core.zookeeper.ZkUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -27,13 +25,12 @@ public class DefaultScheduler {
      * 检查遗留的异常worker信息,并进行停止操作,防止遗留worker堆积
      */
     public static void checkShutdownWorker() throws Exception {
-        List<String> applications = ZkOptions.getRunningApplicationsID(ZkConnector.getInstance().getZkCurator());
-        JSONArray workerJson = ZkOptions.getWorkers(ZkConnector.getInstance().getZkCurator());
-        for (int i = 0; i < workerJson.size(); i++) {
-            String[] params = workerJson.getJSONObject(i).getString("workerId").split("\\_");
-            if (!applications.contains(params[0])) {
-                RemoteOptions.killWorker(workerJson.getJSONObject(i).getString("host"), params[0], Integer.parseInt(params[1]), Integer.parseInt(params[2]));
-                logger.info("[Tracker] Shutdown Worker <" + workerJson.getJSONObject(i).getString("workerId") + "> was found and the kill was completed");
+        List<String> applications = ZkUtils.getRunningApplicationsID(ZkCurator.getInstance().getZkCurator());
+        List<WorkerState> workersState = ZkUtils.getWorkers(ZkCurator.getInstance().getZkCurator());
+        for (int i = 0; i < workersState.size(); i++) {
+            if (!applications.contains(workersState.get(i).getAppID())) {
+                RemoteOptions.killWorker(workersState.get(i).getHost(), workersState.get(i).getAppID(), workersState.get(i).getSeq(), workersState.get(i).getTotal());
+                logger.info("[Tracker] Shutdown Worker <" + workersState.get(i).getWorkerId() + "> was found and the kill was completed");
             }
         }
     }
@@ -43,13 +40,12 @@ public class DefaultScheduler {
      * 检测因异常停止的worker, 检查出来后进行调度重启
      */
     public static void checkStartWorker() throws Exception {
-        List<AppResource> applications = ZkOptions.getRunningApplications(ZkConnector.getInstance().getZkCurator());
-        List<String> workerList = ZkOptions.getWorkerID(ZkConnector.getInstance().getZkCurator());
-        List<AssetsState> assets = DefaultScheduler.getAssetsState();
+        List<AppResource> applications = ZkUtils.getRunningApplications(ZkCurator.getInstance().getZkCurator());
+        List<String> workerList = ZkUtils.getWorkerID(ZkCurator.getInstance().getZkCurator());
         for (AppResource res : applications) {
             for (int i = 0; i < res.getNumWorkers(); i++) {
                 if (!workerList.contains(res.getId() + "_" + i + "_" + +res.getNumWorkers())) {
-                    RemoteOptions.startWorker(res.getId(), i, res.getNumWorkers(), assets);
+                    RemoteOptions.startWorker(res.getId(), i, res.getNumWorkers(), DefaultScheduler.getAssetsState(res.getCategory()).get(0));
                     logger.info("[Tracker] Start Worker <" + res.getId() + "_" + i + "_" + +res.getNumWorkers() + "> was found and the start was completed");
                 }
             }
@@ -60,31 +56,45 @@ public class DefaultScheduler {
      * 检测因异常重复多余的worker, 检查出来后进行调度重启
      */
     public static void checkLegacyWorker() throws Exception {
-        JSONArray workerJson = ZkOptions.getWorkers(ZkConnector.getInstance().getZkCurator());
+        List<WorkerState> workersState = ZkUtils.getWorkers(ZkCurator.getInstance().getZkCurator());
         HashSet<String> workerSet = new HashSet<>();
-        for (int i = 0; i < workerJson.size(); i++) {
-            String[] params = workerJson.getJSONObject(i).getString("workerId").split("\\_");
-            if(workerSet.contains(workerJson.getJSONObject(i).getString("workerId"))){
-                RemoteOptions.killWorker(workerJson.getJSONObject(i).getString("host"), params[0], Integer.parseInt(params[1]), Integer.parseInt(params[2]));
-                logger.info("[Tracker] Legacy Worker <" + workerJson.getJSONObject(i).getString("workerId") + "> was found and the kill was completed");
+        for (int i = 0; i < workersState.size(); i++) {
+            if (workerSet.contains(workersState.get(i).getWorkerId())) {
+                RemoteOptions.killWorker(workersState.get(i).getHost(), workersState.get(i).getAppID(), workersState.get(i).getSeq(), workersState.get(i).getTotal());
+                logger.info("[Tracker] Legacy Worker <" + workersState.get(i).getWorkerId() + "> was found and the kill was completed");
             }
         }
     }
 
     /**
      * 获取所有可以运行程序的节点, 并返回排序后的节点列表信息, 供分配任务使用
-     *h
+     * h
+     *
      * @return List
      * @throws Exception
      */
-    public static List<AssetsState> getAssetsState() throws Exception {
-        List<AssetsState> states = ZkOptions.getNodeState(ZkConnector.getInstance().getZkCurator());
-        HashMap<String, List<String>> workerMap = new HashMap<>();
-        JSONArray workerJson = ZkOptions.getWorkers(ZkConnector.getInstance().getZkCurator());
-        for (int i = 0; i < workerJson.size(); i++) {
-            workerMap.computeIfAbsent(workerJson.getJSONObject(i).getString("host"), x -> new ArrayList<>()).add(workerJson.getJSONObject(i).toJSONString());
+    public static List<AssetsState> getAssetsState(String category) throws Exception {
+        List<AssetsState> states = ZkUtils.getNodeState(ZkCurator.getInstance().getZkCurator());
+        HashMap<String, List<WorkerState>> workerMap = new HashMap<>();
+        List<WorkerState> workersState = ZkUtils.getWorkers(ZkCurator.getInstance().getZkCurator());
+        for (int i = 0; i < workersState.size(); i++) {
+            workerMap.computeIfAbsent(workersState.get(i).getHost(), x -> new ArrayList<>()).add(workersState.get(i));
         }
-        return states.stream().filter(x -> x.getCategory().equals("default")).map(x -> x.setWorkerSize(workerMap.getOrDefault(x.getHost(), new ArrayList<>()).size())).sorted().collect(Collectors.toList());
+        return states.stream().filter(x -> x.getCategory().equals(category)).map(x -> x.setWorkers(workerMap.getOrDefault(x.getHost(), new ArrayList<>()))).sorted().collect(Collectors.toList());
+    }
+
+    /**
+     * 检测应用worker 运行位置信息,如果运行位置错误, 那么将kill掉错误得worker
+     */
+    public static void checkWorkerLocation(String category) throws Exception {
+        Map<String, BrokerState> nodeMaps = ZkUtils.getNodeMaps(ZkCurator.getInstance().getZkCurator());
+        List<WorkerState> workersState = ZkUtils.getWorkers(ZkCurator.getInstance().getZkCurator());
+        for (int i = 0; i < workersState.size() && workersState.get(i).getCategory().equals(category); i++) {
+            if (nodeMaps.containsKey(workersState.get(i).getHost()) && !workersState.get(i).getCategory().equals(nodeMaps.get(workersState.get(i).getHost()).getCategory())) {
+                RemoteOptions.killWorker(workersState.get(i).getHost(), workersState.get(i).getAppID(), workersState.get(i).getSeq(), workersState.get(i).getTotal());
+                logger.info("[Tracker] Check position error worker <" + workersState.get(i).getWorkerId() + "> was found and the kill was completed");
+            }
+        }
     }
 
 
@@ -92,7 +102,14 @@ public class DefaultScheduler {
      * 检测因异常重复多余的worker, 检查出来后进行调度重启
      */
     public static void rebalanceWorkers(String category) throws Exception {
-        //暂时未做实现
+        double average = ZkUtils.getAverageWorkers(ZkCurator.getInstance().getZkCurator(), category);
+        for (AssetsState assetsState : DefaultScheduler.getAssetsState(category)) {
+            for (int i = 0; i < (int)Math.floor(assetsState.getWorkerSize() - average); i++) {
+                WorkerState workerState = assetsState.getWorkers().get(new Random().nextInt(assetsState.getWorkerSize()));
+                RemoteOptions.killWorker(workerState.getHost(), workerState.getAppID(), workerState.getSeq(), workerState.getTotal());
+                logger.info("[Tracker] Rebalance worker <" + workerState.getWorkerId() + "> was found and the kill was completed");
+            }
+        }
     }
 
     /**

@@ -22,8 +22,8 @@ public class ClusterRMI {
      * 启用相关远程调用服务，可用于对提交的任务进行控制
      */
     public static void init() throws RemoteException, MalformedURLException, UnknownHostException {
-        String host = Configuration.getInstance().getConf().getString("cluster.host");
-        int port = Configuration.getInstance().getConf().getInteger("cluster.port");
+        String host = Configuration.getInstance().getString("cluster.host");
+        int port = Configuration.getInstance().getInteger("cluster.port");
         System.setProperty("java.rmi.server.hostname", host);
         LocateRegistry.createRegistry(port);
         Naming.rebind("rmi://"+ InetAddress.getByName(host).getHostAddress()+":" + port + "/Broker", new ClusterServiceImpl());

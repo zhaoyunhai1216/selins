@@ -14,35 +14,38 @@ public class EnvCommons {
     /**
      * 获取当前系统整体本地硬盘容量，并格式化新的输出格式
      *
-     * @param sigar
      * @return
      * @throws Exception
      */
-    public static int getTotalFileSystemStat(Sigar sigar) throws SigarException {
+    public static int getTotalFileSystemStat() throws SigarException {
+        Sigar sigar = new Sigar();
         long bytes = 0L;
         for (int i = 0; i < sigar.getFileSystemList().length; i++) {
             if (sigar.getFileSystemList()[i].getType() != 2) continue;
             FileSystemUsage usage = sigar.getFileSystemUsage(sigar.getFileSystemList()[i].getDirName());
             bytes += usage.getTotal();
         }
-        return (int)Math.round ((double)bytes / 1024d / 1024d);
+        int stat = (int) Math.round((double) bytes / 1024d / 1024d);
+        sigar.close();
+        return stat;
     }
 
     /**
      * 获取当前系统使用本地硬盘容量，并格式化新的输出格式
      *
-     * @param sigar
      * @return
      * @throws Exception
      */
-    public static int getUsedFileSystemStat(Sigar sigar) throws SigarException {
+    public static int getUsedFileSystemStat() throws SigarException {
+        Sigar sigar = new Sigar();
         long bytes = 0L;
         for (int i = 0; i < sigar.getFileSystemList().length; i++) {
             if (sigar.getFileSystemList()[i].getType() != 2) continue;
             FileSystemUsage usage = sigar.getFileSystemUsage(sigar.getFileSystemList()[i].getDirName());
             bytes += usage.getUsed();
         }
-        return(int)Math.round ((double)bytes / 1024d / 1024d);
+        sigar.close();
+        return (int) Math.round((double) bytes / 1024d / 1024d);
     }
 
     /**
@@ -59,7 +62,7 @@ public class EnvCommons {
             FileSystemUsage usage = sigar.getFileSystemUsage(sigar.getFileSystemList()[i].getDirName());
             bytes += usage.getFree();
         }
-        return (int)Math.round ((double)bytes / 1024d / 1024d);
+        return (int) Math.round((double) bytes / 1024d / 1024d);
     }
 
     /**
@@ -70,7 +73,7 @@ public class EnvCommons {
      * @throws Exception
      */
     public static String getPercentFileSystemStat(Sigar sigar) throws SigarException {
-        return Math.round((double) getUsedFileSystemStat(sigar) / (double) getTotalFileSystemStat(sigar) * 100d) + "%";
+        return Math.round((double) getUsedFileSystemStat() / (double) getTotalFileSystemStat() * 100d) + "%";
     }
 
     /**
@@ -114,9 +117,11 @@ public class EnvCommons {
      * @return
      * @throws Exception
      */
-    public static String getTotalMemoryStat(Sigar sigar) throws SigarException {
-        // 内存总量
-        return Math.round((double)sigar.getMem().getTotal() / 1024d / 1024d / 1024d) + "G";
+    public static int getTotalMemoryStat() throws SigarException {
+        Sigar sigar = new Sigar();
+        int stat = (int) Math.round((double) sigar.getMem().getTotal() / 1024d / 1024d / 1024d);
+        sigar.close();
+        return stat;
     }
 
     /**
@@ -126,9 +131,12 @@ public class EnvCommons {
      * @return
      * @throws Exception
      */
-    public static String getUsedMemoryStat(Sigar sigar) throws SigarException {
+    public static int getUsedMemoryStat() throws SigarException {
+        Sigar sigar = new Sigar();
+        int stat = (int) Math.round((double) sigar.getMem().getUsed() / 1024d / 1024d / 1024d);
+        sigar.close();
         // 内存总量
-        return Math.round((double)sigar.getMem().getUsed() / 1024d / 1024d / 1024d) + "G";
+        return stat;
     }
 
     /**
@@ -140,7 +148,7 @@ public class EnvCommons {
      */
     public static String getFreeMemoryStat(Sigar sigar) throws SigarException {
         // 内存总量
-        return Math.round((double)sigar.getMem().getFree() / 1024d / 1024d / 1024d) + "G";
+        return Math.round((double) sigar.getMem().getFree() / 1024d / 1024d / 1024d) + "G";
     }
 
     /**
@@ -150,10 +158,24 @@ public class EnvCommons {
      * @return
      * @throws Exception
      */
-    public static String getCpuStat(Sigar sigar) throws SigarException {
+    public static String getCpuStat() throws SigarException {
+        Sigar sigar = new Sigar();
         double cpuStat = Arrays.asList(sigar.getCpuPercList()).stream()
                 .mapToDouble(x -> x.getCombined()).average().getAsDouble();
-        return CpuPerc.format(cpuStat);
+        sigar.close();
+        return EnvCommons.format(cpuStat);
+    }
+
+    /**
+     * 格式化当前获取出来得CPU格式信息
+     * @param val
+     * @return
+     */
+    public static String format(double val) {
+        String p = String.valueOf(val * 100.0D);
+        int ix = p.indexOf(".") + 1;
+        String percent = p.substring(0, ix) + p.substring(ix, ix + 1);
+        return percent;
     }
 
     /**
@@ -245,7 +267,7 @@ public class EnvCommons {
             path += ";" + classpath;
         }
         System.setProperty("java.library.path", path);
-        logger.info("[ENV] Application init library successful.");
+        logger.info("[ENV] Load the local library successful.");
     }
 
     public static void main(String[] args) throws Exception {

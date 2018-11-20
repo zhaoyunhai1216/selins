@@ -1,6 +1,5 @@
 package org.cluster.core.utils;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dyuproject.protostuff.LinkedBuffer;
 import com.dyuproject.protostuff.ProtostuffIOUtil;
@@ -11,9 +10,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.zookeeper.CreateMode;
 import org.cluster.core.backtype.bean.AppResource;
 import org.cluster.core.commons.Configuration;
-import org.cluster.core.scheduler.AssetsState;
-import org.cluster.core.zookeeper.ZkConnector;
-import org.cluster.core.zookeeper.ZkOptions;
+import org.cluster.core.zookeeper.ZkCurator;
+import org.cluster.core.zookeeper.ZkUtils;
 import org.hyperic.sigar.Sigar;
 import org.hyperic.sigar.SigarException;
 import org.slf4j.Logger;
@@ -21,10 +19,10 @@ import org.slf4j.LoggerFactory;
 import org.xerial.snappy.Snappy;
 
 import java.io.*;
+import java.lang.management.ManagementFactory;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -162,21 +160,21 @@ public class UtilCommons {
      * @return
      * @throws SigarException
      */
-    public static String getBrokerState() throws SigarException, InterruptedException {
-        Sigar sigar = new Sigar();
-        JSONObject json = new JSONObject()
-                .fluentPut("host", Configuration.getInstance().getConf().getString("cluster.host"))
-                .fluentPut("port", Configuration.getInstance().getConf().getInteger("cluster.port"))
-                .fluentPut("category", "default")
-                .fluentPut("rack", Configuration.getInstance().getConf().getString("cluster.rack"))
-                .fluentPut("startTime", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()))
-                .fluentPut("baseDir", Configuration.getInstance().getConf().getString("cluster.zookeeper.root"))
+    public static String getBrokerState() throws SigarException {
+        return new JSONObject()
+                .fluentPut("baseDir", Configuration.getInstance().getString("cluster.zookeeper.root"))
+                .fluentPut("host", Configuration.getInstance().getString("cluster.host"))
+                .fluentPut("port", Configuration.getInstance().getInteger("cluster.port"))
+                .fluentPut("category", Configuration.getInstance().getString("cluster.category"))
+                .fluentPut("rack", Configuration.getInstance().getString("cluster.rack"))
+                .fluentPut("startTime", ManagementFactory.getRuntimeMXBean().getStartTime())
                 .fluentPut("jdk", EnvCommons.getJDKVersion())
-                .fluentPut("processors", EnvCommons.getProcessors())
-                .fluentPut("totalMemory", EnvCommons.getTotalMemoryStat(sigar))
-                .fluentPut("totalFileSystem", EnvCommons.getTotalFileSystemStat(sigar));
-        sigar.close();
-        return json.toJSONString();
+                .fluentPut("usedVCores", EnvCommons.getCpuStat())
+                .fluentPut("usedMemory", EnvCommons.getUsedMemoryStat())
+                .fluentPut("usedHDD", EnvCommons.getUsedFileSystemStat())
+                .fluentPut("totalVCores", EnvCommons.getProcessors())
+                .fluentPut("totalMemory", EnvCommons.getTotalMemoryStat())
+                .fluentPut("totalHDD", EnvCommons.getTotalFileSystemStat()).toJSONString();
     }
 
     /**
@@ -206,7 +204,7 @@ public class UtilCommons {
     public static void startCommand(String workId, String[] args) throws Exception {
         // Set the necessary command to execute the application master
         Vector<CharSequence> vargs = new Vector<CharSequence>(30);
-        vargs.add("cd " + Configuration.getBaseDir() + "bin;");
+        vargs.add("cd " + Configuration.getProjectDir() + "/bin;");
         vargs.add("sh ./worker-start.sh");
         vargs.addAll(Arrays.asList(args));
         // Get final commmand
@@ -220,7 +218,7 @@ public class UtilCommons {
         });
         thread.setDaemon(true);
         thread.start();
-        while (thread.isAlive() && !ZkOptions.checkWorkerExists(ZkConnector.getInstance().getZkCurator(), workId)) {
+        while (thread.isAlive() && !ZkUtils.checkWorkerExists(ZkCurator.getInstance().getZkCurator(), workId)) {
             TimeUnit.SECONDS.sleep(1);
             logger.info("[Env] Worker <" + workId + "> is starting, please wait.");
         }
@@ -249,8 +247,8 @@ public class UtilCommons {
                 p = Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", command});
             }
             p.waitFor();
-            logger.info(IOUtils.toString(p.getInputStream(),"GBK"));
-            logger.info(IOUtils.toString(p.getErrorStream(),"GBK"));
+            logger.info(IOUtils.toString(p.getInputStream(), "GBK"));
+            logger.info(IOUtils.toString(p.getErrorStream(), "GBK"));
             logger.info("[ENV] Command <" + command + "> is destroy.");
         } catch (Exception e) {
             e.printStackTrace();
@@ -263,11 +261,11 @@ public class UtilCommons {
     }
 
     public static String[] getWorkerParameters(String appID, int seq, int total) throws Exception {
-        String workDir = Configuration.getInstance().getConf().getString("cluster.worker.dir");
-        AppResource res = ZkOptions.getAppZkResource(appID);
-        String host = Configuration.getInstance().getConf().getString("cluster.host");
+        String workDir = Configuration.getInstance().getString("cluster.worker.dir");
+        AppResource res = ZkUtils.getAppZkResource(appID);
+        String host = Configuration.getInstance().getString("cluster.host");
         return new String[]{workDir, appID + "_" + seq + "_" + total, res.getJvmOpts(), "--host=" + host, "--appID=" + res.getId()
-                , "--appMain=" + res.getAppMain(), "--seq=" + seq, "--total=" + total, "--yaml=" + Configuration.getBaseDir() + "etc"};
+                , "--appMain=" + res.getAppMain(), "--seq=" + seq, "--total=" + total, "--category=" + res.getCategory(), "--yaml=" + Configuration.getProjectDir() + "/etc"};
     }
 
     /**
@@ -295,14 +293,15 @@ public class UtilCommons {
 
     /**
      * 获取唯一id信息
+     *
      * @return
      * @throws Exception
      */
     public static int getId() throws Exception {
-        String dir = Configuration.getInstance().getConf().getString("cluster.zookeeper.root") + "/seq";
-        String seqJson = "{\"timestamp\":"+System.currentTimeMillis()+"}";
-        ZkOptions.create(ZkConnector.getInstance().getZkCurator(),dir,seqJson.getBytes(), CreateMode.PERSISTENT);
-        return ZkConnector.getInstance().getZkCurator().setData().forPath(dir, seqJson.getBytes()).getVersion();
+        String dir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/seq";
+        String seqJson = "{\"timestamp\":" + System.currentTimeMillis() + "}";
+        ZkUtils.create(ZkCurator.getInstance().getZkCurator(), dir, seqJson.getBytes(), CreateMode.PERSISTENT);
+        return ZkCurator.getInstance().getZkCurator().setData().forPath(dir, seqJson.getBytes()).getVersion();
     }
 
     public static void main(String[] args) throws Exception {

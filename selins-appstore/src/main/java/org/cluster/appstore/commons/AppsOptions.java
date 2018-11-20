@@ -6,8 +6,8 @@ import org.apache.zookeeper.CreateMode;
 import org.cluster.appstore.utils.UtilCommons;
 import org.cluster.core.backtype.bean.AppResource;
 import org.cluster.core.commons.Configuration;
-import org.cluster.core.zookeeper.ZkConnector;
-import org.cluster.core.zookeeper.ZkOptions;
+import org.cluster.core.zookeeper.ZkCurator;
+import org.cluster.core.zookeeper.ZkUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,7 +27,7 @@ public class AppsOptions {
      * @throws IOException
      */
     public static void createResources(String appID, byte[] b) throws IOException {
-        String url = Configuration.getInstance().getConf().getString("cluster.appstore.dir") + "/" + appID + ".zip";
+        String url = Configuration.getInstance().getString("cluster.appstore.dir") + "/" + appID + ".zip";
         FileUtils.writeByteArrayToFile(new File(url), b);
     }
 
@@ -37,7 +37,7 @@ public class AppsOptions {
      * @param appID
      */
     public static void deleteResources(String appID) {
-        String url = Configuration.getInstance().getConf().getString("cluster.appstore.dir") + "/" + appID + ".zip";
+        String url = Configuration.getInstance().getString("cluster.appstore.dir") + "/" + appID + ".zip";
         FileUtils.deleteQuietly(new File(url));
     }
 
@@ -47,7 +47,7 @@ public class AppsOptions {
      * @param appID
      */
     public static byte[] searchResources(String appID) throws IOException {
-        String url = Configuration.getInstance().getConf().getString("cluster.appstore.dir") + "/" + appID + ".zip";
+        String url = Configuration.getInstance().getString("cluster.appstore.dir") + "/" + appID + ".zip";
         return FileUtils.readFileToByteArray(new File(url));
     }
 
@@ -58,9 +58,9 @@ public class AppsOptions {
      * @throws IOException
      */
     public static boolean createZkResources(String appID, String mainClass, String jvmOpts, int numWorkers, String category) {
-        String zkDir = Configuration.getInstance().getConf().getString("cluster.zookeeper.root") + "/appstore/" + appID;
+        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/appstore/" + appID;
         AppResource meta = new AppResource(appID, UtilCommons.getAppName(mainClass), jvmOpts, mainClass,numWorkers,0,category);
-        return ZkOptions.create(ZkConnector.getInstance().getZkCurator(), zkDir, meta.toJson().getBytes(), CreateMode.PERSISTENT);
+        return ZkUtils.create(ZkCurator.getInstance().getZkCurator(), zkDir, meta.toJson().getBytes(), CreateMode.PERSISTENT);
     }
 
     /**
@@ -69,8 +69,8 @@ public class AppsOptions {
      * @param appID
      */
     public static void deleteZkResources(String appID) throws Exception {
-        String zkDir = Configuration.getInstance().getConf().getString("cluster.zookeeper.root") + "/appstore/" + appID;
-        ZkConnector.getInstance().getZkCurator().delete().forPath(zkDir);
+        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/appstore/" + appID;
+        ZkCurator.getInstance().getZkCurator().delete().forPath(zkDir);
     }
 
     /**
@@ -80,9 +80,9 @@ public class AppsOptions {
      * @throws Exception
      */
     public static void updateState(String appID, int state) throws Exception {
-        String zkDir = Configuration.getInstance().getConf().getString("cluster.zookeeper.root") + "/appstore/" + appID;
-        JSONObject json = JSONObject.parseObject(new String(ZkConnector.getInstance().getZkCurator().getData().forPath(zkDir)));
+        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/appstore/" + appID;
+        JSONObject json = JSONObject.parseObject(new String(ZkCurator.getInstance().getZkCurator().getData().forPath(zkDir)));
         json.put("state",state);
-        ZkOptions.update(ZkConnector.getInstance().getZkCurator(),zkDir, json.toJSONString().getBytes());
+        ZkUtils.update(ZkCurator.getInstance().getZkCurator(),zkDir, json.toJSONString().getBytes());
     }
 }

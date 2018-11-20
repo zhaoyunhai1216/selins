@@ -5,8 +5,8 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.Options;
 import org.cluster.core.cluster.rpc.ClusterService;
-import org.cluster.core.zookeeper.ZkConnector;
-import org.cluster.core.zookeeper.ZkOptions;
+import org.cluster.core.zookeeper.ZkCurator;
+import org.cluster.core.zookeeper.ZkUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +30,7 @@ public class Kill {
             System.out.println(opts.getOptions());
             return;
         }
-        JSONObject masterJson = JSONObject.parseObject(ZkOptions.getMaster(ZkConnector.getInstance().getZkCurator()));
+        JSONObject masterJson = JSONObject.parseObject(ZkUtils.getMaster(ZkCurator.getInstance().getZkCurator()));
         ClusterService service = (ClusterService) Naming.lookup("rmi://"
                 + InetAddress.getByName(masterJson.getString("host")).getHostAddress() + ":" + masterJson.getInteger("port") + "/Broker");
         service.kill(cliParser.getOptionValue("appID"));

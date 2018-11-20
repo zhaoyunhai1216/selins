@@ -7,7 +7,7 @@ import org.apache.commons.cli.Options;
 import org.cluster.core.cluster.rpc.AppStoreService;
 import org.cluster.core.commons.Configuration;
 import org.cluster.core.utils.UtilCommons;
-import org.cluster.core.zookeeper.ZkConnector;
+import org.cluster.core.zookeeper.ZkCurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,8 +32,8 @@ public class Deploy {
             logger.info(opts.getOptions().toString());
             return;
         }
-        String zkDir = Configuration.getInstance().getConf().getString("cluster.zookeeper.root") + "/appmeta";
-        JSONObject json = JSONObject.parseObject(new String(ZkConnector.getInstance().getZkCurator().getData().forPath(zkDir)));
+        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/appmeta";
+        JSONObject json = JSONObject.parseObject(new String(ZkCurator.getInstance().getZkCurator().getData().forPath(zkDir)));
         AppStoreService service = (AppStoreService) Naming.lookup("rmi://"
                 + InetAddress.getByName(json.getString("host")).getHostAddress() + ":" + json.getString("port") + "/AppStore");
         byte[] b = UtilCommons.zipDirectory(new File(cliParser.getOptionValue("path")), "/");
