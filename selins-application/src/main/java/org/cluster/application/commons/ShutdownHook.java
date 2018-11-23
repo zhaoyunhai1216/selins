@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
  * @Version: 1.0
  * @Description: TODO
  */
-public class ShutdownHook extends Thread{
+public class ShutdownHook extends Thread {
     private EnvOptions options;
 
     /**
@@ -31,9 +31,9 @@ public class ShutdownHook extends Thread{
             ZkCurator.getInstance().getZkCurator().delete().forPath(zkDir);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.info(e.getMessage(),e);
+            logger.info(e.getMessage(), e);
         }
-        logger.info("Zookeeper released all resources,System will to stop.");
+        logger.info("Destroy zookeeper heartbeat connection,Worker Shutting down .");
     }
 
     /**

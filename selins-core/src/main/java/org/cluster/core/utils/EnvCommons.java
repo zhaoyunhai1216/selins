@@ -159,12 +159,12 @@ public class EnvCommons {
      * @return
      * @throws Exception
      */
-    public static String getCpuStat() throws SigarException {
+    public static float getCpuStat() throws SigarException {
         Sigar sigar = new Sigar();
         double cpuStat = Arrays.asList(sigar.getCpuPercList()).stream()
                 .mapToDouble(x -> x.getCombined()).average().getAsDouble();
         sigar.close();
-        return EnvCommons.format(cpuStat);
+        return Float.parseFloat(EnvCommons.format(cpuStat));
     }
 
     /**
