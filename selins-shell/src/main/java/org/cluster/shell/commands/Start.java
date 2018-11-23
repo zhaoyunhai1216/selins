@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.Options;
+import org.cluster.core.backtype.bean.BrokerState;
 import org.cluster.core.cluster.rpc.ClusterService;
+import org.cluster.core.commons.Environment;
 import org.cluster.core.zookeeper.ZkCurator;
 import org.cluster.core.zookeeper.ZkUtils;
 import org.slf4j.Logger;
@@ -30,9 +32,9 @@ public class Start {
             System.out.println(opts.getOptions());
             return;
         }
-        JSONObject masterJson = JSONObject.parseObject(ZkUtils.getMaster(ZkCurator.getInstance().getZkCurator()));
+        BrokerState master = ZkUtils.getMaster(ZkCurator.getInstance().getZkCurator());
         ClusterService service = (ClusterService) Naming.lookup("rmi://"
-                + InetAddress.getByName(masterJson.getString("host")).getHostAddress() + ":" + masterJson.getInteger("port") + "/Broker");
+                + InetAddress.getByName(master.getString(Environment.CLUSTER_HOST)).getHostAddress() + ":" + master.getInteger(Environment.CLUSTER_PORT) + "/Broker");
         service.start(cliParser.getOptionValue("appID"));
         logger.info("[Cluster] The application was successfully started. So let's go ahead and look at UI");
 

@@ -5,7 +5,9 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.Options;
 import org.cluster.core.backtype.bean.AppResource;
+import org.cluster.core.backtype.bean.BrokerState;
 import org.cluster.core.commons.Configuration;
+import org.cluster.core.commons.Environment;
 import org.cluster.core.utils.TabCommons;
 import org.cluster.core.zookeeper.ZkCurator;
 import org.slf4j.Logger;
@@ -45,13 +47,14 @@ public class Lists {
      * 命令主函数, 执行shell命令后调用此方法
      */
     public void application(String[] args) throws Exception {
-        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/appstore";
+        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/applications";
         List<String> childs = ZkCurator.getInstance().getZkCurator().getChildren().forPath(zkDir);
         List<String[]> columnValues = new ArrayList<>();
         columnValues.add(new String[]{"application id", "state", "name", "jvmOpts", "numWorkers", "category"});
         for (String child : childs) {
-            AppResource res = JSONObject.parseObject(ZkCurator.getInstance().getZkCurator().getData().forPath(zkDir + "/" + child), AppResource.class);
-            columnValues.add(new String[]{res.getId(), (res.getState() == 0 ? "Deploy" : "Running"), res.getName(), res.getJvmOpts(), String.valueOf(res.getNumWorkers()),res.getCategory()});
+            AppResource res = AppResource.parse(new String(ZkCurator.getInstance().getZkCurator().getData().forPath(zkDir + "/" + child)));
+            columnValues.add(new String[]{res.getString(AppResource.Fileds.ID), (res.getInteger(AppResource.Fileds.STATE) == 0 ? "Deploy" : "Running")
+                    , res.getString(AppResource.Fileds.NAME), res.getString(AppResource.Fileds.JVM_OPTS), String.valueOf(res.getInteger(AppResource.Fileds.NUM_WORKERS)), res.getString(AppResource.Fileds.CATEGORY)});
         }
         logger.info("Applications\n" + new TabCommons(columnValues).toString());
     }
@@ -63,12 +66,12 @@ public class Lists {
         String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/worker";
         List<String> childs = ZkCurator.getInstance().getZkCurator().getChildren().forPath(zkDir);
         List<String[]> columnValues = new ArrayList<>();
-        columnValues.add(new String[]{"worker id", "process", "host", "startTime", "runtime", "exectors", "threadCount", "cpu","memory"});
+        columnValues.add(new String[]{"worker id", "process", "host", "startTime", "runtime", "exectors", "threadCount", "cpu", "memory"});
         for (String child : childs) {
             JSONObject json = JSONObject.parseObject(new String(ZkCurator.getInstance().getZkCurator().getData().forPath(zkDir + "/" + child)));
             columnValues.add(new String[]{json.getString("workerId"), json.getString("process")
-                    , json.getString("host"), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(json.getLong("startTime"))), String.valueOf(json.getInteger("runtime").intValue()/60000)
-                    , String.valueOf(json.getInteger("exectors").intValue()), String.valueOf(json.getInteger("threadCount").intValue()),json.getString("cpu"), json.getString("memory")
+                    , json.getString("host"), new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(json.getLong("startTime"))), String.valueOf(json.getInteger("runtime").intValue() / 60000)
+                    , String.valueOf(json.getInteger("exectors").intValue()), String.valueOf(json.getInteger("threadCount").intValue()), json.getString("cpu"), json.getString("memory")
             });
         }
         logger.info("Workers\n" + new TabCommons(columnValues).toString());
@@ -81,11 +84,12 @@ public class Lists {
         String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/ids";
         List<String> childs = ZkCurator.getInstance().getZkCurator().getChildren().forPath(zkDir);
         List<String[]> columnValues = new ArrayList<>();
-        columnValues.add(new String[]{"host", "port", "startTime", "rack", "category", "processors", "memory", "hdd", "jdk"});
+        columnValues.add(new String[]{"host", "port", "start.timestamp", "rack", "category", "vCores", "memory", "hdd", "jdk"});
         for (String child : childs) {
-            JSONObject json = JSONObject.parseObject(new String(ZkCurator.getInstance().getZkCurator().getData().forPath(zkDir + "/" + child)));
-            columnValues.add(new String[]{json.getString("host"), json.getString("port"), json.getString("startTime"), json.getString("rack")
-                    , json.getString("category"), json.getString("processors"), json.getString("totalMemory"), json.getString("totalFileSystem") + "G", json.getString("jdk")});
+            BrokerState state = BrokerState.parse(new String(ZkCurator.getInstance().getZkCurator().getData().forPath(zkDir + "/" + child)));
+            columnValues.add(new String[]{state.getString(Environment.CLUSTER_HOST), state.getString(Environment.CLUSTER_PORT), state.getString(Environment.START_TIMESTAMP)
+                    , state.getString(Environment.CLUSTER_RACK), state.getString(Environment.CLUSTER_CATEGORY), state.getString(Environment.VCORES_USED)+"%/"+state.getString(Environment.VCORES_TOTAL)
+                    , state.getString(Environment.MEMOTY_USED)+"/"+ state.getString(Environment.MEMOTY_TOTAL)+ "G", state.getString(Environment.HDD_USED) + "/" +state.getString(Environment.HDD_TOTAL) + "G", state.getString(Environment.JAVA_VERSION)});
         }
         logger.info("Brokers\n" + new TabCommons(columnValues).toString());
     }

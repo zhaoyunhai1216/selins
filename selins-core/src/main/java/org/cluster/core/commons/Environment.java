@@ -9,17 +9,27 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
  * @Description: TODO
  */
 public enum Environment {
+    START_TIMESTAMP("start.timestamp"),
+    JAVA_VERSION("java.version"),
+    SYSTEM_INFO("system.info"),
     CLUSTER_HOST("cluster.host"),
     CLUSTER_PORT("cluster.port"),
     CLUSTER_RACK("cluster.rack"),
-    APPLICATION_ID("application.id"),
-    APPLICATION_INDEX("application.index"),
-    APPLICATION_TOATL("application.total"),
-    EXECUTOR_INDEX("exector.index"),
-    EXECUTOR_TOATL("exector.total"),
+    CLUSTER_CATEGORY("cluster.category"),
+    YAML_DIR("yaml"),
+    VCORES_TOTAL("total.vCores"),
+    MEMOTY_TOTAL("total.memory"),
+    HDD_TOTAL("total.hdd"),
+    VCORES_USED("used.vCores"),
+    MEMOTY_USED("used.memory"),
+    HDD_USED("used.hdd"),
     ZK_CONNECT("cluster.zookeeper.servers"),
     ZK_ROOT_DIR("cluster.zookeeper.root"),
-    KAFKA_BOOTSTRAP("kafka.bootstrap");
+    KAFKA_BOOTSTRAP("kafka.bootstrap"),
+    WORKER_DIR("cluster.worker.dir"),
+    LOG_DIR("cluster.log.dir"),
+    APPSTORE_PORT("cluster.appstore.port"),
+    APPSTORE_DIR("cluster.appstore.dir");
 
     private final String variable;
 

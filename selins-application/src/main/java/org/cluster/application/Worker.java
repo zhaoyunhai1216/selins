@@ -8,6 +8,7 @@ import org.cluster.application.base.Application;
 import org.cluster.application.commons.ApplicationContext;
 import org.cluster.application.commons.EnvOptions;
 import org.cluster.application.commons.Environment;
+import org.cluster.application.commons.ShutdownHook;
 import org.cluster.application.tracker.LoggerManager;
 import org.cluster.application.utils.UtilCommons;
 import org.cluster.application.zookeeper.ZkCurator;
@@ -29,8 +30,9 @@ public class Worker {
     public static void main(String[] args) throws Exception {
         EnvOptions opt = UtilCommons.getCliParser(args);
         ZkCurator.getInstance().init(opt.getOptionValue(Environment.ZK_CONNECT));
-        Application application = (Application)Class.forName(opt.getOptionValue(Environment.APPLICATION_MAIN)).newInstance();
+        Application application = (Application) Class.forName(opt.getOptionValue(Environment.APPLICATION_MAIN)).newInstance();
         application.init(opt);
+        Runtime.getRuntime().addShutdownHook(new ShutdownHook(opt));
     }
 
     /**

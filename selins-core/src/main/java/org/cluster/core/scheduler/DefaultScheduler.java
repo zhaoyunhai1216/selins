@@ -1,10 +1,10 @@
 package org.cluster.core.scheduler;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import org.cluster.core.backtype.bean.AppResource;
+import org.cluster.core.backtype.bean.AssetsState;
 import org.cluster.core.backtype.bean.BrokerState;
 import org.cluster.core.backtype.bean.WorkerState;
+import org.cluster.core.commons.Environment;
 import org.cluster.core.zookeeper.ZkCurator;
 import org.cluster.core.zookeeper.ZkUtils;
 import org.slf4j.Logger;
@@ -29,8 +29,8 @@ public class DefaultScheduler {
         List<WorkerState> workersState = ZkUtils.getWorkers(ZkCurator.getInstance().getZkCurator());
         for (int i = 0; i < workersState.size(); i++) {
             if (!applications.contains(workersState.get(i).getAppID())) {
-                RemoteOptions.killWorker(workersState.get(i).getHost(), workersState.get(i).getAppID(), workersState.get(i).getSeq(), workersState.get(i).getTotal());
-                logger.info("[Tracker] Shutdown Worker <" + workersState.get(i).getWorkerId() + "> was found and the kill was completed");
+                RemoteOptions.killWorker(workersState.get(i).getString(WorkerState.Fileds.HOST), workersState.get(i).getAppID(), workersState.get(i).getSeq(), workersState.get(i).getTotal());
+                logger.info("[Tracker] Shutdown Worker <" + workersState.get(i).getString(WorkerState.Fileds.WORKER_ID) + "> was found and the kill was completed");
             }
         }
     }
@@ -43,10 +43,10 @@ public class DefaultScheduler {
         List<AppResource> applications = ZkUtils.getRunningApplications(ZkCurator.getInstance().getZkCurator());
         List<String> workerList = ZkUtils.getWorkerID(ZkCurator.getInstance().getZkCurator());
         for (AppResource res : applications) {
-            for (int i = 0; i < res.getNumWorkers(); i++) {
-                if (!workerList.contains(res.getId() + "_" + i + "_" + +res.getNumWorkers())) {
-                    RemoteOptions.startWorker(res.getId(), i, res.getNumWorkers(), DefaultScheduler.getAssetsState(res.getCategory()).get(0));
-                    logger.info("[Tracker] Start Worker <" + res.getId() + "_" + i + "_" + +res.getNumWorkers() + "> was found and the start was completed");
+            for (int i = 0; i < res.getInteger(AppResource.Fileds.NUM_WORKERS); i++) {
+                if (!workerList.contains(res.getString(AppResource.Fileds.ID) + "_" + i + "_" + +res.getInteger(AppResource.Fileds.NUM_WORKERS))) {
+                    RemoteOptions.startWorker(res.getString(AppResource.Fileds.ID), i, res.getInteger(AppResource.Fileds.NUM_WORKERS), DefaultScheduler.getAssetsState(res.getString(AppResource.Fileds.CATEGORY)).get(0));
+                    logger.info("[Tracker] Start Worker <" + res.getString(AppResource.Fileds.ID) + "_" + i + "_" + +res.getInteger(AppResource.Fileds.NUM_WORKERS) + "> was found and the start was completed");
                 }
             }
         }
@@ -59,9 +59,9 @@ public class DefaultScheduler {
         List<WorkerState> workersState = ZkUtils.getWorkers(ZkCurator.getInstance().getZkCurator());
         HashSet<String> workerSet = new HashSet<>();
         for (int i = 0; i < workersState.size(); i++) {
-            if (workerSet.contains(workersState.get(i).getWorkerId())) {
-                RemoteOptions.killWorker(workersState.get(i).getHost(), workersState.get(i).getAppID(), workersState.get(i).getSeq(), workersState.get(i).getTotal());
-                logger.info("[Tracker] Legacy Worker <" + workersState.get(i).getWorkerId() + "> was found and the kill was completed");
+            if (workerSet.contains(workersState.get(i).getString(WorkerState.Fileds.WORKER_ID))) {
+                RemoteOptions.killWorker(workersState.get(i).getString(WorkerState.Fileds.HOST), workersState.get(i).getAppID(), workersState.get(i).getSeq(), workersState.get(i).getTotal());
+                logger.info("[Tracker] Legacy Worker <" + workersState.get(i).getString(WorkerState.Fileds.WORKER_ID) + "> was found and the kill was completed");
             }
         }
     }
@@ -78,7 +78,7 @@ public class DefaultScheduler {
         HashMap<String, List<WorkerState>> workerMap = new HashMap<>();
         List<WorkerState> workersState = ZkUtils.getWorkers(ZkCurator.getInstance().getZkCurator());
         for (int i = 0; i < workersState.size(); i++) {
-            workerMap.computeIfAbsent(workersState.get(i).getHost(), x -> new ArrayList<>()).add(workersState.get(i));
+            workerMap.computeIfAbsent(workersState.get(i).getString(WorkerState.Fileds.HOST), x -> new ArrayList<>()).add(workersState.get(i));
         }
         return states.stream().filter(x -> x.getCategory().equals(category)).map(x -> x.setWorkers(workerMap.getOrDefault(x.getHost(), new ArrayList<>()))).sorted().collect(Collectors.toList());
     }
@@ -89,10 +89,10 @@ public class DefaultScheduler {
     public static void checkWorkerLocation(String category) throws Exception {
         Map<String, BrokerState> nodeMaps = ZkUtils.getNodeMaps(ZkCurator.getInstance().getZkCurator());
         List<WorkerState> workersState = ZkUtils.getWorkers(ZkCurator.getInstance().getZkCurator());
-        for (int i = 0; i < workersState.size() && workersState.get(i).getCategory().equals(category); i++) {
-            if (nodeMaps.containsKey(workersState.get(i).getHost()) && !workersState.get(i).getCategory().equals(nodeMaps.get(workersState.get(i).getHost()).getCategory())) {
-                RemoteOptions.killWorker(workersState.get(i).getHost(), workersState.get(i).getAppID(), workersState.get(i).getSeq(), workersState.get(i).getTotal());
-                logger.info("[Tracker] Check position error worker <" + workersState.get(i).getWorkerId() + "> was found and the kill was completed");
+        for (int i = 0; i < workersState.size() && workersState.get(i).getString(WorkerState.Fileds.CATEGORY).equals(category); i++) {
+            if (nodeMaps.containsKey(workersState.get(i).getString(WorkerState.Fileds.HOST)) && !workersState.get(i).getString(WorkerState.Fileds.CATEGORY).equals(nodeMaps.get(workersState.get(i).getString(WorkerState.Fileds.HOST)).getString(Environment.CLUSTER_CATEGORY))) {
+                RemoteOptions.killWorker(workersState.get(i).getString(WorkerState.Fileds.HOST), workersState.get(i).getAppID(), workersState.get(i).getSeq(), workersState.get(i).getTotal());
+                logger.info("[Tracker] Check position error worker <" + workersState.get(i).getString(WorkerState.Fileds.WORKER_ID) + "> was found and the kill was completed");
             }
         }
     }
@@ -106,8 +106,8 @@ public class DefaultScheduler {
         for (AssetsState assetsState : DefaultScheduler.getAssetsState(category)) {
             for (int i = 0; i < (int)Math.floor(assetsState.getWorkerSize() - average); i++) {
                 WorkerState workerState = assetsState.getWorkers().get(new Random().nextInt(assetsState.getWorkerSize()));
-                RemoteOptions.killWorker(workerState.getHost(), workerState.getAppID(), workerState.getSeq(), workerState.getTotal());
-                logger.info("[Tracker] Rebalance worker <" + workerState.getWorkerId() + "> was found and the kill was completed");
+                RemoteOptions.killWorker(workerState.getString(WorkerState.Fileds.HOST), workerState.getAppID(), workerState.getSeq(), workerState.getTotal());
+                logger.info("[Tracker] Rebalance worker <" + workerState.getString(WorkerState.Fileds.WORKER_ID) + "> was found and the kill was completed");
             }
         }
     }

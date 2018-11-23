@@ -9,141 +9,82 @@ import com.alibaba.fastjson.JSONObject;
  * @Description: TODO
  */
 public class WorkerState {
-    private String workerId;
-    private String host;
-    private String process;
-    private String category;
-    private long startTime;
-    private long runtime;
-    private String cpu;
-    private String memory;
-    private int exectors;
-    private int threadCount;
+    public enum Fileds {
+        WORKER_ID("workerId"),
+        HOST("host"),
+        PROCESS("process"),
+        CATEGORY("category"),
+        START_TIMESTAMP("startTime"),
+        RUN_TIME("runtime"),
+        CPU_USAGE("cpu"),
+        MEMORY_USAGE("memory"),
+        EXECTORS("exectors"),
+        THREAD_COUNT("threadCount");
 
-    public String getWorkerId() {
-        return workerId;
+        private String var;
+
+        Fileds(String var) {
+            this.var = var;
+        }
+
+        public String key() {
+            return this.var;
+        }
     }
 
-    public void setWorkerId(String workerId) {
-        this.workerId = workerId;
+    private JSONObject var;
+
+    public WorkerState(JSONObject var) {
+        this.var = var;
     }
 
-    public String getHost() {
-        return host;
+    /**
+     * 根据Environment枚举内容, 获取上下文环境中的内容.
+     */
+    public int getInteger(WorkerState.Fileds fileds) {
+        return var.getInteger(fileds.key());
     }
 
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    public String getProcess() {
-        return process;
-    }
-
-    public void setProcess(String process) {
-        this.process = process;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public long getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(long startTime) {
-        this.startTime = startTime;
-    }
-
-    public long getRuntime() {
-        return runtime;
-    }
-
-    public void setRuntime(long runtime) {
-        this.runtime = runtime;
-    }
-
-    public String getCpu() {
-        return cpu;
-    }
-
-    public void setCpu(String cpu) {
-        this.cpu = cpu;
-    }
-
-    public String getMemory() {
-        return memory;
-    }
-
-    public void setMemory(String memory) {
-        this.memory = memory;
-    }
-
-    public int getExectors() {
-        return exectors;
-    }
-
-    public void setExectors(int exectors) {
-        this.exectors = exectors;
-    }
-
-    public int getThreadCount() {
-        return threadCount;
-    }
-
-    public void setThreadCount(int threadCount) {
-        this.threadCount = threadCount;
-    }
-
-    public String getAppID() {
-        return this.getWorkerId().split("\\_")[0];
-    }
-
-    public int getSeq() {
-        return Integer.parseInt(this.getWorkerId().split("\\_")[1]);
-    }
-
-    public int getTotal() {
-        return Integer.parseInt(this.getWorkerId().split("\\_")[2]);
-    }
-
-    @Override
-    public String toString() {
-        return "WorkerState{" +
-                "workerId='" + workerId + '\'' +
-                ", host='" + host + '\'' +
-                ", process='" + process + '\'' +
-                ", category='" + category + '\'' +
-                ", startTime=" + startTime +
-                ", runtime=" + runtime +
-                ", cpu='" + cpu + '\'' +
-                ", memory='" + memory + '\'' +
-                ", exectors=" + exectors +
-                ", threadCount=" + threadCount +
-                '}';
+    /**
+     * 根据Environment枚举内容, 获取上下文环境中的内容.
+     */
+    public String getString(WorkerState.Fileds fileds) {
+        return String.valueOf(var.getString(fileds.key()));
     }
 
     /**
      * 转换成json字符串
-     *
-     * @return
      */
-    public String toJson() {
-        return JSONObject.toJSONString(this);
+    @Override
+    public String toString() {
+        return var.toJSONString();
     }
 
     /**
-     * 由json解析成WorkerState 对象
-     *
-     * @param workerJson
-     * @return
+     * 由json解析成MetaNode 对象
      */
-    public static WorkerState parse(String workerJson) {
-        return JSONObject.parseObject(workerJson, WorkerState.class);
+    public static WorkerState parse(String jsonString) {
+        return new WorkerState(JSONObject.parseObject(jsonString));
+    }
+
+    /**
+     * 获取appID
+     */
+    public String getAppID() {
+        return getString(Fileds.WORKER_ID).split("\\_")[0];
+    }
+
+    /**
+     * 获取当前app的worker的序列号
+     */
+    public int getSeq() {
+        return Integer.parseInt(getString(Fileds.WORKER_ID).split("\\_")[1]);
+    }
+
+    /**
+     * 获取当前app总共的worker数量
+     */
+    public int getTotal() {
+        return Integer.parseInt(getString(Fileds.WORKER_ID).split("\\_")[2]);
     }
 }

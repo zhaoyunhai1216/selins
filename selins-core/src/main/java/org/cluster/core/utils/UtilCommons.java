@@ -10,6 +10,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.zookeeper.CreateMode;
 import org.cluster.core.backtype.bean.AppResource;
 import org.cluster.core.commons.Configuration;
+import org.cluster.core.commons.Environment;
 import org.cluster.core.zookeeper.ZkCurator;
 import org.cluster.core.zookeeper.ZkUtils;
 import org.hyperic.sigar.Sigar;
@@ -161,20 +162,10 @@ public class UtilCommons {
      * @throws SigarException
      */
     public static String getBrokerState() throws SigarException {
-        return new JSONObject()
-                .fluentPut("baseDir", Configuration.getInstance().getString("cluster.zookeeper.root"))
-                .fluentPut("host", Configuration.getInstance().getString("cluster.host"))
-                .fluentPut("port", Configuration.getInstance().getInteger("cluster.port"))
-                .fluentPut("category", Configuration.getInstance().getString("cluster.category"))
-                .fluentPut("rack", Configuration.getInstance().getString("cluster.rack"))
-                .fluentPut("startTime", ManagementFactory.getRuntimeMXBean().getStartTime())
-                .fluentPut("jdk", EnvCommons.getJDKVersion())
-                .fluentPut("usedVCores", EnvCommons.getCpuStat())
-                .fluentPut("usedMemory", EnvCommons.getUsedMemoryStat())
-                .fluentPut("usedHDD", EnvCommons.getUsedFileSystemStat())
-                .fluentPut("totalVCores", EnvCommons.getProcessors())
-                .fluentPut("totalMemory", EnvCommons.getTotalMemoryStat())
-                .fluentPut("totalHDD", EnvCommons.getTotalFileSystemStat()).toJSONString();
+        return new JSONObject().fluentPutAll(Configuration.getInstance().getInnerMap())
+                .fluentPut(Environment.VCORES_USED.key(), EnvCommons.getCpuStat())
+                .fluentPut(Environment.MEMOTY_USED.key(), EnvCommons.getUsedMemoryStat())
+                .fluentPut(Environment.HDD_USED.key(), EnvCommons.getUsedFileSystemStat()).toJSONString();
     }
 
     /**
@@ -228,7 +219,7 @@ public class UtilCommons {
     public static void killCommand(String processID) throws Exception {
         // Set the necessary command to execute the application master
         Vector<CharSequence> vargs = new Vector<CharSequence>(30);
-        vargs.add("kill -9 " + processID + "");
+        vargs.add("kill -15 " + processID + "");
         // Get final commmand
         StringBuilder command = new StringBuilder();
         for (CharSequence str : vargs) {
@@ -264,8 +255,8 @@ public class UtilCommons {
         String workDir = Configuration.getInstance().getString("cluster.worker.dir");
         AppResource res = ZkUtils.getAppZkResource(appID);
         String host = Configuration.getInstance().getString("cluster.host");
-        return new String[]{workDir, appID + "_" + seq + "_" + total, res.getJvmOpts(), "--host=" + host, "--appID=" + res.getId()
-                , "--appMain=" + res.getAppMain(), "--seq=" + seq, "--total=" + total, "--category=" + res.getCategory(), "--yaml=" + Configuration.getProjectDir() + "/etc"};
+        return new String[]{workDir, appID + "_" + seq + "_" + total, res.getString(AppResource.Fileds.JVM_OPTS), "--host=" + host, "--appID=" + res.getString(AppResource.Fileds.ID)
+                , "--appMain=" + res.getString(AppResource.Fileds.MAIN), "--seq=" + seq, "--total=" + total, "--category=" + res.getString(AppResource.Fileds.CATEGORY), "--yaml=" + Configuration.getProjectDir() + "/etc"};
     }
 
     /**
@@ -298,7 +289,7 @@ public class UtilCommons {
      * @throws Exception
      */
     public static int getId() throws Exception {
-        String dir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/seq";
+        String dir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/seqid";
         String seqJson = "{\"timestamp\":" + System.currentTimeMillis() + "}";
         ZkUtils.create(ZkCurator.getInstance().getZkCurator(), dir, seqJson.getBytes(), CreateMode.PERSISTENT);
         return ZkCurator.getInstance().getZkCurator().setData().forPath(dir, seqJson.getBytes()).getVersion();

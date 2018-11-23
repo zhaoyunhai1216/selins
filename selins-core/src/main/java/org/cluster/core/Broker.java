@@ -2,6 +2,7 @@ package org.cluster.core;
 
 import org.cluster.core.cluster.rpc.ClusterRMI;
 import org.cluster.core.commons.Configuration;
+import org.cluster.core.commons.Environment;
 import org.cluster.core.scheduler.ApplicationTracker;
 import org.cluster.core.zookeeper.ZkCurator;
 import org.cluster.core.zookeeper.ZkUtils;
@@ -24,11 +25,11 @@ public class Broker {
         /**
          * 加载配置文件信息
          */
-        Configuration.init(args[0]);
+        Configuration.init(Configuration.getProjectDir() + "/etc/conf/cluster.yaml");
         /**
          * 负责启动连接zookeeper,传入zookeeper地址
          */
-        ZkCurator.getInstance().init(Configuration.getInstance().getString("cluster.zookeeper.servers"));
+        ZkCurator.getInstance().init(Configuration.getInstance().getString(Environment.ZK_CONNECT));
         /**
          * 构建本集群的Master节点的zookeeper路径信息
          */
@@ -41,9 +42,8 @@ public class Broker {
          * 启动跟踪器
          */
         ApplicationTracker.getInstance();
-        logger.info("[Cluster] Broker [" + Configuration.getInstance().getString("cluster.host")
-                + ":" + Configuration.getInstance().getInteger("cluster.port") + "] is start-up successfully.");
-        TimeUnit.DAYS.sleep(Integer.MAX_VALUE);
+        logger.info("[Cluster] Broker [" + Configuration.getInstance().getString(Environment.CLUSTER_HOST)
+                + ":" + Configuration.getInstance().getInteger(Environment.CLUSTER_PORT) + "] is start-up successful.");
     }
 
     /**

@@ -27,7 +27,7 @@ public class ApplicationTest extends Application {
      * 程序入口方法, 用于启动application 应用
      */
     public static void main(String[] args) throws Exception {
-        toSubmit(new ApplicationTest(), "local", "--yaml=/Users/zhaoyunhai/程序/selins//etc/");
+        toSubmit(new ApplicationTest(), "local", "--yaml=E:\\工作空间\\selins\\etc\\");
         System.out.println(123);
     }
 

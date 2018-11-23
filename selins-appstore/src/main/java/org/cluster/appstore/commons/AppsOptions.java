@@ -58,9 +58,9 @@ public class AppsOptions {
      * @throws IOException
      */
     public static boolean createZkResources(String appID, String mainClass, String jvmOpts, int numWorkers, String category) {
-        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/appstore/" + appID;
-        AppResource meta = new AppResource(appID, UtilCommons.getAppName(mainClass), jvmOpts, mainClass,numWorkers,0,category);
-        return ZkUtils.create(ZkCurator.getInstance().getZkCurator(), zkDir, meta.toJson().getBytes(), CreateMode.PERSISTENT);
+        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/applications/" + appID;
+        AppResource meta = new AppResource(appID, UtilCommons.getAppName(mainClass), jvmOpts, mainClass, numWorkers, 0, category);
+        return ZkUtils.create(ZkCurator.getInstance().getZkCurator(), zkDir, meta.toString().getBytes(), CreateMode.PERSISTENT);
     }
 
     /**
@@ -69,20 +69,21 @@ public class AppsOptions {
      * @param appID
      */
     public static void deleteZkResources(String appID) throws Exception {
-        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/appstore/" + appID;
+        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/applications/" + appID;
         ZkCurator.getInstance().getZkCurator().delete().forPath(zkDir);
     }
 
     /**
      * 更新状态信息
+     *
      * @param appID
      * @param state
      * @throws Exception
      */
     public static void updateState(String appID, int state) throws Exception {
-        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/appstore/" + appID;
+        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/applications/" + appID;
         JSONObject json = JSONObject.parseObject(new String(ZkCurator.getInstance().getZkCurator().getData().forPath(zkDir)));
-        json.put("state",state);
-        ZkUtils.update(ZkCurator.getInstance().getZkCurator(),zkDir, json.toJSONString().getBytes());
+        json.put("state", state);
+        ZkUtils.update(ZkCurator.getInstance().getZkCurator(), zkDir, json.toJSONString().getBytes());
     }
 }

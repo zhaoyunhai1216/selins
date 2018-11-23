@@ -23,12 +23,12 @@ public interface ClusterService extends Remote {
     /**
      * 启动应用的某个节点
      */
-    void start(String appID, int index, int total) throws Exception;
+    void start(String appID, int seq, int total) throws Exception;
 
     /**
      * 停止应用的某个节点
      */
-    void kill(String appid, int index, int total) throws Exception;
+    void kill(String appID, int seq, int total) throws Exception;
 
     /**
      * 获取本机器的各个worker上报的状态信息
@@ -36,12 +36,12 @@ public interface ClusterService extends Remote {
     String getState() throws Exception;
 
     /**
-     * 接收本机器的各个worker上报的状态信息
-     */
-    void acceptState(String workerID, String state) throws Exception;
-
-    /**
      * 均衡指定类型的worker
      */
     void rebalance(String category) throws Exception;
+
+    /**
+     * 接收本机器的各个worker上报的状态信息
+     */
+    void acceptState(String workerID, String state) throws Exception;
 }

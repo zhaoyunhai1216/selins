@@ -5,6 +5,7 @@ import org.apache.commons.io.FileUtils;
 import org.cluster.core.Broker;
 import org.cluster.core.scheduler.LocalOptions;
 import org.cluster.core.utils.EnvCommons;
+import org.hyperic.sigar.SigarException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
@@ -29,8 +30,8 @@ public class Configuration extends JSONObject {
      * 构造方法
      */
     public Configuration(String conf) throws Exception {
-        EnvCommons.setEnvironment(Configuration.getProjectDir() + "/etc");
-        this.put("yaml", conf);
+        this.put(Environment.START_TIMESTAMP, System.currentTimeMillis());
+        EnvCommons.setEnvironment(this);
         this.putAll(new Yaml().loadAs(FileUtils.openInputStream(new File(conf)), JSONObject.class).getInnerMap());
     }
 
@@ -51,8 +52,22 @@ public class Configuration extends JSONObject {
     /**
      * 根据Environment枚举内容, 获取上下文环境中的内容.
      */
+    public int getInteger(Environment env) {
+        return this.getInteger(env.key());
+    }
+
+    /**
+     * 根据Environment枚举内容, 获取上下文环境中的内容.
+     */
     public String getString(Environment env) {
         return String.valueOf(this.getString(env.key()));
+    }
+
+    /**
+     * 根据Environment枚举内容, 存放数据到conf
+     */
+    public Object put(Environment env, Object value) {
+        return this.put(env.key(), value);
     }
 
     /**

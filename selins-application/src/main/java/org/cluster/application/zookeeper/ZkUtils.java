@@ -5,12 +5,14 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
+import org.cluster.application.backtype.tuple.BrokerState;
 import org.cluster.application.commons.EnvOptions;
 import org.cluster.application.commons.Environment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.Configuration;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,9 +80,9 @@ public class ZkUtils {
      */
     public static Map<String, String> getMapping(EnvOptions options) throws Exception {
         HashMap<String, String> mapping = new HashMap<>();
-        JSONArray nodeJson = ZkUtils.getNodes(ZkCurator.getInstance().getZkCurator(), options);
-        for (int i = 0; i < nodeJson.size(); i++) {
-            mapping.put(nodeJson.getJSONObject(i).getString("host"), nodeJson.getJSONObject(i).getString("port"));
+        List<BrokerState> brokers = ZkUtils.getNodes(ZkCurator.getInstance().getZkCurator(), options);
+        for (int i = 0; i < brokers.size(); i++) {
+            mapping.put(brokers.get(i).getString(BrokerState.Fileds.HOST), brokers.get(i).getString(BrokerState.Fileds.PORT));
         }
         return mapping;
     }
@@ -88,19 +90,17 @@ public class ZkUtils {
     /**
      * 获取目前正在服务得节点信息
      */
-    public static JSONArray getNodes(CuratorFramework curator, EnvOptions options) throws Exception {
+    public static List<BrokerState> getNodes(CuratorFramework curator, EnvOptions options) throws Exception {
         String zkDir = options.getOptionValue(Environment.ZK_ROOT_DIR) + "/ids";
         List<String> childs = curator.getChildren().forPath(zkDir);
         if (childs.size() == 0) {
             throw new Exception("No node exists.");
         }
-        JSONArray nodeJson = new JSONArray();
+        List<BrokerState> brokersState = new ArrayList<BrokerState>();
         for (String child : childs) {
-            JSONObject brokerJSON = JSONObject.parseObject(new String(curator.getData().forPath(zkDir + "/" + child)));
-            brokerJSON.put("brokerID", child);
-            nodeJson.add(brokerJSON);
+            brokersState.add(BrokerState.parse(new String(curator.getData().forPath(zkDir + "/" + child))));
         }
-        return nodeJson;
+        return brokersState;
     }
 
     /**

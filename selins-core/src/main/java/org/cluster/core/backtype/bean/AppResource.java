@@ -11,94 +11,79 @@ import java.io.Serializable;
  * @Description: TODO
  */
 public class AppResource implements Serializable {
-    private String id;
-    private String name;
-    private String jvmOpts;
-    private String appMain;
-    private int numWorkers;
-    private int state;
-    private String category;
+    public enum Fileds {
+        ID("id"),
+        NAME("name"),
+        JVM_OPTS("jvmOpts"),
+        MAIN("appMain"),
+        NUM_WORKERS("numWorkers"),
+        STATE("state"),
+        CATEGORY("category");
 
+        private String var;
+
+        Fileds(String var) {
+            this.var = var;
+        }
+
+        public String key() {
+            return this.var;
+        }
+    }
+
+    private JSONObject var;
+
+    /**
+     * 初始化构造方法
+     */
     public AppResource(String id, String name, String jvmOpts, String appMain, int numWorkers, int state, String category) {
-        this.id = id;
-        this.name = name;
-        this.jvmOpts = jvmOpts;
-        this.appMain = appMain;
-        this.numWorkers = numWorkers;
-        this.state = state;
-        this.category = category;
+        this(new JSONObject());
+        put(Fileds.ID, id);
+        put(Fileds.NAME, name);
+        put(Fileds.JVM_OPTS, jvmOpts);
+        put(Fileds.MAIN, appMain);
+        put(Fileds.NUM_WORKERS, numWorkers);
+        put(Fileds.STATE, state);
+        put(Fileds.CATEGORY, category);
     }
 
-    public String getId() {
-        return id;
+    public AppResource(JSONObject var) {
+        this.var = var;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    /**
+     * 根据Environment枚举内容, 获取上下文环境中的内容.
+     */
+    public int getInteger(AppResource.Fileds fileds) {
+        return var.getInteger(fileds.key());
     }
 
-    public String getName() {
-        return name;
+    /**
+     * 根据Environment枚举内容, 获取上下文环境中的内容.
+     */
+    public String getString(AppResource.Fileds fileds) {
+        return String.valueOf(var.getString(fileds.key()));
     }
 
-    public void setName(String name) {
-        this.name = name;
+    /**
+     * 根据Environment枚举内容, 获取上下文环境中的内容.
+     */
+    public void put(AppResource.Fileds fileds, Object o) {
+        var.put(fileds.key(), o);
     }
 
-    public String getJvmOpts() {
-        return jvmOpts;
-    }
-
-    public void setJvmOpts(String jvmOpts) {
-        this.jvmOpts = jvmOpts;
-    }
-
-    public String getAppMain() {
-        return appMain;
-    }
-
-    public void setAppMain(String appMain) {
-        this.appMain = appMain;
-    }
-
-    public int getNumWorkers() {
-        return numWorkers;
-    }
-
-    public void setNumWorkers(int numWorkers) {
-        this.numWorkers = numWorkers;
-    }
-
-    public int getState() {
-        return state;
-    }
-
-    public void setState(int state) {
-        this.state = state;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
+    /**
+     * 转换成json字符串
+     */
     @Override
     public String toString() {
-        return "AppResource{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", jvmOpts='" + jvmOpts + '\'' +
-                ", appMain='" + appMain + '\'' +
-                ", numWorkers=" + numWorkers +
-                ", state=" + state +
-                ", category='" + category + '\'' +
-                '}';
+        return var.toJSONString();
     }
 
-    public String toJson() {
-        return JSONObject.toJSONString(this);
+    /**
+     * 由json解析成MetaNode 对象
+     */
+    public static AppResource parse(String jsonString) {
+        return new AppResource(JSONObject.parseObject(jsonString));
     }
 }

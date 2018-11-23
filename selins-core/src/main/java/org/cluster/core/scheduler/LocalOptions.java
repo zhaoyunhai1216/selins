@@ -37,9 +37,8 @@ public class LocalOptions {
         WorkerState workerState =  null;
         try {
             workerState = ZkUtils.getWorker(ZkCurator.getInstance().getZkCurator(), appID + "_" + seq + "_" + total);
-            UtilCommons.killCommand(workerState.getProcess());
+            UtilCommons.killCommand(workerState.getString(WorkerState.Fileds.PROCESS));
         } catch (Exception e) {
-            e.printStackTrace();
             logger.warn(e.getMessage(), e);
         }
         LocalOptions.deleteWorkerResources(appID, seq, total);

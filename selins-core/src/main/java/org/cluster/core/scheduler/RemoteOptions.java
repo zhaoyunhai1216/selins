@@ -1,8 +1,9 @@
 package org.cluster.core.scheduler;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.cluster.core.backtype.bean.AppResource;
+import org.cluster.core.backtype.bean.AssetsState;
+import org.cluster.core.backtype.bean.AppStore;
 import org.cluster.core.backtype.bean.WorkerState;
 import org.cluster.core.cluster.rpc.AppStoreService;
 import org.cluster.core.cluster.rpc.ClusterService;
@@ -26,27 +27,6 @@ public class RemoteOptions {
     /**
      * 重新启动worker,调用远程Broker接口,调度重启worker
      */
-    public static void startApplication(AppResource appResource) throws Exception {
-        for (int i = 0; i < appResource.getNumWorkers(); i++) {
-            List<AssetsState> assets = DefaultScheduler.getAssetsState(appResource.getCategory());
-            startWorker(appResource.getId(), i, appResource.getNumWorkers(), assets.get(0));
-        }
-    }
-
-    /**
-     * 在zookeeper集群中, 获取application的运行参数信息, 然后保存到内容中用于调度提供参数
-     */
-    public static void killApplication(String appID) throws Exception {
-        List<WorkerState> workersState = ZkUtils.getWorkers(ZkCurator.getInstance().getZkCurator());
-        for (int i = 0; i < workersState.size(); i++) {
-            String host = workersState.get(i).getHost();
-            getBrokerService(host).kill(appID, i, workersState.size());
-        }
-    }
-
-    /**
-     * 重新启动worker,调用远程Broker接口,调度重启worker
-     */
     public static void startWorker(String appID, int seq, int total, AssetsState assets) throws Exception {
         RemoteOptions.getBrokerService(assets.getHost(), assets.getPort()).start(appID, seq, total);
     }
@@ -62,8 +42,8 @@ public class RemoteOptions {
      * 在集群的appstore中, 同步application的运行文件信息,然后解压存储到本地用于启动运行
      */
     public static byte[] getAppResources(String appID) throws Exception {
-        JSONObject masterJson = JSONObject.parseObject(ZkUtils.getAppStore(ZkCurator.getInstance().getZkCurator()));
-        return getAppstoreService(masterJson.getString("host"), masterJson.getInteger("port")).getResources(appID);
+        AppStore appStore = ZkUtils.getAppStore(ZkCurator.getInstance().getZkCurator());
+        return getAppstoreService(appStore.getString(AppStore.Fileds.HOST), appStore.getInteger(AppStore.Fileds.PORT)).getResources(appID);
     }
 
     /**
@@ -74,8 +54,8 @@ public class RemoteOptions {
      * @throws Exception
      */
     public static void updateState(String appID, int state) throws Exception {
-        JSONObject appmetaJson = ZkUtils.getAppMetaJson();
-        getAppstoreService(appmetaJson.getString("host"), appmetaJson.getInteger("port")).updateState(appID, state);
+        AppStore metaNode = ZkUtils.getAppStore(ZkCurator.getInstance().getZkCurator());
+        getAppstoreService(metaNode.getString(AppStore.Fileds.HOST), metaNode.getInteger(AppStore.Fileds.PORT)).updateState(appID, state);
     }
 
     /**

@@ -1,7 +1,6 @@
-package org.cluster.core.backtype.bean;
+package org.cluster.application.backtype.tuple;
 
 import com.alibaba.fastjson.JSONObject;
-import org.cluster.core.commons.Environment;
 
 /**
  * @Auther: 赵云海
@@ -10,6 +9,19 @@ import org.cluster.core.commons.Environment;
  * @Description: TODO
  */
 public class BrokerState {
+    public enum Fileds {
+        HOST("cluster.host"), PORT("cluster.port");
+
+        private String var;
+
+        Fileds(String var) {
+            this.var = var;
+        }
+
+        public String key() {
+            return this.var;
+        }
+    }
 
     private JSONObject var;
 
@@ -20,14 +32,14 @@ public class BrokerState {
     /**
      * 根据Environment枚举内容, 获取上下文环境中的内容.
      */
-    public int getInteger(Environment fileds) {
+    public int getInteger(BrokerState.Fileds fileds) {
         return var.getInteger(fileds.key());
     }
 
     /**
      * 根据Environment枚举内容, 获取上下文环境中的内容.
      */
-    public String getString(Environment fileds) {
+    public String getString(BrokerState.Fileds fileds) {
         return String.valueOf(var.getString(fileds.key()));
     }
 

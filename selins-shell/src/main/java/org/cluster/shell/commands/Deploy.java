@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.Options;
+import org.cluster.core.backtype.bean.AppStore;
 import org.cluster.core.cluster.rpc.AppStoreService;
 import org.cluster.core.commons.Configuration;
 import org.cluster.core.utils.UtilCommons;
@@ -32,10 +33,10 @@ public class Deploy {
             logger.info(opts.getOptions().toString());
             return;
         }
-        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/appmeta";
-        JSONObject json = JSONObject.parseObject(new String(ZkCurator.getInstance().getZkCurator().getData().forPath(zkDir)));
+        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/appstore";
+        AppStore appStore = AppStore.parse(new String(ZkCurator.getInstance().getZkCurator().getData().forPath(zkDir)));
         AppStoreService service = (AppStoreService) Naming.lookup("rmi://"
-                + InetAddress.getByName(json.getString("host")).getHostAddress() + ":" + json.getString("port") + "/AppStore");
+                + InetAddress.getByName(appStore.getString(AppStore.Fileds.HOST)).getHostAddress() + ":" + appStore.getInteger(AppStore.Fileds.PORT) + "/AppStore");
         byte[] b = UtilCommons.zipDirectory(new File(cliParser.getOptionValue("path")), "/");
         service.deploy(cliParser.getOptionValue("jvmOpts"), cliParser.getOptionValue("appMain"), Integer.parseInt(cliParser.getOptionValue("numWorkers")), cliParser.getOptionValue("category"), b);
         logger.info("[Cluster] The application was successfully submitted. So let's go ahead and look at UI");

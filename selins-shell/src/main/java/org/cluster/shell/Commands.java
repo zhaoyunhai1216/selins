@@ -19,7 +19,7 @@ public class Commands {
         /**
          * 加载配置文件信息
          */
-        Configuration.init(URLDecoder.decode(new Commands().getClass().getResource("/").getFile(),"UTF-8") + "/etc/conf/cluster.yaml");
+        Configuration.init(Configuration.getProjectDir() + "/etc/conf/cluster.yaml");
         /**
          * 负责启动连接zookeeper,传入zookeeper地址
          */

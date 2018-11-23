@@ -1,6 +1,8 @@
 package org.cluster.core.utils;
 
 
+import org.cluster.core.commons.Configuration;
+import org.cluster.core.commons.Environment;
 import org.hyperic.sigar.*;
 import org.slf4j.Logger;
 
@@ -154,7 +156,6 @@ public class EnvCommons {
     /**
      * 获取当前系统每个核心的使用率，然后计算出系统总体使用率
      *
-     * @param sigar
      * @return
      * @throws Exception
      */
@@ -168,6 +169,7 @@ public class EnvCommons {
 
     /**
      * 格式化当前获取出来得CPU格式信息
+     *
      * @param val
      * @return
      */
@@ -244,7 +246,7 @@ public class EnvCommons {
      * @return
      * @throws SigarException
      */
-    public static String getOS() throws SigarException {
+    public static String getSysinfo() throws SigarException {
         return System.getProperties().getProperty("os.name")
                 + "_" + System.getProperties().getProperty("os.version")
                 + "_" + System.getProperties().getProperty("os.arch");
@@ -255,8 +257,8 @@ public class EnvCommons {
      *
      * @throws IOException
      */
-    public static void setEnvironment(String conf) throws Exception {
-        String classpath = new File(conf + "/native").getCanonicalPath();
+    public static void setEnvironment(Configuration configuration) throws Exception {
+        String classpath = new File(Configuration.getProjectDir() + "/etc/native").getCanonicalPath();
         String path = System.getProperty("java.library.path");
         if (path.contains(classpath)) {
             return;
@@ -267,29 +269,12 @@ public class EnvCommons {
             path += ";" + classpath;
         }
         System.setProperty("java.library.path", path);
-        logger.info("[ENV] Load the local library successful.");
-    }
-
-    public static void main(String[] args) throws Exception {
-        setEnvironment("E:\\工作空间\\ccinfra-real-cmpt-yn\\etc\\");
-        Sigar sigar = new Sigar();
-        //System.out.printf(System.getProperty("java.library.path"));
-        /*System.out.println(getTotalMemoryStat(sigar));
-        System.out.println(getUsedMemoryStat(sigar));
-        System.out.println(getFreeMemoryStat(sigar));
-        System.out.println(getCpuStat(sigar));
-        System.out.println(getRxNetStat(sigar));
-        System.out.println(getNxNetStat(sigar));
-        System.out.println(getTotalFileSystemStat(sigar));
-        System.out.println(getUsedFileSystemStat(sigar));
-        System.out.println(getFreeFileSystemStat(sigar));
-        System.out.println(getPercentFileSystemStat(sigar));
-        System.out.println(getReadFileSystemStat(sigar));
-        System.out.println(getWriteFileSystemStat(sigar));
-        System.out.println(getJavaVersion());
-        System.out.println(getOS());*/
-        System.out.println(UtilCommons.getBrokerState());
-        sigar.close();
+        configuration.put(Environment.SYSTEM_INFO, EnvCommons.getSysinfo());
+        configuration.put(Environment.JAVA_VERSION, EnvCommons.getJDKVersion());
+        configuration.put(Environment.VCORES_TOTAL, EnvCommons.getProcessors());
+        configuration.put(Environment.MEMOTY_TOTAL, EnvCommons.getTotalMemoryStat());
+        configuration.put(Environment.HDD_TOTAL, EnvCommons.getTotalFileSystemStat());
+        logger.info("[Env] initializes the runtime environment and local library successful.");
     }
 
     // 日志 sfl4j 注册

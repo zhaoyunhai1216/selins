@@ -1,5 +1,8 @@
 package org.cluster.core.scheduler;
 
+import org.cluster.core.commons.Configuration;
+import org.cluster.core.commons.Environment;
+import org.cluster.core.utils.UtilCommons;
 import org.cluster.core.zookeeper.ZkCurator;
 import org.cluster.core.zookeeper.ZkUtils;
 import org.slf4j.Logger;
@@ -37,9 +40,11 @@ public enum ApplicationTracker {
 
     /**
      * 跟踪调度, 调度具体的跟踪内容
+     *
      * @throws Exception
      */
     public void tracker() throws Exception {
+        ZkUtils.updateBrokerState();
         if (ZkUtils.isMaster(ZkCurator.getInstance().getZkCurator())) {
             DefaultScheduler.checkLegacyWorker();
             DefaultScheduler.checkShutdownWorker();

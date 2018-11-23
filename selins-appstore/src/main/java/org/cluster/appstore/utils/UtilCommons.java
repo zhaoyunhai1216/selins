@@ -27,7 +27,7 @@ public class UtilCommons {
      * 构建Master的zookeeper路径
      */
     public static void initZkMetaDir() throws Exception {
-        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/appmeta";
+        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/appstore";
         ZkUtils.build(zkDir, new JSONObject()
                 .fluentPut("host", Configuration.getInstance().getString("cluster.host"))
                 .fluentPut("port", Configuration.getInstance().getInteger("cluster.appstore.port"))
@@ -40,7 +40,7 @@ public class UtilCommons {
      * @throws Exception
      */
     public static int getId() throws Exception {
-        String dir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/seq";
+        String dir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/seqid";
         String seqJson = "{\"timestamp\":"+System.currentTimeMillis()+"}";
         ZkUtils.create(ZkCurator.getInstance().getZkCurator(),dir,seqJson.getBytes(), CreateMode.PERSISTENT);
         return ZkCurator.getInstance().getZkCurator().setData().forPath(dir, seqJson.getBytes()).getVersion();

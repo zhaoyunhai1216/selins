@@ -1,6 +1,5 @@
 package org.cluster.core.zookeeper;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.zookeeper.CreateMode;
@@ -8,10 +7,11 @@ import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.data.Stat;
 import org.cluster.core.backtype.bean.AppResource;
 import org.cluster.core.backtype.bean.BrokerState;
+import org.cluster.core.backtype.bean.AppStore;
 import org.cluster.core.backtype.bean.WorkerState;
 import org.cluster.core.commons.Configuration;
 import org.cluster.core.commons.Environment;
-import org.cluster.core.scheduler.AssetsState;
+import org.cluster.core.backtype.bean.AssetsState;
 import org.cluster.core.utils.UtilCommons;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,39 +83,48 @@ public class ZkUtils {
      */
     public static void initBrokerState() throws Exception {
         String address = Configuration.getInstance().getString(Environment.CLUSTER_HOST) + ":" + Configuration.getInstance().getString(Environment.CLUSTER_PORT);
-        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/ids/" + address;
+        String zkDir = Configuration.getInstance().getString(Environment.ZK_ROOT_DIR) + "/ids/" + address;
         ZkUtils.build(zkDir, UtilCommons.getBrokerState());
+    }
+
+    /**
+     * 更新节点得zookeeper存储内容到最新
+     */
+    public static void updateBrokerState() throws Exception {
+        String address = Configuration.getInstance().getString(Environment.CLUSTER_HOST) + ":" + Configuration.getInstance().getString(Environment.CLUSTER_PORT);
+        String zkDir =  Configuration.getInstance().getString(Environment.ZK_ROOT_DIR) + "/ids/" + address;
+        ZkUtils.update(ZkCurator.getInstance().getZkCurator(),zkDir, UtilCommons.getBrokerState().getBytes());
     }
 
     /**
      * 获取目前正在服务得主节点信息
      */
-    public static String getMaster(CuratorFramework curator) throws Exception {
+    public static BrokerState getMaster(CuratorFramework curator) throws Exception {
         String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/ids";
         List<String> childs = curator.getChildren().forPath(zkDir);
         if (childs.size() == 0) {
             throw new Exception("No master node exists.");
         }
-        JSONObject masterJson = new JSONObject();
+        BrokerState master = null;
         long min_czxid = Long.MAX_VALUE;
         for (String child : childs) {
             Stat stat = curator.checkExists().forPath(zkDir + "/" + child);
             if (stat == null) continue;
             JSONObject json = JSONObject.parseObject(new String(curator.getData().forPath(zkDir + "/" + child)));
             if (stat.getCzxid() < min_czxid) {
-                masterJson = json;
+                master = BrokerState.parse(json.toJSONString());
             }
         }
-        return masterJson.toJSONString();
+        return master;
     }
 
     /**
      * 获取目前正在服务得主节点信息
      */
     public static boolean isMaster(CuratorFramework curator) throws Exception {
-        String host = JSONObject.parseObject(getMaster(curator)).getString("host");
-        String port = JSONObject.parseObject(getMaster(curator)).getString("port");
-        return Configuration.getInstance().getString("cluster.host").equals(host) && Configuration.getInstance().getString("cluster.port").equals(port);
+        String host = getMaster(curator).getString(Environment.CLUSTER_HOST);
+        int port = getMaster(curator).getInteger(Environment.CLUSTER_PORT);
+        return Configuration.getInstance().getString("cluster.host").equals(host) && Configuration.getInstance().getInteger("cluster.port")== port;
     }
 
     /**
@@ -140,7 +149,7 @@ public class ZkUtils {
         HashMap<String, Integer> mapping = new HashMap<>();
         List<BrokerState> brokersState = ZkUtils.getNodes(ZkCurator.getInstance().getZkCurator());
         for (int i = 0; i < brokersState.size(); i++) {
-            mapping.put(brokersState.get(i).getHost(), brokersState.get(i).getPort());
+            mapping.put(brokersState.get(i).getString(Environment.CLUSTER_HOST), brokersState.get(i).getInteger(Environment.CLUSTER_PORT));
         }
         return mapping;
     }
@@ -168,7 +177,7 @@ public class ZkUtils {
         List<BrokerState> brokersState = ZkUtils.getNodes(ZkCurator.getInstance().getZkCurator());
         HashMap<String, BrokerState> nodeMaps = new HashMap<String, BrokerState>();
         for (int i = 0; i < brokersState.size(); i++) {
-            nodeMaps.put(brokersState.get(i).getHost(), brokersState.get(i));
+            nodeMaps.put(brokersState.get(i).getString(Environment.CLUSTER_HOST), brokersState.get(i));
         }
         return nodeMaps;
     }
@@ -180,7 +189,7 @@ public class ZkUtils {
         List<BrokerState> brokersState = ZkUtils.getNodes(ZkCurator.getInstance().getZkCurator());
         List<AssetsState> nodeStates = new ArrayList<>();
         for (int i = 0; i < brokersState.size(); i++) {
-            nodeStates.add(new AssetsState(brokersState.get(i).getHost(), brokersState.get(i).getPort(), brokersState.get(i).getCategory()));
+            nodeStates.add(new AssetsState(brokersState.get(i).getString(Environment.CLUSTER_HOST), brokersState.get(i).getInteger(Environment.CLUSTER_PORT), brokersState.get(i).getString(Environment.CLUSTER_CATEGORY)));
         }
         return nodeStates;
     }
@@ -191,11 +200,11 @@ public class ZkUtils {
     public static WorkerState getWorker(CuratorFramework curator, String workerID) throws Exception {
         List<WorkerState> workersState = ZkUtils.getWorkers(ZkCurator.getInstance().getZkCurator());
         for (int i = 0; i < workersState.size(); i++) {
-            if (workersState.get(i).getWorkerId().equals(workerID)) {
+            if (workersState.get(i).getString(WorkerState.Fileds.WORKER_ID).equals(workerID)) {
                 return workersState.get(i);
             }
         }
-        throw new Exception("<" + workerID + "> This node is not available.");
+        throw new Exception("<" + workerID + "> The worker has been destroyed.");
     }
 
     /**
@@ -205,7 +214,7 @@ public class ZkUtils {
         List<WorkerState> workersState = ZkUtils.getWorkers(ZkCurator.getInstance().getZkCurator());
         List<String> workerList = new ArrayList<>();
         for (int i = 0; i < workersState.size(); i++) {
-            workerList.add(workersState.get(i).getWorkerId());
+            workerList.add(workersState.get(i).getString(WorkerState.Fileds.WORKER_ID));
         }
         return workerList;
     }
@@ -216,7 +225,7 @@ public class ZkUtils {
     public static double getAverageWorkers(CuratorFramework curator, String category) throws Exception {
         List<BrokerState> brokersState = ZkUtils.getNodes(curator);
         List<AppResource> applications = ZkUtils.getRunningApplications(curator, category);
-        return applications.stream().mapToDouble(x -> x.getNumWorkers()).sum() / brokersState.size();
+        return applications.stream().mapToDouble(x -> x.getInteger(AppResource.Fileds.NUM_WORKERS)).sum() / brokersState.size();
     }
 
     /**
@@ -239,7 +248,7 @@ public class ZkUtils {
         List<WorkerState> workersState = ZkUtils.getWorkers(curator);
         HashMap<String, WorkerState> workerMaps = new HashMap<>();
         for (int i = 0; i < workersState.size(); i++) {
-            workerMaps.put(workersState.get(i).getWorkerId(), workersState.get(i));
+            workerMaps.put(workersState.get(i).getString(WorkerState.Fileds.WORKER_ID), workersState.get(i));
         }
         return workerMaps;
     }
@@ -255,16 +264,16 @@ public class ZkUtils {
     /**
      * 获取目前正在服务得主节点信息
      */
-    public static String getAppStore(CuratorFramework curator) throws Exception {
-        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/appmeta";
-        return JSONObject.parseObject(new String(curator.getData().forPath(zkDir))).toJSONString();
+    public static AppStore getAppStore(CuratorFramework curator) throws Exception {
+        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/appstore";
+        return AppStore.parse(new String(curator.getData().forPath(zkDir)));
     }
 
     /**
      * 获取所有部署的application应用列表信息, 然后返回信息列表，提供给后续使用
      */
     public static List<AppResource> getApplications(CuratorFramework curator) throws Exception {
-        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/appstore";
+        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/applications";
         List<String> childs = ZkCurator.getInstance().getZkCurator().getChildren().forPath(zkDir);
         ArrayList<AppResource> applications = new ArrayList<>();
         for (String child : childs) {
@@ -278,13 +287,13 @@ public class ZkUtils {
      * 获取所有部署的application应用列表信息, 然后返回信息列表，提供给后续使用
      */
     public static List<String> getRunningApplicationsID(CuratorFramework curator) throws Exception {
-        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/appstore";
+        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/applications";
         List<String> childs = ZkCurator.getInstance().getZkCurator().getChildren().forPath(zkDir);
         ArrayList<String> applications = new ArrayList<>();
         for (String child : childs) {
-            AppResource res = JSONObject.parseObject(ZkCurator.getInstance().getZkCurator().getData().forPath(zkDir + "/" + child), AppResource.class);
-            if (res.getState() != 1) continue;
-            applications.add(res.getId());
+            AppResource res = AppResource.parse(new String(ZkCurator.getInstance().getZkCurator().getData().forPath(zkDir + "/" + child)));
+            if (res.getInteger(AppResource.Fileds.STATE) != 1) continue;
+            applications.add(res.getString(AppResource.Fileds.ID));
 
         }
         return applications;
@@ -294,12 +303,12 @@ public class ZkUtils {
      * 获取所有部署的application应用列表信息, 然后返回信息列表，提供给后续使用
      */
     public static List<AppResource> getRunningApplications(CuratorFramework curator) throws Exception {
-        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/appstore";
+        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/applications";
         List<String> childs = ZkCurator.getInstance().getZkCurator().getChildren().forPath(zkDir);
         ArrayList<AppResource> applications = new ArrayList<>();
         for (String child : childs) {
-            AppResource res = JSONObject.parseObject(ZkCurator.getInstance().getZkCurator().getData().forPath(zkDir + "/" + child), AppResource.class);
-            if (res.getState() != 1) continue;
+            AppResource res = AppResource.parse(new String(ZkCurator.getInstance().getZkCurator().getData().forPath(zkDir + "/" + child)));
+            if (res.getInteger(AppResource.Fileds.STATE) != 1) continue;
             applications.add(res);
 
         }
@@ -311,25 +320,17 @@ public class ZkUtils {
      */
     public static List<AppResource> getRunningApplications(CuratorFramework curator, String category) throws Exception {
         List<AppResource> applications = ZkUtils.getRunningApplications(curator);
-        return applications.stream().filter(x -> x.getCategory().equals(category)).collect(Collectors.toList());
+        return applications.stream().filter(x -> x.getString(AppResource.Fileds.CATEGORY).equals(category)).collect(Collectors.toList());
     }
 
     /**
      * 在zookeeper集群中, 获取application的运行参数信息, 然后保存到内容中用于调度提供参数
      */
     public static AppResource getAppZkResource(String appid) throws Exception {
-        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/appstore/" + appid;
+        String zkDir = Configuration.getInstance().getString(Environment.ZK_ROOT_DIR) + "/applications/" + appid;
         return JSONObject.parseObject(ZkCurator.getInstance().getZkCurator().getData().forPath(zkDir), AppResource.class);
     }
 
-    /**
-     * @return
-     * @throws Exception
-     */
-    public static JSONObject getAppMetaJson() throws Exception {
-        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/appmeta";
-        return JSONObject.parseObject(new String(ZkCurator.getInstance().getZkCurator().getData().forPath(zkDir)));
-    }
 
     /**
      * 日志定义 Logger

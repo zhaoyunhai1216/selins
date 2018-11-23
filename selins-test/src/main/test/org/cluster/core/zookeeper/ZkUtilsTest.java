@@ -30,11 +30,12 @@ public class ZkUtilsTest {
     }
 
     @Test
-    public void initBrokerState() throws SigarException {
+    public void initBrokerState() throws Exception {
         String address = Configuration.getInstance().getString(Environment.CLUSTER_HOST) + ":" + Configuration.getInstance().getString(Environment.CLUSTER_PORT);
-        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/ids/" + address;
+        String zkDir = Configuration.getInstance().getString(Environment.ZK_ROOT_DIR) + "/ids/" + address;
         //ZkUtils.build(zkDir, UtilCommons.getBrokerState());
         System.out.println(UtilCommons.getBrokerState());
+        ZkCurator.getInstance().getZkCurator().delete().forPath("/cluster/appstore");
     }
 
     @Test
