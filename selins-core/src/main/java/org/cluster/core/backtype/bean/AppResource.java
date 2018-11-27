@@ -15,7 +15,7 @@ public class AppResource implements Serializable {
         ID("id"),
         NAME("name"),
         JVM_OPTS("jvmOpts"),
-        MAIN("appMain"),
+        CLASS("class"),
         NUM_WORKERS("numWorkers"),
         STATE("state"),
         CATEGORY("category");
@@ -41,7 +41,7 @@ public class AppResource implements Serializable {
         put(Fileds.ID, id);
         put(Fileds.NAME, name);
         put(Fileds.JVM_OPTS, jvmOpts);
-        put(Fileds.MAIN, appMain);
+        put(Fileds.CLASS, appMain);
         put(Fileds.NUM_WORKERS, numWorkers);
         put(Fileds.STATE, state);
         put(Fileds.CATEGORY, category);

@@ -3,6 +3,7 @@ package org.cluster.appstore;
 import org.cluster.appstore.rpc.AppStoreRMI;
 import org.cluster.appstore.utils.UtilCommons;
 import org.cluster.core.commons.Configuration;
+import org.cluster.core.commons.Environment;
 import org.cluster.core.zookeeper.ZkCurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,7 @@ public class AppStore {
         /**
          * 负责启动连接zookeeper,传入zookeeper地址
          */
-        ZkCurator.getInstance().init(Configuration.getInstance().getString("cluster.zookeeper.servers"));
+        ZkCurator.getInstance().init(Configuration.getInstance().getString(Environment.ZK_CONNECT));
         /**
          * 构建本集群的Master节点的zookeeper路径信息
          */
@@ -35,8 +36,8 @@ public class AppStore {
          * 启用相关远程调用服务，可用于对提交的任务进行控制
          */
         AppStoreRMI.init();
-        logger.info("[Cluster] AppStore [" + Configuration.getInstance().getString("cluster.host")
-                + ":" + Configuration.getInstance().getInteger("cluster.appstore.port") + "] is start-up successfully.");
+        logger.info("[Cluster] AppStore [" + Configuration.getInstance().getString(Environment.CLUSTER_HOST)
+                + ":" + Configuration.getInstance().getInteger(Environment.APPSTORE_PORT) + "] is start-up successfully.");
     }
 
     /**

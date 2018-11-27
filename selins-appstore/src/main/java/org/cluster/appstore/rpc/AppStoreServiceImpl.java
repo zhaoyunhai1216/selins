@@ -36,10 +36,10 @@ public class AppStoreServiceImpl extends UnicastRemoteObject implements AppStore
      * 提交指定的app到集群Nimbus中进行调度分发
      */
     @Override
-    public void deploy(String jvmOpts, String mainClass, int numWorkers, String category, byte[] b) throws Exception {
-        String appID = UtilCommons.getAppName(mainClass) + "-" + UtilCommons.getId();
-        AppsOptions.createResources(appID, b);
-        AppsOptions.createZkResources(appID, mainClass, jvmOpts, numWorkers, category);
+    public void deploy(String jvmOpts, String clazz, int numWorkers, String category, byte[] repo) throws Exception {
+        String appID = UtilCommons.getAppName(clazz) + "-" + UtilCommons.getId();
+        AppsOptions.createResources(appID, repo);
+        AppsOptions.createZkResources(appID, clazz, jvmOpts, numWorkers, category);
         logger.info("The application <" + appID + "> was successfully deploy");
     }
 

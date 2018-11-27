@@ -29,7 +29,7 @@ public class Deploy {
     public void exec(String[] args) throws Exception {
         Options opts = getOptions();
         CommandLine cliParser = new GnuParser().parse(opts, args);
-        if (!cliParser.hasOption("jvmOpts") || !cliParser.hasOption("appMain") || !cliParser.hasOption("numWorkers") || !cliParser.hasOption("category") || !cliParser.hasOption("path")) {
+        if (!cliParser.hasOption("jvmOpts") || !cliParser.hasOption("class") || !cliParser.hasOption("numWorkers") || !cliParser.hasOption("category") || !cliParser.hasOption("path")) {
             logger.info(opts.getOptions().toString());
             return;
         }
@@ -38,22 +38,23 @@ public class Deploy {
         AppStoreService service = (AppStoreService) Naming.lookup("rmi://"
                 + InetAddress.getByName(appStore.getString(AppStore.Fileds.HOST)).getHostAddress() + ":" + appStore.getInteger(AppStore.Fileds.PORT) + "/AppStore");
         byte[] b = UtilCommons.zipDirectory(new File(cliParser.getOptionValue("path")), "/");
-        service.deploy(cliParser.getOptionValue("jvmOpts"), cliParser.getOptionValue("appMain"), Integer.parseInt(cliParser.getOptionValue("numWorkers")), cliParser.getOptionValue("category"), b);
+        service.deploy(cliParser.getOptionValue("jvmOpts"), cliParser.getOptionValue("class"), Integer.parseInt(cliParser.getOptionValue("numWorkers")), cliParser.getOptionValue("category"), b);
         logger.info("[Cluster] The application was successfully submitted. So let's go ahead and look at UI");
     }
 
     /**
      * 获取命令的参数相关内容的描述信息
      */
-    public Options getOptions(){
+    public Options getOptions() {
         Options opts = new Options();
         opts.addOption("jvmOpts", true, "application java options.");
-        opts.addOption("appMain", true, "application main class.");
+        opts.addOption("class", true, "application main class.");
         opts.addOption("numWorkers", true, "work parallelism.");
         opts.addOption("category", true, "application category.");
-        opts.addOption("path", true, "Application file path.");
+        opts.addOption("jars", true, "Application file path.");
         return opts;
     }
+
     /**
      * 日志定义 Logger
      */

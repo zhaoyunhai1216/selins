@@ -1,6 +1,7 @@
 package org.cluster.appstore.rpc;
 
 import org.cluster.core.commons.Configuration;
+import org.cluster.core.commons.Environment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,8 +23,8 @@ public class AppStoreRMI {
      * 启用相关远程调用服务，可用于对提交的任务进行控制
      */
     public static void init() throws RemoteException, MalformedURLException, UnknownHostException {
-        String host = Configuration.getInstance().getString("cluster.host");
-        int port = Configuration.getInstance().getInteger("cluster.appstore.port");
+        String host = Configuration.getInstance().getString(Environment.CLUSTER_HOST);
+        int port = Configuration.getInstance().getInteger(Environment.APPSTORE_PORT);
         System.setProperty("java.rmi.server.hostname", host);
         LocateRegistry.createRegistry(port);
         Naming.rebind("rmi://"+InetAddress.getByName(host).getHostAddress()+":" + port + "/AppStore", new AppStoreServiceImpl());
