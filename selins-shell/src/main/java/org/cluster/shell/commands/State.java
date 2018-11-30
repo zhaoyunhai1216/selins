@@ -39,7 +39,7 @@ public class State {
             System.out.println(opts.getOptions());
             return;
         }
-        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/ids";
+        String zkDir = Configuration.getInstance().getString(Environment.ZK_ROOT_DIR) + "/ids";
         List<String> childs = ZkCurator.getInstance().getZkCurator().getChildren().forPath(zkDir);
         Map<String, List<String[]>> targets = new HashMap<>();
         for (String child : childs) {
@@ -54,24 +54,6 @@ public class State {
         }
     }
 
-    public static void main(String[] args) throws Exception {
-        String appID = "ApplicationTest-20";
-        Configuration.init(Configuration.getProjectDir() + "/etc/conf/cluster.yaml");
-        ZkCurator.getInstance().init(Configuration.getInstance().getString("cluster.zookeeper.servers"));
-        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/ids";
-        List<String> childs = ZkCurator.getInstance().getZkCurator().getChildren().forPath(zkDir);
-        Map<String, List<String[]>> targets = new HashMap<>();
-        for (String child : childs) {
-            BrokerState master =BrokerState.parse(new String(ZkCurator.getInstance().getZkCurator().getData().forPath(zkDir + "/" + child)));
-            ClusterService service = (ClusterService) Naming.lookup("rmi://"
-                    + InetAddress.getByName(master.getString(Environment.CLUSTER_HOST)).getHostAddress() + ":" + master.getInteger(Environment.CLUSTER_PORT) + "/Broker");
-            Map<String, Map<String, Map<String, String>>> state = JSONObject.parseObject(service.getState(),Map.class);
-            UtilCommons.megrMap(targets,state.getOrDefault(appID,new HashMap<>()));
-        }
-        for (Map.Entry<String, List<String[]>> entry: targets.entrySet()) {
-            logger.info(entry.getKey() + "\n" + new TabCommons(entry.getValue()).toString());
-        }
-    }
     /**
      * 获取命令的参数相关内容的描述信息
      */

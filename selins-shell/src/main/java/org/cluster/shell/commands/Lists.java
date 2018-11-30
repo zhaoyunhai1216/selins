@@ -47,7 +47,7 @@ public class Lists {
      * 命令主函数, 执行shell命令后调用此方法
      */
     public void application(String[] args) throws Exception {
-        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/applications";
+        String zkDir = Configuration.getInstance().getString(Environment.ZK_ROOT_DIR) + "/applications";
         List<String> childs = ZkCurator.getInstance().getZkCurator().getChildren().forPath(zkDir);
         List<String[]> columnValues = new ArrayList<>();
         columnValues.add(new String[]{"application id", "state", "name", "jvmOpts", "numWorkers", "category"});
@@ -63,7 +63,7 @@ public class Lists {
      * 命令主函数, 执行shell命令后调用此方法
      */
     public void worker(String[] args) throws Exception {
-        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/worker";
+        String zkDir = Configuration.getInstance().getString(Environment.ZK_ROOT_DIR) + "/worker";
         List<String> childs = ZkCurator.getInstance().getZkCurator().getChildren().forPath(zkDir);
         List<String[]> columnValues = new ArrayList<>();
         columnValues.add(new String[]{"worker id", "process", "host", "startTime", "runtime", "exectors", "threadCount", "cpu", "memory"});
@@ -81,7 +81,7 @@ public class Lists {
      * 命令主函数, 执行shell命令后调用此方法
      */
     public void broker(String[] args) throws Exception {
-        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/ids";
+        String zkDir = Configuration.getInstance().getString(Environment.ZK_ROOT_DIR) + "/ids";
         List<String> childs = ZkCurator.getInstance().getZkCurator().getChildren().forPath(zkDir);
         List<String[]> columnValues = new ArrayList<>();
         columnValues.add(new String[]{"host", "port", "start.timestamp", "rack", "category", "vCores", "memory", "hdd", "jdk"});
@@ -96,13 +96,9 @@ public class Lists {
 
     public static void main(String[] args) throws Exception {
         /**
-         * 加载配置文件信息
-         */
-        Configuration.init("/Users/zhaoyunhai/程序/selins//etc/conf/cluster.yaml");
-        /**
          * 负责启动连接zookeeper,传入zookeeper地址
          */
-        ZkCurator.getInstance().init(Configuration.getInstance().getString("cluster.zookeeper.servers"));
+        ZkCurator.getInstance().init(Configuration.getInstance().getString(Environment.ZK_CONNECT));
 
         new Lists().worker(args);
     }

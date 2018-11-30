@@ -1,6 +1,7 @@
 package org.cluster.core.zookeeper;
 
 import org.cluster.core.commons.Configuration;
+import org.cluster.core.commons.Environment;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -10,18 +11,18 @@ public class ZkCuratorTest {
 
     @Before
     public void setUp() throws Exception {
-        Configuration.init(Configuration.getProjectDir() + "/etc/conf/cluster.yaml");
+
     }
 
     @Test
     public void getZkCurator() {
-        ZkCurator.getInstance().init(Configuration.getInstance().getString("cluster.zookeeper.servers"));
+        ZkCurator.getInstance().init(Configuration.getInstance().getString(Environment.ZK_CONNECT));
         ZkCurator.getInstance().getZkCurator();
     }
 
     @Test
     public void init() {
-        ZkCurator.getInstance().init(Configuration.getInstance().getString("cluster.zookeeper.servers"));
+        ZkCurator.getInstance().init(Configuration.getInstance().getString(Environment.ZK_CONNECT));
     }
 
     @Test

@@ -1,6 +1,7 @@
 package org.cluster.shell;
 
 import org.cluster.core.commons.Configuration;
+import org.cluster.core.commons.Environment;
 import org.cluster.core.zookeeper.ZkCurator;
 import org.cluster.shell.commands.*;
 import org.slf4j.Logger;
@@ -17,13 +18,9 @@ import java.net.URLDecoder;
 public class Commands {
     public static void main(String[] args) throws Exception {
         /**
-         * 加载配置文件信息
-         */
-        Configuration.init(Configuration.getProjectDir() + "/etc/conf/cluster.yaml");
-        /**
          * 负责启动连接zookeeper,传入zookeeper地址
          */
-        ZkCurator.getInstance().init(Configuration.getInstance().getString("cluster.zookeeper.servers"));
+        ZkCurator.getInstance().init(Configuration.getInstance().getString(Environment.ZK_CONNECT));
         /**
          * 执行命令
          */

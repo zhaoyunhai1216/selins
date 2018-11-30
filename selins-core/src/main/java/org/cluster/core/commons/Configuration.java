@@ -12,6 +12,7 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -20,54 +21,55 @@ import java.util.UUID;
  * @Version: 1.0
  * @Description: TODO
  */
-public class Configuration extends JSONObject {
-    /**
-     * 一个Cache实例
-     */
-    private static Configuration clusterYaml;
+public enum Configuration {
+    INSTANCE(Configuration.getProjectDir() + "/etc/conf/cluster.yaml");
+
+    private JSONObject var;
 
     /**
      * 构造方法
      */
-    public Configuration(String conf) throws Exception {
-        this.put(Environment.START_TIMESTAMP, System.currentTimeMillis());
+    Configuration(String conf) {
+        try {
+            init(conf);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    void init(String conf) throws Exception {
+        var = new JSONObject();
+        var.put(Environment.START_TIMESTAMP.key(), System.currentTimeMillis());
         EnvCommons.setEnvironment(this);
-        this.putAll(new Yaml().loadAs(FileUtils.openInputStream(new File(conf)), JSONObject.class).getInnerMap());
+        var.putAll(new Yaml().loadAs(FileUtils.openInputStream(new File(conf)), JSONObject.class).getInnerMap());
     }
 
     /**
      * 获得单例
      */
     public static Configuration getInstance() {
-        return clusterYaml;
-    }
-
-    /**
-     * 初始化Yaml配置文件信息
-     */
-    public static void init(String conf) throws Exception {
-        clusterYaml = new Configuration(conf);
+        return INSTANCE;
     }
 
     /**
      * 根据Environment枚举内容, 获取上下文环境中的内容.
      */
     public int getInteger(Environment env) {
-        return this.getInteger(env.key());
+        return var.getInteger(env.key());
     }
 
     /**
      * 根据Environment枚举内容, 获取上下文环境中的内容.
      */
     public String getString(Environment env) {
-        return String.valueOf(this.getString(env.key()));
+        return String.valueOf(var.getString(env.key()));
     }
 
     /**
      * 根据Environment枚举内容, 存放数据到conf
      */
     public Object put(Environment env, Object value) {
-        return this.put(env.key(), value);
+        return var.put(env.key(), value);
     }
 
     /**
@@ -75,6 +77,13 @@ public class Configuration extends JSONObject {
      */
     public static String getProjectDir() {
         return System.getProperty("user.dir");
+    }
+
+    /**
+     * 以map形式展示内容信息
+     */
+    public Map<String, Object> getInnerMap() {
+        return var.getInnerMap();
     }
 
     /**

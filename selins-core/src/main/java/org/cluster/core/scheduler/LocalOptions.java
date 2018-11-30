@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.io.FileUtils;
 import org.cluster.core.backtype.bean.WorkerState;
 import org.cluster.core.commons.Configuration;
+import org.cluster.core.commons.Environment;
 import org.cluster.core.commons.StateMemory;
 import org.cluster.core.utils.UtilCommons;
 import org.cluster.core.zookeeper.ZkCurator;
@@ -48,7 +49,7 @@ public class LocalOptions {
      * 在集群的appstore中, 同步application的运行文件信息,然后解压存储到本地用于启动运行
      */
     public static void saveWorkerResources(String appID, int seq, int total, byte[] zipBytes) throws Exception {
-        String workdir = Configuration.getInstance().getString("cluster.worker.dir");
+        String workdir = Configuration.getInstance().getString(Environment.WORKER_DIR);
         FileUtils.deleteDirectory(new File(workdir + appID));
         UtilCommons.unZipDirectory(workdir + appID + "_" + seq + "_" + total, zipBytes);
     }
@@ -57,7 +58,7 @@ public class LocalOptions {
      * 在集群的appstore中, 同步application的运行文件信息,然后解压存储到本地用于启动运行
      */
     public static void deleteWorkerResources(String appID, int seq, int total) throws Exception {
-        String workDir = Configuration.getInstance().getString("cluster.worker.dir");
+        String workDir = Configuration.getInstance().getString(Environment.WORKER_DIR);
         FileUtils.deleteDirectory(new File(workDir + appID + "_" + seq + "_" + total));
     }
 

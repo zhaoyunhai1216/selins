@@ -100,7 +100,7 @@ public class ZkUtils {
      * 获取目前正在服务得主节点信息
      */
     public static BrokerState getMaster(CuratorFramework curator) throws Exception {
-        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/ids";
+        String zkDir = Configuration.getInstance().getString(Environment.ZK_ROOT_DIR) + "/ids";
         List<String> childs = curator.getChildren().forPath(zkDir);
         if (childs.size() == 0) {
             throw new Exception("No master node exists.");
@@ -124,7 +124,7 @@ public class ZkUtils {
     public static boolean isMaster(CuratorFramework curator) throws Exception {
         String host = getMaster(curator).getString(Environment.CLUSTER_HOST);
         int port = getMaster(curator).getInteger(Environment.CLUSTER_PORT);
-        return Configuration.getInstance().getString("cluster.host").equals(host) && Configuration.getInstance().getInteger("cluster.port")== port;
+        return Configuration.getInstance().getString(Environment.CLUSTER_HOST).equals(host) && Configuration.getInstance().getInteger(Environment.CLUSTER_PORT)== port;
     }
 
     /**
@@ -158,7 +158,7 @@ public class ZkUtils {
      * 获取目前正在服务得节点信息
      */
     public static List<BrokerState> getNodes(CuratorFramework curator) throws Exception {
-        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/ids";
+        String zkDir = Configuration.getInstance().getString(Environment.ZK_ROOT_DIR) + "/ids";
         List<String> childs = curator.getChildren().forPath(zkDir);
         if (childs.size() == 0) {
             throw new Exception("No node exists.");
@@ -232,7 +232,7 @@ public class ZkUtils {
      * 获取目前正在服务得节点信息
      */
     public static List<WorkerState> getWorkers(CuratorFramework curator) throws Exception {
-        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/worker";
+        String zkDir = Configuration.getInstance().getString(Environment.ZK_ROOT_DIR) + "/worker";
         List<String> childs = curator.getChildren().forPath(zkDir);
         List<WorkerState> workers = new ArrayList<>();
         for (String child : childs) {
@@ -257,7 +257,7 @@ public class ZkUtils {
      * 检查节点是否存在
      */
     public static boolean checkWorkerExists(CuratorFramework curator, String workerUid) throws Exception {
-        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/worker/" + workerUid;
+        String zkDir = Configuration.getInstance().getString(Environment.ZK_ROOT_DIR) + "/worker/" + workerUid;
         return curator.checkExists().forPath(zkDir) != null;
     }
 
@@ -265,7 +265,7 @@ public class ZkUtils {
      * 获取目前正在服务得主节点信息
      */
     public static AppStore getAppStore(CuratorFramework curator) throws Exception {
-        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/appstore";
+        String zkDir = Configuration.getInstance().getString(Environment.ZK_ROOT_DIR) + "/appstore";
         return AppStore.parse(new String(curator.getData().forPath(zkDir)));
     }
 
@@ -273,7 +273,7 @@ public class ZkUtils {
      * 获取所有部署的application应用列表信息, 然后返回信息列表，提供给后续使用
      */
     public static List<AppResource> getApplications(CuratorFramework curator) throws Exception {
-        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/applications";
+        String zkDir = Configuration.getInstance().getString(Environment.ZK_ROOT_DIR) + "/applications";
         List<String> childs = ZkCurator.getInstance().getZkCurator().getChildren().forPath(zkDir);
         ArrayList<AppResource> applications = new ArrayList<>();
         for (String child : childs) {
@@ -287,7 +287,7 @@ public class ZkUtils {
      * 获取所有部署的application应用列表信息, 然后返回信息列表，提供给后续使用
      */
     public static List<String> getRunningApplicationsID(CuratorFramework curator) throws Exception {
-        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/applications";
+        String zkDir = Configuration.getInstance().getString(Environment.ZK_ROOT_DIR) + "/applications";
         List<String> childs = ZkCurator.getInstance().getZkCurator().getChildren().forPath(zkDir);
         ArrayList<String> applications = new ArrayList<>();
         for (String child : childs) {
@@ -303,7 +303,7 @@ public class ZkUtils {
      * 获取所有部署的application应用列表信息, 然后返回信息列表，提供给后续使用
      */
     public static List<AppResource> getRunningApplications(CuratorFramework curator) throws Exception {
-        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/applications";
+        String zkDir = Configuration.getInstance().getString(Environment.ZK_ROOT_DIR) + "/applications";
         List<String> childs = ZkCurator.getInstance().getZkCurator().getChildren().forPath(zkDir);
         ArrayList<AppResource> applications = new ArrayList<>();
         for (String child : childs) {

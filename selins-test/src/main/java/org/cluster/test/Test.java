@@ -1,6 +1,7 @@
 package org.cluster.test;
 
 import org.cluster.core.commons.Configuration;
+import org.cluster.core.commons.Environment;
 import org.cluster.core.zookeeper.ZkCurator;
 
 /**
@@ -12,13 +13,9 @@ import org.cluster.core.zookeeper.ZkCurator;
 public class Test {
     public static void main(String[] args) throws Exception {
         /**
-         * 加载配置文件信息
-         */
-        Configuration.init("E:\\工作空间\\ccinfra-real-cmpt-yn\\etc\\conf\\cluster.yaml");
-        /**
          * 负责启动连接zookeeper,传入zookeeper地址
          */
-        ZkCurator.getInstance().init(Configuration.getInstance().getString("cluster.zookeeper.servers"));
+        ZkCurator.getInstance().init(Configuration.getInstance().getString(Environment.ZK_CONNECT));
 
        //DefaultScheduler.getAssetsState("default");
 

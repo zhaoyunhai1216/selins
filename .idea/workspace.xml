@@ -4,12 +4,20 @@
     <list default="true" id="d4044f26-1c7d-405c-ad37-fdbd1ed55be0" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/selins-appstore/src/main/java/org/cluster/appstore/AppStore.java" beforeDir="false" afterPath="$PROJECT_DIR$/selins-appstore/src/main/java/org/cluster/appstore/AppStore.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/selins-appstore/src/main/java/org/cluster/appstore/commons/AppsOptions.java" beforeDir="false" afterPath="$PROJECT_DIR$/selins-appstore/src/main/java/org/cluster/appstore/commons/AppsOptions.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/selins-appstore/src/main/java/org/cluster/appstore/rpc/AppStoreRMI.java" beforeDir="false" afterPath="$PROJECT_DIR$/selins-appstore/src/main/java/org/cluster/appstore/rpc/AppStoreRMI.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/selins-appstore/src/main/java/org/cluster/appstore/rpc/AppStoreServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/selins-appstore/src/main/java/org/cluster/appstore/rpc/AppStoreServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/selins-appstore/src/main/java/org/cluster/appstore/utils/UtilCommons.java" beforeDir="false" afterPath="$PROJECT_DIR$/selins-appstore/src/main/java/org/cluster/appstore/utils/UtilCommons.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/backtype/bean/AppResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/backtype/bean/AppResource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/Broker.java" beforeDir="false" afterPath="$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/Broker.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/commons/Configuration.java" beforeDir="false" afterPath="$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/commons/Configuration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/scheduler/LocalOptions.java" beforeDir="false" afterPath="$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/scheduler/LocalOptions.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/utils/UtilCommons.java" beforeDir="false" afterPath="$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/utils/UtilCommons.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/zookeeper/ZkUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/zookeeper/ZkUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/selins-shell/src/main/java/org/cluster/shell/Commands.java" beforeDir="false" afterPath="$PROJECT_DIR$/selins-shell/src/main/java/org/cluster/shell/Commands.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/selins-shell/src/main/java/org/cluster/shell/commands/Deploy.java" beforeDir="false" afterPath="$PROJECT_DIR$/selins-shell/src/main/java/org/cluster/shell/commands/Deploy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/selins-shell/src/main/java/org/cluster/shell/commands/Destroy.java" beforeDir="false" afterPath="$PROJECT_DIR$/selins-shell/src/main/java/org/cluster/shell/commands/Destroy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/selins-shell/src/main/java/org/cluster/shell/commands/Lists.java" beforeDir="false" afterPath="$PROJECT_DIR$/selins-shell/src/main/java/org/cluster/shell/commands/Lists.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/selins-shell/src/main/java/org/cluster/shell/commands/State.java" beforeDir="false" afterPath="$PROJECT_DIR$/selins-shell/src/main/java/org/cluster/shell/commands/State.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/selins-test/src/main/java/org/cluster/test/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/selins-test/src/main/java/org/cluster/test/Test.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/selins-test/src/main/test/org/cluster/core/commons/ConfigurationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/selins-test/src/main/test/org/cluster/core/commons/ConfigurationTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/selins-test/src/main/test/org/cluster/core/zookeeper/ZkCuratorTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/selins-test/src/main/test/org/cluster/core/zookeeper/ZkCuratorTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/selins-test/src/main/test/org/cluster/core/zookeeper/ZkUtilsTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/selins-test/src/main/test/org/cluster/core/zookeeper/ZkUtilsTest.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/selins-core/target/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -74,18 +82,18 @@
     <session id="608204264">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="4" />
-          <entry key="project.open.time.1" value="3" />
+          <entry key="project.closed" value="6" />
+          <entry key="project.open.time.1" value="4" />
           <entry key="project.open.time.15" value="1" />
           <entry key="project.open.time.5" value="1" />
           <entry key="project.open.time.7" value="1" />
-          <entry key="project.opened" value="6" />
+          <entry key="project.opened" value="7" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="class" value="9" />
-          <entry key="java" value="443" />
+          <entry key="class" value="10" />
+          <entry key="java" value="467" />
           <entry key="properties" value="1" />
           <entry key="rej" value="1" />
           <entry key="sh" value="3" />
@@ -95,8 +103,8 @@
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="CLASS" value="9" />
-          <entry key="JAVA" value="443" />
+          <entry key="CLASS" value="10" />
+          <entry key="JAVA" value="467" />
           <entry key="PLAIN_TEXT" value="4" />
           <entry key="Properties" value="1" />
           <entry key="XML" value="23" />
@@ -106,7 +114,7 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="dummy" value="59" />
-          <entry key="java" value="5968" />
+          <entry key="java" value="6100" />
           <entry key="sh" value="13" />
           <entry key="xml" value="21" />
           <entry key="yaml" value="12" />
@@ -114,7 +122,7 @@
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="5968" />
+          <entry key="JAVA" value="6100" />
           <entry key="PLAIN_TEXT" value="72" />
           <entry key="XML" value="21" />
           <entry key="YAML" value="12" />
@@ -123,53 +131,7 @@
     </session>
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/etc/conf/cluster.yaml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="47" selection-start-column="28" selection-end-column="47" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/selins-appstore/src/main/java/org/cluster/appstore/rpc/AppStoreServiceImpl.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="38" column="97" selection-start-line="38" selection-start-column="93" selection-end-line="38" selection-end-column="97" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/selins-appstore/src/main/java/org/cluster/appstore/commons/AppsOptions.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="247">
-              <caret line="62" column="43" selection-start-line="62" selection-start-column="43" selection-end-line="62" selection-end-column="43" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/backtype/bean/AppResource.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="508">
-              <caret line="43" column="35" selection-start-line="43" selection-start-column="35" selection-end-line="43" selection-end-column="35" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/selins-shell/src/main/java/org/cluster/shell/commands/Deploy.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="613">
-              <caret line="53" column="28" selection-start-line="53" selection-start-column="28" selection-end-line="53" selection-end-column="28" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -211,16 +173,11 @@
         <option value="$PROJECT_DIR$/selins-application/src/main/connector/org/cluster/core/cluster/rpc/ClusterService.java" />
         <option value="$PROJECT_DIR$/selins-shell/src/main/java/org/cluster/shell/commands/Help.java" />
         <option value="$PROJECT_DIR$/selins-test/src/main/test/org/cluster/core/commons/TestConfiguration.java" />
-        <option value="$PROJECT_DIR$/selins-test/src/main/java/org/cluster/test/Test.java" />
-        <option value="$PROJECT_DIR$/selins-test/src/main/test/org/cluster/core/commons/ConfigurationTest.java" />
-        <option value="$PROJECT_DIR$/selins-test/src/main/test/org/cluster/core/zookeeper/ZkCuratorTest.java" />
         <option value="$PROJECT_DIR$/etc/conf/cluster.yaml" />
         <option value="$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/commons/Environment.java" />
         <option value="$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/cluster/rpc/ClusterRMI.java" />
-        <option value="$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/Broker.java" />
         <option value="$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/cluster/rpc/AppStoreService.java" />
         <option value="$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/cluster/rpc/ClusterService.java" />
-        <option value="$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/commons/Configuration.java" />
         <option value="$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/backtype/bean/AssetsState.java" />
         <option value="$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/backtype/bean/MetaNode.java" />
         <option value="$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/backtype/bean/BaseState.java" />
@@ -232,30 +189,35 @@
         <option value="$PROJECT_DIR$/selins-shell/src/main/java/org/cluster/shell/commands/Kill.java" />
         <option value="$PROJECT_DIR$/selins-shell/src/main/java/org/cluster/shell/commands/Start.java" />
         <option value="$PROJECT_DIR$/selins-shell/src/main/java/org/cluster/shell/commands/Rebalance.java" />
-        <option value="$PROJECT_DIR$/selins-shell/src/main/java/org/cluster/shell/Commands.java" />
         <option value="$PROJECT_DIR$/selins-test/src/main/java/org/cluster/test/ApplicationTest.java" />
         <option value="$PROJECT_DIR$/selins-application/src/main/java/org/cluster/application/zookeeper/ZkUtils.java" />
         <option value="$PROJECT_DIR$/selins-application/src/main/java/org/cluster/application/backtype/tuple/BrokerState.java" />
         <option value="$PROJECT_DIR$/selins-application/src/main/java/org/cluster/application/tracker/LoggerManager.java" />
-        <option value="$PROJECT_DIR$/selins-shell/src/main/java/org/cluster/shell/commands/State.java" />
         <option value="$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/scheduler/ApplicationTracker.java" />
-        <option value="$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/scheduler/LocalOptions.java" />
         <option value="$PROJECT_DIR$/selins-application/src/main/java/org/cluster/application/Worker.java" />
-        <option value="$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/utils/UtilCommons.java" />
-        <option value="$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/zookeeper/ZkUtils.java" />
         <option value="$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/scheduler/RemoteOptions.java" />
-        <option value="$PROJECT_DIR$/selins-shell/src/main/java/org/cluster/shell/commands/Lists.java" />
-        <option value="$PROJECT_DIR$/selins-test/src/main/test/org/cluster/core/zookeeper/ZkUtilsTest.java" />
-        <option value="$PROJECT_DIR$/selins-shell/src/main/java/org/cluster/shell/commands/Destroy.java" />
         <option value="$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/utils/EnvCommons.java" />
         <option value="$PROJECT_DIR$/selins-application/src/main/java/org/cluster/application/commons/ShutdownHook.java" />
-        <option value="$PROJECT_DIR$/selins-appstore/src/main/java/org/cluster/appstore/AppStore.java" />
         <option value="$PROJECT_DIR$/selins-appstore/src/main/java/org/cluster/appstore/utils/UtilCommons.java" />
         <option value="$PROJECT_DIR$/selins-appstore/src/main/java/org/cluster/appstore/rpc/AppStoreRMI.java" />
         <option value="$PROJECT_DIR$/selins-appstore/src/main/java/org/cluster/appstore/rpc/AppStoreServiceImpl.java" />
         <option value="$PROJECT_DIR$/selins-appstore/src/main/java/org/cluster/appstore/commons/AppsOptions.java" />
         <option value="$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/backtype/bean/AppResource.java" />
+        <option value="$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/Broker.java" />
+        <option value="$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/zookeeper/ZkUtils.java" />
+        <option value="$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/scheduler/LocalOptions.java" />
+        <option value="$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/commons/Configuration.java" />
+        <option value="$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/utils/UtilCommons.java" />
+        <option value="$PROJECT_DIR$/selins-shell/src/main/java/org/cluster/shell/commands/State.java" />
+        <option value="$PROJECT_DIR$/selins-shell/src/main/java/org/cluster/shell/commands/Destroy.java" />
         <option value="$PROJECT_DIR$/selins-shell/src/main/java/org/cluster/shell/commands/Deploy.java" />
+        <option value="$PROJECT_DIR$/selins-shell/src/main/java/org/cluster/shell/Commands.java" />
+        <option value="$PROJECT_DIR$/selins-shell/src/main/java/org/cluster/shell/commands/Lists.java" />
+        <option value="$PROJECT_DIR$/selins-appstore/src/main/java/org/cluster/appstore/AppStore.java" />
+        <option value="$PROJECT_DIR$/selins-test/src/main/java/org/cluster/test/Test.java" />
+        <option value="$PROJECT_DIR$/selins-test/src/main/test/org/cluster/core/zookeeper/ZkCuratorTest.java" />
+        <option value="$PROJECT_DIR$/selins-test/src/main/test/org/cluster/core/commons/ConfigurationTest.java" />
+        <option value="$PROJECT_DIR$/selins-test/src/main/test/org/cluster/core/zookeeper/ZkUtilsTest.java" />
       </list>
     </option>
   </component>
@@ -280,24 +242,14 @@
   </component>
   <component name="MavenProjectNavigator">
     <treeState>
-      <expand>
-        <path>
-          <item name="" type="16c1761:MavenProjectsStructure$RootNode" />
-          <item name="selins" type="9519ce18:MavenProjectsStructure$ProjectNode" />
-        </path>
-        <path>
-          <item name="" type="16c1761:MavenProjectsStructure$RootNode" />
-          <item name="selins" type="9519ce18:MavenProjectsStructure$ProjectNode" />
-          <item name="Lifecycle" type="58874e2:MavenProjectsStructure$LifecycleNode" />
-        </path>
-      </expand>
+      <expand />
       <select />
     </treeState>
   </component>
   <component name="MavenRunner">
     <option name="skipTests" value="true" />
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
     <option name="width" value="1936" />
@@ -327,6 +279,7 @@
     </navigator>
     <panes>
       <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -334,287 +287,17 @@
               <item name="selins" type="b2602c69:ProjectViewProjectNode" />
               <item name="selins" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="selins" type="b2602c69:ProjectViewProjectNode" />
-              <item name="selins" type="462c0819:PsiDirectoryNode" />
-              <item name="etc" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="selins" type="b2602c69:ProjectViewProjectNode" />
-              <item name="selins" type="462c0819:PsiDirectoryNode" />
-              <item name="etc" type="462c0819:PsiDirectoryNode" />
-              <item name="conf" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="selins" type="b2602c69:ProjectViewProjectNode" />
-              <item name="selins" type="462c0819:PsiDirectoryNode" />
-              <item name="selins-appstore" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="selins" type="b2602c69:ProjectViewProjectNode" />
-              <item name="selins" type="462c0819:PsiDirectoryNode" />
-              <item name="selins-appstore" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="selins" type="b2602c69:ProjectViewProjectNode" />
-              <item name="selins" type="462c0819:PsiDirectoryNode" />
-              <item name="selins-appstore" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="selins" type="b2602c69:ProjectViewProjectNode" />
-              <item name="selins" type="462c0819:PsiDirectoryNode" />
-              <item name="selins-appstore" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="selins" type="b2602c69:ProjectViewProjectNode" />
-              <item name="selins" type="462c0819:PsiDirectoryNode" />
-              <item name="selins-appstore" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="appstore" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="selins" type="b2602c69:ProjectViewProjectNode" />
-              <item name="selins" type="462c0819:PsiDirectoryNode" />
-              <item name="selins-appstore" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="appstore" type="462c0819:PsiDirectoryNode" />
-              <item name="commons" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="selins" type="b2602c69:ProjectViewProjectNode" />
-              <item name="selins" type="462c0819:PsiDirectoryNode" />
-              <item name="selins-appstore" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="appstore" type="462c0819:PsiDirectoryNode" />
-              <item name="rpc" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="selins" type="b2602c69:ProjectViewProjectNode" />
-              <item name="selins" type="462c0819:PsiDirectoryNode" />
-              <item name="selins-appstore" type="462c0819:PsiDirectoryNode" />
-              <item name="target" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="selins" type="b2602c69:ProjectViewProjectNode" />
-              <item name="selins" type="462c0819:PsiDirectoryNode" />
-              <item name="selins-core" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="selins" type="b2602c69:ProjectViewProjectNode" />
-              <item name="selins" type="462c0819:PsiDirectoryNode" />
-              <item name="selins-core" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="selins" type="b2602c69:ProjectViewProjectNode" />
-              <item name="selins" type="462c0819:PsiDirectoryNode" />
-              <item name="selins-core" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="selins" type="b2602c69:ProjectViewProjectNode" />
-              <item name="selins" type="462c0819:PsiDirectoryNode" />
-              <item name="selins-core" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="selins" type="b2602c69:ProjectViewProjectNode" />
-              <item name="selins" type="462c0819:PsiDirectoryNode" />
-              <item name="selins-core" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="core" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="selins" type="b2602c69:ProjectViewProjectNode" />
-              <item name="selins" type="462c0819:PsiDirectoryNode" />
-              <item name="selins-core" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="core" type="462c0819:PsiDirectoryNode" />
-              <item name="bean" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="selins" type="b2602c69:ProjectViewProjectNode" />
-              <item name="selins" type="462c0819:PsiDirectoryNode" />
-              <item name="selins-core" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="core" type="462c0819:PsiDirectoryNode" />
-              <item name="rpc" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="selins" type="b2602c69:ProjectViewProjectNode" />
-              <item name="selins" type="462c0819:PsiDirectoryNode" />
-              <item name="selins-core" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="core" type="462c0819:PsiDirectoryNode" />
-              <item name="commons" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="selins" type="b2602c69:ProjectViewProjectNode" />
-              <item name="selins" type="462c0819:PsiDirectoryNode" />
-              <item name="selins-core" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="core" type="462c0819:PsiDirectoryNode" />
-              <item name="scheduler" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="selins" type="b2602c69:ProjectViewProjectNode" />
-              <item name="selins" type="462c0819:PsiDirectoryNode" />
-              <item name="selins-core" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="core" type="462c0819:PsiDirectoryNode" />
-              <item name="utils" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="selins" type="b2602c69:ProjectViewProjectNode" />
-              <item name="selins" type="462c0819:PsiDirectoryNode" />
-              <item name="selins-core" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="core" type="462c0819:PsiDirectoryNode" />
-              <item name="zookeeper" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="selins" type="b2602c69:ProjectViewProjectNode" />
-              <item name="selins" type="462c0819:PsiDirectoryNode" />
-              <item name="selins-core" type="462c0819:PsiDirectoryNode" />
-              <item name="target" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="selins" type="b2602c69:ProjectViewProjectNode" />
-              <item name="selins" type="462c0819:PsiDirectoryNode" />
-              <item name="selins-shell" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="selins" type="b2602c69:ProjectViewProjectNode" />
-              <item name="selins" type="462c0819:PsiDirectoryNode" />
-              <item name="selins-shell" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="selins" type="b2602c69:ProjectViewProjectNode" />
-              <item name="selins" type="462c0819:PsiDirectoryNode" />
-              <item name="selins-shell" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="selins" type="b2602c69:ProjectViewProjectNode" />
-              <item name="selins" type="462c0819:PsiDirectoryNode" />
-              <item name="selins-shell" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="selins" type="b2602c69:ProjectViewProjectNode" />
-              <item name="selins" type="462c0819:PsiDirectoryNode" />
-              <item name="selins-shell" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="shell" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="selins" type="b2602c69:ProjectViewProjectNode" />
-              <item name="selins" type="462c0819:PsiDirectoryNode" />
-              <item name="selins-shell" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="shell" type="462c0819:PsiDirectoryNode" />
-              <item name="commands" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="selins" type="b2602c69:ProjectViewProjectNode" />
-              <item name="selins" type="462c0819:PsiDirectoryNode" />
-              <item name="selins-shell" type="462c0819:PsiDirectoryNode" />
-              <item name="target" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="selins" type="b2602c69:ProjectViewProjectNode" />
-              <item name="selins" type="462c0819:PsiDirectoryNode" />
-              <item name="selins-test" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="selins" type="b2602c69:ProjectViewProjectNode" />
-              <item name="selins" type="462c0819:PsiDirectoryNode" />
-              <item name="selins-test" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="selins" type="b2602c69:ProjectViewProjectNode" />
-              <item name="selins" type="462c0819:PsiDirectoryNode" />
-              <item name="selins-test" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="selins" type="b2602c69:ProjectViewProjectNode" />
-              <item name="selins" type="462c0819:PsiDirectoryNode" />
-              <item name="selins-test" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="selins" type="b2602c69:ProjectViewProjectNode" />
-              <item name="selins" type="462c0819:PsiDirectoryNode" />
-              <item name="selins-test" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-              <item name="core" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="selins" type="b2602c69:ProjectViewProjectNode" />
-              <item name="selins" type="462c0819:PsiDirectoryNode" />
-              <item name="selins-test" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-              <item name="core" type="462c0819:PsiDirectoryNode" />
-              <item name="zookeeper" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
       </pane>
       <pane id="AndroidView" />
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1543296968884" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1543560024345" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit4" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit4" value="" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/bin" />
@@ -802,6 +485,7 @@
       <workItem from="1542616261794" duration="23603000" />
       <workItem from="1542784305240" duration="31010000" />
       <workItem from="1543199000679" duration="4312000" />
+      <workItem from="1543557743005" duration="2210000" />
     </task>
     <servers />
   </component>
@@ -838,12 +522,12 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="135696000" />
+    <option name="totallyTimeSpent" value="137906000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.14978679" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17537314" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -870,7 +554,7 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="right" id="Capture Analysis" order="4" />
-      <window_info anchor="right" id="Maven Projects" order="5" visible="true" weight="0.24200426" />
+      <window_info anchor="right" id="Maven Projects" order="5" visible="true" weight="0.24147122" />
       <window_info anchor="right" id="Database" order="6" />
       <window_info anchor="right" id="Palette&#9;" order="7" />
       <window_info anchor="right" id="Theme Preview" order="8" />
@@ -922,12 +606,6 @@
           <properties />
           <option name="timeStamp" value="18" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/selins-shell/src/main/java/org/cluster/shell/commands/State.java</url>
-          <line>67</line>
-          <properties />
-          <option name="timeStamp" value="20" />
-        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
@@ -941,63 +619,10 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/backtype/bean/BaseState.java" />
-    <entry file="file://$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/backtype/bean/AssetsState.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="793">
-          <caret line="62" column="20" lean-forward="true" selection-start-line="62" selection-start-column="20" selection-end-line="62" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/selins-test/src/main/test/org/cluster/core/backtype/bean/BrokerStateTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="247">
-          <caret line="19" column="49" lean-forward="true" selection-start-line="19" selection-start-column="8" selection-end-line="19" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/utils/TabCommons.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-608">
-          <caret line="13" column="13" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/selins-shell/src/main/java/org/cluster/shell/Commands.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="346">
-          <caret line="25" selection-start-line="25" selection-end-line="25" selection-end-column="105" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/selins-application/src/main/java/org/cluster/application/commons/Environment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="17" column="42" lean-forward="true" selection-start-line="17" selection-start-column="42" selection-end-line="17" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://E:/Maven库/org/apache/kafka/kafka_2.12/1.1.0/kafka_2.12-1.1.0.jar!/kafka/server/BrokerState.class">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="19">
           <caret line="1" column="11" selection-start-line="1" selection-start-column="11" selection-end-line="1" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/backtype/bean/BrokerState.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="11" column="24" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="24" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/commons/Environment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="183">
-          <caret line="15" column="33" lean-forward="true" selection-start-line="14" selection-start-column="4" selection-end-line="15" selection-end-column="33" />
         </state>
       </provider>
     </entry>
@@ -1019,13 +644,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/Broker.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="39" column="21" selection-start-line="39" selection-start-column="21" selection-end-line="39" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/cluster/rpc/ClusterRMI.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="361">
@@ -1040,13 +658,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/backtype/bean/AppStore.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-183">
-          <caret line="10" column="21" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/backtype/bean/WorkerState.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1102">
@@ -1054,25 +665,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/commons/StateMemory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="760">
-          <caret line="51" column="18" selection-start-line="51" selection-start-column="18" selection-end-line="51" selection-end-column="18" />
-          <folding>
-            <element signature="e#1104#1105#0" expanded="true" />
-            <element signature="e#1164#1165#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/selins-application/src/main/java/org/cluster/application/commons/EnvOptions.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="167">
           <caret line="49" column="18" selection-start-line="49" selection-start-column="18" selection-end-line="49" selection-end-column="18" />
-          <folding>
-            <element signature="e#2143#2144#0" expanded="true" />
-            <element signature="e#2219#2220#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1090,13 +686,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/zookeeper/ZkUtils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="278">
-          <caret line="332" selection-start-line="332" selection-end-line="332" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/scheduler/RemoteOptions.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="798">
@@ -1104,27 +693,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/scheduler/LocalOptions.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="722">
-          <caret line="38" column="12" selection-start-line="38" selection-start-column="12" selection-end-line="38" selection-end-column="12" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/scheduler/ApplicationTracker.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="281">
           <caret line="50" column="45" selection-start-line="50" selection-start-column="29" selection-end-line="50" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/commons/Configuration.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="627">
-          <caret line="47" column="23" selection-start-line="47" selection-start-column="23" selection-end-line="47" selection-end-column="23" />
         </state>
       </provider>
     </entry>
@@ -1145,31 +717,10 @@
     <entry file="file://$PROJECT_DIR$/selins-shell/pom.xml">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/selins-test/src/main/test/org/cluster/core/zookeeper/ZkUtilsTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="37" column="82" selection-start-line="37" selection-start-column="82" selection-end-line="37" selection-end-column="82" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/selins-shell/src/main/java/org/cluster/shell/commands/Destroy.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="196">
-          <caret line="33" column="99" selection-start-line="33" selection-start-column="99" selection-end-line="33" selection-end-column="99" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/selins-shell/src/main/java/org/cluster/shell/commands/Kill.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="337">
           <caret line="32" column="19" lean-forward="true" selection-start-line="32" selection-start-column="19" selection-end-line="32" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/selins-shell/src/main/java/org/cluster/shell/commands/Lists.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="129">
-          <caret line="49" column="103" selection-start-line="49" selection-start-column="91" selection-end-line="49" selection-end-column="103" />
         </state>
       </provider>
     </entry>
@@ -1194,24 +745,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/selins-shell/src/main/java/org/cluster/shell/commands/State.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="490">
-          <caret line="68" column="26" lean-forward="true" selection-start-line="68" selection-start-column="26" selection-end-line="68" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/scheduler/DefaultScheduler.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1178">
           <caret line="27" column="61" selection-start-line="27" selection-start-column="61" selection-end-line="27" selection-end-column="61" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/utils/UtilCommons.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="65">
-          <caret line="165" column="76" selection-start-line="165" selection-start-column="76" selection-end-line="165" selection-end-column="76" />
         </state>
       </provider>
     </entry>
@@ -1229,11 +766,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="323">
           <caret line="35" column="22" selection-start-line="35" selection-start-column="22" selection-end-line="35" selection-end-column="22" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#428#429#0" expanded="true" />
-            <element signature="e#466#467#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1241,20 +773,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="361">
           <caret line="34" column="52" selection-start-line="34" selection-start-column="52" selection-end-line="34" selection-end-column="52" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/selins-application/src/main/java/org/cluster/application/backtype/tuple/BrokerState.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="223">
-          <caret line="12" column="29" selection-start-line="12" selection-start-column="29" selection-end-line="12" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/zookeeper/ZkCurator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="443">
-          <caret line="33" column="16" selection-start-line="33" selection-start-column="16" selection-end-line="33" selection-end-column="16" />
         </state>
       </provider>
     </entry>
@@ -1272,13 +790,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/selins-appstore/src/main/java/org/cluster/appstore/AppStore.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="589">
-          <caret line="37" column="22" selection-start-line="37" selection-start-column="22" selection-end-line="37" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/etc/conf/cluster.yaml">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -1288,29 +799,215 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/selins-appstore/src/main/java/org/cluster/appstore/rpc/AppStoreServiceImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
+        <state relative-caret-position="551">
           <caret line="38" column="97" selection-start-line="38" selection-start-column="93" selection-end-line="38" selection-end-column="97" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/selins-appstore/src/main/java/org/cluster/appstore/commons/AppsOptions.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="247">
+        <state relative-caret-position="969">
           <caret line="62" column="43" selection-start-line="62" selection-start-column="43" selection-end-line="62" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/selins-shell/src/main/java/org/cluster/shell/commands/Deploy.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="613">
-          <caret line="53" column="28" selection-start-line="53" selection-start-column="28" selection-end-line="53" selection-end-column="28" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/backtype/bean/AppResource.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="508">
-          <caret line="43" column="35" selection-start-line="43" selection-start-column="35" selection-end-line="43" selection-end-column="35" />
+        <state relative-caret-position="736">
+          <caret line="46" column="39" lean-forward="true" selection-start-line="46" selection-start-column="39" selection-end-line="46" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/backtype/bean/AppStore.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="304">
+          <caret line="25" selection-start-line="25" selection-end-line="25" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/backtype/bean/BrokerState.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="247">
+          <caret line="13" column="27" lean-forward="true" selection-start-line="13" selection-start-column="3" selection-end-line="13" selection-end-column="27" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/commons/StateMemory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="209">
+          <caret line="16" column="13" lean-forward="true" selection-start-line="16" selection-start-column="4" selection-end-line="16" selection-end-column="13" />
+          <folding>
+            <element signature="e#1104#1105#0" expanded="true" />
+            <element signature="e#1164#1165#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/commons/Environment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="183">
+          <caret line="15" column="33" lean-forward="true" selection-start-line="14" selection-start-column="4" selection-end-line="15" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/scheduler/LocalOptions.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="188">
+          <caret line="60" column="85" selection-start-line="60" selection-start-column="85" selection-end-line="60" selection-end-column="85" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://E:/Maven库/com/alibaba/fastjson/1.2.51/fastjson-1.2.51.jar!/com/alibaba/fastjson/JSONObject.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="196">
+          <caret line="383" column="30" lean-forward="true" selection-start-line="383" selection-start-column="11" selection-end-line="383" selection-end-column="30" />
+          <folding>
+            <element signature="e#11814#11815#0" expanded="true" />
+            <element signature="e#11845#11846#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/commons/Configuration.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="376">
+          <caret line="82" column="19" selection-start-line="82" selection-start-column="19" selection-end-line="82" selection-end-column="19" />
+          <folding>
+            <element signature="e#1082#1083#0" expanded="true" />
+            <element signature="e#1116#1117#0" expanded="true" />
+            <element signature="e#1368#1369#0" expanded="true" />
+            <element signature="e#1417#1418#0" expanded="true" />
+            <element signature="e#1520#1521#0" expanded="true" />
+            <element signature="e#1584#1585#0" expanded="true" />
+            <element signature="e#1692#1693#0" expanded="true" />
+            <element signature="e#1741#1742#0" expanded="true" />
+            <element signature="e#1816#1817#0" expanded="true" />
+            <element signature="e#1869#1870#0" expanded="true" />
+            <element signature="e#1974#1975#0" expanded="true" />
+            <element signature="e#2014#2015#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/utils/UtilCommons.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="418">
+          <caret line="291" column="82" selection-start-line="291" selection-start-column="82" selection-end-line="291" selection-end-column="82" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/selins-shell/src/main/java/org/cluster/shell/commands/State.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="584">
+          <caret line="60" column="37" lean-forward="true" selection-start-line="60" selection-start-column="37" selection-end-line="60" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/selins-shell/src/main/java/org/cluster/shell/commands/Destroy.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="337">
+          <caret line="34" column="84" selection-start-line="34" selection-start-column="84" selection-end-line="34" selection-end-column="84" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/selins-shell/src/main/java/org/cluster/shell/commands/Deploy.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="399">
+          <caret line="36" column="84" selection-start-line="36" selection-start-column="84" selection-end-line="36" selection-end-column="84" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/selins-shell/src/main/java/org/cluster/shell/Commands.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="188">
+          <caret line="22" column="75" selection-start-line="22" selection-start-column="75" selection-end-line="22" selection-end-column="75" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/selins-shell/src/main/java/org/cluster/shell/commands/Lists.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="551">
+          <caret line="100" column="97" selection-start-line="100" selection-start-column="97" selection-end-line="100" selection-end-column="97" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/selins-appstore/src/main/java/org/cluster/appstore/AppStore.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="21" column="61" selection-start-line="21" selection-start-column="61" selection-end-line="21" selection-end-column="61" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/selins-test/src/main/java/org/cluster/test/Test.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="17" column="75" selection-start-line="17" selection-start-column="75" selection-end-line="17" selection-end-column="75" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/selins-test/src/main/test/org/cluster/core/zookeeper/ZkCuratorTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="281">
+          <caret line="24" column="97" selection-start-line="24" selection-start-column="97" selection-end-line="24" selection-end-column="97" />
+          <folding>
+            <element signature="e#538#539#0" expanded="true" />
+            <element signature="e#645#646#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/selins-test/src/main/test/org/cluster/core/commons/ConfigurationTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="475">
+          <caret line="27" column="66" selection-start-line="27" selection-start-column="66" selection-end-line="27" selection-end-column="66" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/selins-test/src/main/test/org/cluster/core/zookeeper/ZkUtilsTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="152">
+          <caret line="15" column="75" selection-start-line="15" selection-start-column="75" selection-end-line="15" selection-end-column="75" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/zookeeper/ZkUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="95">
+          <caret line="305" column="84" selection-start-line="305" selection-start-column="84" selection-end-line="305" selection-end-column="84" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/zookeeper/ZkCurator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="33" column="16" selection-start-line="33" selection-start-column="16" selection-end-line="33" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/selins-core/src/main/java/org/cluster/core/Broker.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="261">
+          <caret line="23" column="61" selection-start-line="23" selection-start-column="61" selection-end-line="23" selection-end-column="61" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/selins-application/src/main/java/org/cluster/application/backtype/tuple/Tuple.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="185">
+          <caret line="18" column="13" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/selins-application/src/main/java/org/cluster/application/backtype/tuple/BrokerState.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="52">
+          <caret line="12" column="29" selection-start-line="12" selection-start-column="29" selection-end-line="12" selection-end-column="29" />
         </state>
       </provider>
     </entry>

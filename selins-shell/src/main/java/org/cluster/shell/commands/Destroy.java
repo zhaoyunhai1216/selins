@@ -7,6 +7,7 @@ import org.apache.commons.cli.Options;
 import org.cluster.core.backtype.bean.AppStore;
 import org.cluster.core.cluster.rpc.AppStoreService;
 import org.cluster.core.commons.Configuration;
+import org.cluster.core.commons.Environment;
 import org.cluster.core.zookeeper.ZkCurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +32,7 @@ public class Destroy {
             logger.info(opts.getOptions().toString());
             return;
         }
-        String zkDir = Configuration.getInstance().getString("cluster.zookeeper.root") + "/appstore";
+        String zkDir = Configuration.getInstance().getString(Environment.ZK_ROOT_DIR) + "/appstore";
         AppStore appStore = AppStore.parse(new String(ZkCurator.getInstance().getZkCurator().getData().forPath(zkDir)));
         AppStoreService service = (AppStoreService) Naming.lookup("rmi://"
                 + InetAddress.getByName(appStore.getString(AppStore.Fileds.HOST)).getHostAddress() + ":" + appStore.getInteger(AppStore.Fileds.PORT) + "/AppStore");
