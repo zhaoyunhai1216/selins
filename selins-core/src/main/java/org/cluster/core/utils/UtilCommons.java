@@ -256,7 +256,7 @@ public class UtilCommons {
         AppResource res = ZkUtils.getAppZkResource(appID);
         String host = Configuration.getInstance().getString(Environment.CLUSTER_HOST);
         return new String[]{workDir, appID + "_" + seq + "_" + total, res.getString(AppResource.Fileds.JVM_OPTS), "--host=" + host, "--appID=" + res.getString(AppResource.Fileds.ID)
-                , "--appMain=" + res.getString(AppResource.Fileds.CLASS), "--seq=" + seq, "--total=" + total, "--category=" + res.getString(AppResource.Fileds.CATEGORY), "--yaml=" + Configuration.getProjectDir() + "/etc"};
+                , "--class=" + res.getString(AppResource.Fileds.CLASS), "--seq=" + seq, "--total=" + total, "--category=" + res.getString(AppResource.Fileds.CATEGORY), "--yaml=" + Configuration.getProjectDir() + "/etc"};
     }
 
     /**
@@ -280,19 +280,6 @@ public class UtilCommons {
             }
         }
 
-    }
-
-    /**
-     * 获取唯一id信息
-     *
-     * @return
-     * @throws Exception
-     */
-    public static int getId() throws Exception {
-        String dir = Configuration.getInstance().getString(Environment.ZK_ROOT_DIR) + "/seqid";
-        String seqJson = "{\"timestamp\":" + System.currentTimeMillis() + "}";
-        ZkUtils.create(ZkCurator.getInstance().getZkCurator(), dir, seqJson.getBytes(), CreateMode.PERSISTENT);
-        return ZkCurator.getInstance().getZkCurator().setData().forPath(dir, seqJson.getBytes()).getVersion();
     }
 
     public static void main(String[] args) throws Exception {

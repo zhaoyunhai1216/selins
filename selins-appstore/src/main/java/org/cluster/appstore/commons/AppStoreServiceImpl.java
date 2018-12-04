@@ -1,15 +1,13 @@
-package org.cluster.appstore.rpc;
+package org.cluster.appstore.commons;
 
-import com.alibaba.fastjson.JSONObject;
-import org.cluster.appstore.commons.AppsOptions;
 import org.cluster.appstore.utils.UtilCommons;
 import org.cluster.core.cluster.rpc.AppStoreService;
+import org.cluster.core.zookeeper.ZkSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.UUID;
 
 /**
  * @Auther: 赵云海
@@ -37,43 +35,43 @@ public class AppStoreServiceImpl extends UnicastRemoteObject implements AppStore
      */
     @Override
     public void deploy(String jvmOpts, String clazz, int numWorkers, String category, byte[] repo) throws Exception {
-        String appID = UtilCommons.getAppName(clazz) + "-" + UtilCommons.getId();
-        AppsOptions.createResources(appID, repo);
-        AppsOptions.createZkResources(appID, clazz, jvmOpts, numWorkers, category);
-        logger.info("The application <" + appID + "> was successfully deploy");
+        String applicationID = UtilCommons.getApplicationID(clazz);
+        OptionsFactory.createResources(applicationID, repo);
+        OptionsFactory.createZkResources(applicationID, clazz, jvmOpts, numWorkers, category);
+        logger.info("The application <" + applicationID + "> was successfully deploy");
     }
 
     /**
      * 销毁指定得application 应用
      */
     @Override
-    public void destroy(String appID) throws Exception {
-        AppsOptions.deleteResources(appID);
-        AppsOptions.deleteZkResources(appID);
-        logger.info("The application <" + appID + "]> was successfully destroy");
+    public void destroy(String applicationID) throws Exception {
+        OptionsFactory.deleteResources(applicationID);
+        OptionsFactory.deleteZkResources(applicationID);
+        logger.info("The application <" + applicationID + "]> was successfully destroy");
     }
 
     /**
      * 同步获取指定的应用执行文件夹
      *
-     * @param appID
+     * @param applicationID
      */
     @Override
-    public byte[] getResources(String appID) throws Exception {
-        byte[] b = AppsOptions.searchResources(appID);
-        logger.info("The application <" + appID + "]> was successfully sync.");
-        return b;
+    public byte[] getResources(String applicationID) throws Exception {
+        byte[] repo = OptionsFactory.searchResources(applicationID);
+        logger.info("The application <" + applicationID + "]> was successfully sync.");
+        return repo;
     }
 
     /**
      * application 应用更新状态
      *
-     * @param appID
+     * @param applicationID
      * @param state
      */
     @Override
-    public void updateState(String appID, int state) throws Exception {
-        AppsOptions.updateState(appID, state);
+    public void updateState(String applicationID, int state) throws Exception {
+        OptionsFactory.updateState(applicationID, state);
     }
 
     /**

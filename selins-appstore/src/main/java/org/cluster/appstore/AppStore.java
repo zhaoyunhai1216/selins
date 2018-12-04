@@ -1,6 +1,6 @@
 package org.cluster.appstore;
 
-import org.cluster.appstore.rpc.AppStoreRMI;
+import org.cluster.appstore.commons.AppStoreRMI;
 import org.cluster.appstore.utils.UtilCommons;
 import org.cluster.core.commons.Configuration;
 import org.cluster.core.commons.Environment;
@@ -27,13 +27,13 @@ public class AppStore {
         /**
          * 构建本集群的Master节点的zookeeper路径信息
          */
-        UtilCommons.initZkMetaDir();
+        UtilCommons.initAppstoreDir();
         /**
          * 启用相关远程调用服务，可用于对提交的任务进行控制
          */
         AppStoreRMI.init();
         logger.info("[Cluster] AppStore [" + Configuration.getInstance().getString(Environment.CLUSTER_HOST)
-                + ":" + Configuration.getInstance().getInteger(Environment.APPSTORE_PORT) + "] is start-up successfully.");
+                + ":" + Configuration.getInstance().getInteger(Environment.APPSTORE_PORT) + "] is bootup successfully.");
     }
 
     /**

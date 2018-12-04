@@ -1,10 +1,9 @@
 package org.cluster.shell.commands;
 
-import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.Options;
-import org.cluster.core.backtype.bean.AppStore;
+import org.cluster.core.backtype.bean.AppStorePojo;
 import org.cluster.core.cluster.rpc.AppStoreService;
 import org.cluster.core.commons.Configuration;
 import org.cluster.core.commons.Environment;
@@ -33,9 +32,9 @@ public class Destroy {
             return;
         }
         String zkDir = Configuration.getInstance().getString(Environment.ZK_ROOT_DIR) + "/appstore";
-        AppStore appStore = AppStore.parse(new String(ZkCurator.getInstance().getZkCurator().getData().forPath(zkDir)));
+        AppStorePojo appStore = AppStorePojo.parse(new String(ZkCurator.getInstance().getZkCurator().getData().forPath(zkDir)));
         AppStoreService service = (AppStoreService) Naming.lookup("rmi://"
-                + InetAddress.getByName(appStore.getString(AppStore.Fileds.HOST)).getHostAddress() + ":" + appStore.getInteger(AppStore.Fileds.PORT) + "/AppStore");
+                + InetAddress.getByName(appStore.getString(AppStorePojo.Fileds.HOST)).getHostAddress() + ":" + appStore.getInteger(AppStorePojo.Fileds.PORT) + "/AppStore");
 
         service.destroy(cliParser.getOptionValue("appID"));
         logger.info("[Cluster] The application was successfully destroy. So let's go ahead and look at UI");

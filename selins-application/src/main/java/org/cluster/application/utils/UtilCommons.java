@@ -261,7 +261,7 @@ public class UtilCommons {
         System.out.println(Arrays.toString(args));
         Options opts = new Options().addOption("host", true, "The host.")
                 .addOption("category", true, "The category.").addOption("appID", true, "The Application id.")
-                .addOption("appMain", true, "The Application id.").addOption("seq", true, "The help parameter.")
+                .addOption("class", true, "The Application id.").addOption("seq", true, "The help parameter.")
                 .addOption("total", true, "The JVM parameter.").addOption("yaml", true, "Yaml configuration file.");
         return new EnvOptions(new GnuParser().parse(opts, args));
     }

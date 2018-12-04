@@ -1,10 +1,9 @@
 package org.cluster.shell.commands;
 
-import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.Options;
-import org.cluster.core.backtype.bean.AppStore;
+import org.cluster.core.backtype.bean.AppStorePojo;
 import org.cluster.core.cluster.rpc.AppStoreService;
 import org.cluster.core.commons.Configuration;
 import org.cluster.core.commons.Environment;
@@ -35,9 +34,9 @@ public class Deploy {
             return;
         }
         String zkDir = Configuration.getInstance().getString(Environment.ZK_ROOT_DIR) + "/appstore";
-        AppStore appStore = AppStore.parse(new String(ZkCurator.getInstance().getZkCurator().getData().forPath(zkDir)));
+        AppStorePojo appStore = AppStorePojo.parse(new String(ZkCurator.getInstance().getZkCurator().getData().forPath(zkDir)));
         AppStoreService service = (AppStoreService) Naming.lookup("rmi://"
-                + InetAddress.getByName(appStore.getString(AppStore.Fileds.HOST)).getHostAddress() + ":" + appStore.getInteger(AppStore.Fileds.PORT) + "/AppStore");
+                + InetAddress.getByName(appStore.getString(AppStorePojo.Fileds.HOST)).getHostAddress() + ":" + appStore.getInteger(AppStorePojo.Fileds.PORT) + "/AppStore");
         byte[] b = UtilCommons.zipDirectory(new File(cliParser.getOptionValue("path")), "/");
         service.deploy(cliParser.getOptionValue("jvmOpts"), cliParser.getOptionValue("class"), Integer.parseInt(cliParser.getOptionValue("numWorkers")), cliParser.getOptionValue("category"), b);
         logger.info("[Cluster] The application was successfully submitted. So let's go ahead and look at UI");
@@ -52,7 +51,7 @@ public class Deploy {
         opts.addOption("class", true, "application main class.");
         opts.addOption("numWorkers", true, "work parallelism.");
         opts.addOption("category", true, "application category.");
-        opts.addOption("jars", true, "Application file path.");
+        opts.addOption("path", true, "Application file path.");
         return opts;
     }
 

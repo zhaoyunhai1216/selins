@@ -1,10 +1,7 @@
 package org.cluster.core.scheduler;
 
-import com.alibaba.fastjson.JSONObject;
-import org.cluster.core.backtype.bean.AppResource;
+import org.cluster.core.backtype.bean.AppStorePojo;
 import org.cluster.core.backtype.bean.AssetsState;
-import org.cluster.core.backtype.bean.AppStore;
-import org.cluster.core.backtype.bean.WorkerState;
 import org.cluster.core.cluster.rpc.AppStoreService;
 import org.cluster.core.cluster.rpc.ClusterService;
 import org.cluster.core.zookeeper.ZkCurator;
@@ -14,7 +11,6 @@ import org.slf4j.LoggerFactory;
 
 import java.net.InetAddress;
 import java.rmi.Naming;
-import java.util.List;
 
 /**
  * @Auther: 赵云海
@@ -42,8 +38,8 @@ public class RemoteOptions {
      * 在集群的appstore中, 同步application的运行文件信息,然后解压存储到本地用于启动运行
      */
     public static byte[] getAppResources(String appID) throws Exception {
-        AppStore appStore = ZkUtils.getAppStore(ZkCurator.getInstance().getZkCurator());
-        return getAppstoreService(appStore.getString(AppStore.Fileds.HOST), appStore.getInteger(AppStore.Fileds.PORT)).getResources(appID);
+        AppStorePojo appStore = ZkUtils.getAppStore(ZkCurator.getInstance().getZkCurator());
+        return getAppstoreService(appStore.getString(AppStorePojo.Fileds.HOST), appStore.getInteger(AppStorePojo.Fileds.PORT)).getResources(appID);
     }
 
     /**
@@ -54,8 +50,8 @@ public class RemoteOptions {
      * @throws Exception
      */
     public static void updateState(String appID, int state) throws Exception {
-        AppStore metaNode = ZkUtils.getAppStore(ZkCurator.getInstance().getZkCurator());
-        getAppstoreService(metaNode.getString(AppStore.Fileds.HOST), metaNode.getInteger(AppStore.Fileds.PORT)).updateState(appID, state);
+        AppStorePojo metaNode = ZkUtils.getAppStore(ZkCurator.getInstance().getZkCurator());
+        getAppstoreService(metaNode.getString(AppStorePojo.Fileds.HOST), metaNode.getInteger(AppStorePojo.Fileds.PORT)).updateState(appID, state);
     }
 
     /**

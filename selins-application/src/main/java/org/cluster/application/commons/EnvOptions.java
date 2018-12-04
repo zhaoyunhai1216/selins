@@ -27,7 +27,7 @@ public class EnvOptions extends JSONObject {
         put(Environment.APPLICATION_ID.key(), cliParser.getOptionValue("appID", UUID.randomUUID().toString()));
         put(Environment.APPLICATION_SEQ.key(), cliParser.getOptionValue("seq", "0"));
         put(Environment.APPLICATION_TOATL.key(), cliParser.getOptionValue("total", "1"));
-        put(Environment.APPLICATION_MAIN.key(), cliParser.getOptionValue("appMain"));
+        put(Environment.APPLICATION_MAIN.key(), cliParser.getOptionValue("class"));
         put(Environment.APPLICATION_CATEGORY.key(), cliParser.getOptionValue("category", "default"));
         EnvCommons.setEnvironment(getOptionValue(Environment.CLUSTER_CONF_DIR.key()));
 

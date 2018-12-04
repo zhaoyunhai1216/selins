@@ -1,4 +1,4 @@
-package org.cluster.appstore.rpc;
+package org.cluster.appstore.commons;
 
 import org.cluster.core.commons.Configuration;
 import org.cluster.core.commons.Environment;

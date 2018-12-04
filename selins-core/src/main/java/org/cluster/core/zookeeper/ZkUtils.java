@@ -5,13 +5,9 @@ import org.apache.curator.framework.CuratorFramework;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.data.Stat;
-import org.cluster.core.backtype.bean.AppResource;
-import org.cluster.core.backtype.bean.BrokerState;
-import org.cluster.core.backtype.bean.AppStore;
-import org.cluster.core.backtype.bean.WorkerState;
+import org.cluster.core.backtype.bean.*;
 import org.cluster.core.commons.Configuration;
 import org.cluster.core.commons.Environment;
-import org.cluster.core.backtype.bean.AssetsState;
 import org.cluster.core.utils.UtilCommons;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,6 +56,21 @@ public class ZkUtils {
         }
     }
 
+
+    /**
+     * 创建zookeeper节点目录
+     */
+    public static List<String> getChildren(CuratorFramework curator, String path) {
+        // 创建服务根目录
+        try {
+            return curator.getChildren().forPath(path);
+        } catch (Exception e) {
+            logger.warn(e.getMessage(), e);
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
     /**
      * 构建Application的zookeeper路径
      */
@@ -92,8 +103,8 @@ public class ZkUtils {
      */
     public static void updateBrokerState() throws Exception {
         String address = Configuration.getInstance().getString(Environment.CLUSTER_HOST) + ":" + Configuration.getInstance().getString(Environment.CLUSTER_PORT);
-        String zkDir =  Configuration.getInstance().getString(Environment.ZK_ROOT_DIR) + "/ids/" + address;
-        ZkUtils.update(ZkCurator.getInstance().getZkCurator(),zkDir, UtilCommons.getBrokerState().getBytes());
+        String zkDir = Configuration.getInstance().getString(Environment.ZK_ROOT_DIR) + "/ids/" + address;
+        ZkUtils.update(ZkCurator.getInstance().getZkCurator(), zkDir, UtilCommons.getBrokerState().getBytes());
     }
 
     /**
@@ -124,7 +135,7 @@ public class ZkUtils {
     public static boolean isMaster(CuratorFramework curator) throws Exception {
         String host = getMaster(curator).getString(Environment.CLUSTER_HOST);
         int port = getMaster(curator).getInteger(Environment.CLUSTER_PORT);
-        return Configuration.getInstance().getString(Environment.CLUSTER_HOST).equals(host) && Configuration.getInstance().getInteger(Environment.CLUSTER_PORT)== port;
+        return Configuration.getInstance().getString(Environment.CLUSTER_HOST).equals(host) && Configuration.getInstance().getInteger(Environment.CLUSTER_PORT) == port;
     }
 
     /**
@@ -233,7 +244,7 @@ public class ZkUtils {
      */
     public static List<WorkerState> getWorkers(CuratorFramework curator) throws Exception {
         String zkDir = Configuration.getInstance().getString(Environment.ZK_ROOT_DIR) + "/worker";
-        List<String> childs = curator.getChildren().forPath(zkDir);
+        List<String> childs = ZkUtils.getChildren(curator, zkDir);
         List<WorkerState> workers = new ArrayList<>();
         for (String child : childs) {
             workers.add(WorkerState.parse(new String(curator.getData().forPath(zkDir + "/" + child))));
@@ -264,9 +275,9 @@ public class ZkUtils {
     /**
      * 获取目前正在服务得主节点信息
      */
-    public static AppStore getAppStore(CuratorFramework curator) throws Exception {
+    public static AppStorePojo getAppStore(CuratorFramework curator) throws Exception {
         String zkDir = Configuration.getInstance().getString(Environment.ZK_ROOT_DIR) + "/appstore";
-        return AppStore.parse(new String(curator.getData().forPath(zkDir)));
+        return AppStorePojo.parse(new String(curator.getData().forPath(zkDir)));
     }
 
     /**
@@ -274,7 +285,7 @@ public class ZkUtils {
      */
     public static List<AppResource> getApplications(CuratorFramework curator) throws Exception {
         String zkDir = Configuration.getInstance().getString(Environment.ZK_ROOT_DIR) + "/applications";
-        List<String> childs = ZkCurator.getInstance().getZkCurator().getChildren().forPath(zkDir);
+        List<String> childs = ZkUtils.getChildren(curator, zkDir);
         ArrayList<AppResource> applications = new ArrayList<>();
         for (String child : childs) {
             applications.add(JSONObject.parseObject(ZkCurator.getInstance().getZkCurator().getData().forPath(zkDir + "/" + child), AppResource.class));
@@ -288,7 +299,7 @@ public class ZkUtils {
      */
     public static List<String> getRunningApplicationsID(CuratorFramework curator) throws Exception {
         String zkDir = Configuration.getInstance().getString(Environment.ZK_ROOT_DIR) + "/applications";
-        List<String> childs = ZkCurator.getInstance().getZkCurator().getChildren().forPath(zkDir);
+        List<String> childs = ZkUtils.getChildren(curator, zkDir);
         ArrayList<String> applications = new ArrayList<>();
         for (String child : childs) {
             AppResource res = AppResource.parse(new String(ZkCurator.getInstance().getZkCurator().getData().forPath(zkDir + "/" + child)));
@@ -304,7 +315,7 @@ public class ZkUtils {
      */
     public static List<AppResource> getRunningApplications(CuratorFramework curator) throws Exception {
         String zkDir = Configuration.getInstance().getString(Environment.ZK_ROOT_DIR) + "/applications";
-        List<String> childs = ZkCurator.getInstance().getZkCurator().getChildren().forPath(zkDir);
+        List<String> childs = ZkUtils.getChildren(curator, zkDir);
         ArrayList<AppResource> applications = new ArrayList<>();
         for (String child : childs) {
             AppResource res = AppResource.parse(new String(ZkCurator.getInstance().getZkCurator().getData().forPath(zkDir + "/" + child)));
@@ -328,7 +339,7 @@ public class ZkUtils {
      */
     public static AppResource getAppZkResource(String appid) throws Exception {
         String zkDir = Configuration.getInstance().getString(Environment.ZK_ROOT_DIR) + "/applications/" + appid;
-        return JSONObject.parseObject(ZkCurator.getInstance().getZkCurator().getData().forPath(zkDir), AppResource.class);
+        return AppResource.parse(new String(ZkCurator.getInstance().getZkCurator().getData().forPath(zkDir)));
     }
 
 

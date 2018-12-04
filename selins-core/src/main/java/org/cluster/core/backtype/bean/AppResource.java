@@ -12,13 +12,13 @@ import java.io.Serializable;
  */
 public class AppResource implements Serializable {
     public enum Fileds {
-        ID("id"),
-        NAME("name"),
-        JVM_OPTS("jvmOpts"),
-        CLASS("class"),
+        ID("application.id"),
+        NAME("application.name"),
+        JVM_OPTS("jvm.options"),
+        CLASS("application.main"),
         NUM_WORKERS("numWorkers"),
-        STATE("state"),
-        CATEGORY("category");
+        STATE("state.type"),
+        CATEGORY("deploy.category");
 
         private String var;
 
@@ -36,12 +36,12 @@ public class AppResource implements Serializable {
     /**
      * 初始化构造方法
      */
-    public AppResource(String id, String name, String jvmOpts, String appMain, int numWorkers, int state, String category) {
+    public AppResource(String id, String name, String jvmOpts, String clazz, int numWorkers, int state, String category) {
         this(new JSONObject());
         put(Fileds.ID, id);
         put(Fileds.NAME, name);
         put(Fileds.JVM_OPTS, jvmOpts);
-        put(Fileds.CLASS, appMain);
+        put(Fileds.CLASS, clazz);
         put(Fileds.NUM_WORKERS, numWorkers);
         put(Fileds.STATE, state);
         put(Fileds.CATEGORY, category);
