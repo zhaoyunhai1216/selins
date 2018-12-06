@@ -13,7 +13,7 @@ public enum Environment {
     APPLICATION_SEQ("application.seq"),
     APPLICATION_TOATL("application.total"),
     APPLICATION_MAIN("application.main"),
-    APPLICATION_CATEGORY("application.category"),
+    DEPLOY_CATEGORY("deploy.category"),
     ZK_CONNECT("cluster.zookeeper.servers"),
     ZK_ROOT_DIR("cluster.zookeeper.root"),
     COMPONENT_NAME("component.name"),

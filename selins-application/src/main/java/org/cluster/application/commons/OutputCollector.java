@@ -40,16 +40,15 @@ public class OutputCollector {
     public OutputCollector(ApplicationContext context) {
         this.context = context;
         //默认kakfaProducer数量1
-        producers = KfkCommons.getProducer(context.getString(Environment.CLUSTER_CONF_DIR), 1);
-        context = context;
-        fileds = new ConcurrentHashMap<>();
+        this.producers = KfkCommons.getProducer(context.getString(Environment.CLUSTER_CONF_DIR), 1);
+        this. fileds = new ConcurrentHashMap<>();
     }
 
     /**
      * 设置本应用所使用的kakfaProducer数量
      */
     public void setProducerSize(ApplicationContext context, int c) {
-        producers.addAll(KfkCommons.getProducer(context.getString(Environment.CLUSTER_CONF_DIR), c - 1));
+        this.producers.addAll(KfkCommons.getProducer(context.getString(Environment.CLUSTER_CONF_DIR), c - 1));
     }
 
     /**

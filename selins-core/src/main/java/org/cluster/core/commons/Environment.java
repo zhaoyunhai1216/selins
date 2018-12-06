@@ -15,7 +15,7 @@ public enum Environment {
     CLUSTER_HOST("cluster.host"),
     CLUSTER_PORT("cluster.port"),
     CLUSTER_RACK("cluster.rack"),
-    CLUSTER_CATEGORY("cluster.category"),
+    DEPLOY_CATEGORY("deploy.category"),
     YAML_DIR("yaml"),
     VCORES_TOTAL("total.vCores"),
     MEMOTY_TOTAL("total.memory"),

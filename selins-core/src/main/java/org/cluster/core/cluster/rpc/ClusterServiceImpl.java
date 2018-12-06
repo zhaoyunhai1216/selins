@@ -1,5 +1,6 @@
 package org.cluster.core.cluster.rpc;
 
+import com.alibaba.fastjson.JSONObject;
 import org.cluster.core.scheduler.*;
 import org.cluster.core.commons.StateMemory;
 import org.slf4j.Logger;
@@ -34,34 +35,35 @@ public class ClusterServiceImpl extends UnicastRemoteObject implements ClusterSe
      * 启动指定得application 应用
      */
     @Override
-    public void start(String appID) throws Exception {
-        RemoteOptions.updateState(appID, 1);
+    public void start(String applicationID) throws Exception {
+        RemoteOptions.updateState(applicationID, 1);
     }
 
     /**
      * 启动应用的某个节点
      */
     @Override
-    public void start(String appID, int seq, int total) throws Exception {
-        LocalOptions.saveWorkerResources(appID, seq, total, RemoteOptions.getAppResources(appID));
-        LocalOptions.startWorker(appID, seq, total);
+    public void start(String applicationID, int seq, int total) throws Exception {
+        byte[] repo = RemoteOptions.getAppResources(applicationID);
+        LocalOptions.saveWorkerResources(applicationID, seq, total, repo);
+        LocalOptions.startWorker(applicationID, seq, total);
     }
 
     /**
      * 停止指定得application 应用
      */
     @Override
-    public void kill(String appID) throws Exception {
-        RemoteOptions.updateState(appID, 0);
-        StateMemory.getInstance().remove(appID);
+    public void kill(String applicationID) throws Exception {
+        RemoteOptions.updateState(applicationID, 0);
+        StateMemory.getInstance().remove(applicationID);
     }
 
     /**
      * 停止应用的某个节点
      */
     @Override
-    public void kill(String appID, int seq, int total) throws Exception {
-        LocalOptions.killWorker(appID, seq, total);
+    public void kill(String applicationID, int seq, int total) throws Exception {
+        LocalOptions.killWorker(applicationID, seq, total);
     }
 
     /**
@@ -80,7 +82,7 @@ public class ClusterServiceImpl extends UnicastRemoteObject implements ClusterSe
      */
     @Override
     public void acceptState(String workerID, String state) throws Exception {
-        LocalOptions.acceptState(workerID, state);
+        LocalOptions.acceptState(workerID, JSONObject.parseObject(state));
     }
 
     /**
@@ -90,6 +92,7 @@ public class ClusterServiceImpl extends UnicastRemoteObject implements ClusterSe
     public void rebalance(String category) throws Exception {
         LocalOptions.rebalance(category);
     }
+
     /**
      * 日志定义 Logger
      */

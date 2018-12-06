@@ -4,12 +4,9 @@ import org.cluster.core.cluster.rpc.ClusterRMI;
 import org.cluster.core.commons.Configuration;
 import org.cluster.core.commons.Environment;
 import org.cluster.core.scheduler.ApplicationTracker;
-import org.cluster.core.zookeeper.ZkCurator;
 import org.cluster.core.zookeeper.ZkUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * @Auther: 赵云海
@@ -23,10 +20,6 @@ public class Broker {
      */
     public static void main(String[] args) throws Exception {
         /**
-         * 负责启动连接zookeeper,传入zookeeper地址
-         */
-        ZkCurator.getInstance().init(Configuration.getInstance().getString(Environment.ZK_CONNECT));
-        /**
          * 构建本集群的Master节点的zookeeper路径信息
          */
         ZkUtils.initBrokerState();
@@ -39,7 +32,7 @@ public class Broker {
          */
         ApplicationTracker.getInstance();
         logger.info("[Cluster] Broker [" + Configuration.getInstance().getString(Environment.CLUSTER_HOST)
-                + ":" + Configuration.getInstance().getInteger(Environment.CLUSTER_PORT) + "] is start-up successful.");
+                + ":" + Configuration.getInstance().getInteger(Environment.CLUSTER_PORT) + "] is Bootup successful.");
     }
 
     /**

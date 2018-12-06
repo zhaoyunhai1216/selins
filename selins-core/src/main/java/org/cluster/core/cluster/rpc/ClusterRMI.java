@@ -28,7 +28,7 @@ public class ClusterRMI {
         System.setProperty("java.rmi.server.hostname", host);
         LocateRegistry.createRegistry(port);
         Naming.rebind("rmi://" + InetAddress.getByName(host).getHostAddress() + ":" + port + "/Broker", new ClusterServiceImpl());
-        logger.info("[Cluster] Rpc [" + host + ":" + port + "] is start-up successful.");
+        logger.info("[Cluster] Rpc [" + host + ":" + port + "] is Bootup successful.");
     }
 
     /**

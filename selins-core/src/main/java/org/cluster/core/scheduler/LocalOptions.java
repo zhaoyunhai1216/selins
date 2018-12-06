@@ -27,58 +27,44 @@ public class LocalOptions {
     /**
      * 在zookeeper集群中, 获取application的运行参数信息, 然后保存到内容中用于调度提供参数
      */
-    public static void startWorker(String appID, int seq, int total) throws Exception {
-        UtilCommons.startCommand(appID + "_" + seq + "_" + total, UtilCommons.getWorkerParameters(appID, seq, total));
+    public static void startWorker(String applicationID, int seq, int total) throws Exception {
+        String[] parameters = UtilCommons.getWorkerParameters(applicationID, seq, total);
+        UtilCommons.startCommand(applicationID + "_" + seq + "_" + total, parameters);
     }
 
     /**
      * 在zookeeper集群中, 获取application的运行参数信息, 然后保存到内容中用于调度提供参数
      */
-    public static void killWorker(String appID, int seq, int total) throws Exception {
-        WorkerState workerState =  null;
-        try {
-            workerState = ZkUtils.getWorker(ZkCurator.getInstance().getZkCurator(), appID + "_" + seq + "_" + total);
-            UtilCommons.killCommand(workerState.getString(WorkerState.Fileds.PROCESS));
-        } catch (Exception e) {
-            logger.warn(e.getMessage(), e);
-        }
-        LocalOptions.deleteWorkerResources(appID, seq, total);
+    public static void killWorker(String applicationID, int seq, int total) throws Exception {
+        UtilCommons.killCommand(getProcessID(applicationID, seq, total));
+        LocalOptions.deleteWorkerResources(applicationID, seq, total);
+    }
+
+    /**
+     * 在zookeeper集群中，查询指定worker, 并获取worker的执行进程的进程编号.
+     */
+    public static String getProcessID(String applicationID, int seq, int total) throws Exception {
+        WorkerState workerState = ZkUtils.getWorker(applicationID + "_" + seq + "_" + total);
+        return workerState.getString(WorkerState.Fileds.PROCESS);
     }
 
     /**
      * 在集群的appstore中, 同步application的运行文件信息,然后解压存储到本地用于启动运行
      */
-    public static void saveWorkerResources(String appID, int seq, int total, byte[] zipBytes) throws Exception {
-        String workdir = Configuration.getInstance().getString(Environment.WORKER_DIR);
-        FileUtils.deleteDirectory(new File(workdir + appID));
-        UtilCommons.unZipDirectory(workdir + appID + "_" + seq + "_" + total, zipBytes);
+    public static void saveWorkerResources(String applicationID, int seq, int total, byte[] repo) throws Exception {
+        String workerDir = Configuration.getInstance().getString(Environment.WORKER_DIR);
+        FileUtils.deleteDirectory(new File(workerDir + applicationID));
+        UtilCommons.unZipDirectory(workerDir + applicationID + "_" + seq + "_" + total, repo);
     }
 
     /**
      * 在集群的appstore中, 同步application的运行文件信息,然后解压存储到本地用于启动运行
      */
-    public static void deleteWorkerResources(String appID, int seq, int total) throws Exception {
+    public static void deleteWorkerResources(String applicationID, int seq, int total) throws Exception {
         String workDir = Configuration.getInstance().getString(Environment.WORKER_DIR);
-        FileUtils.deleteDirectory(new File(workDir + appID + "_" + seq + "_" + total));
+        FileUtils.deleteDirectory(new File(workDir + applicationID + "_" + seq + "_" + total));
     }
 
-    /**
-     * 接收本机器的各个worker上报的状态信息
-     *
-     * @param workerID
-     * @param state
-     * @throws Exception
-     */
-    public static void acceptState(String workerID, String state) throws Exception {
-        JSONObject stateJson = JSONObject.parseObject(state);
-        for (String key : stateJson.keySet()) {
-            JSONArray exectorJson = stateJson.getJSONArray(key);
-            for (int i = 0; i < exectorJson.size(); i++) {
-                String exectorID = exectorJson.getJSONObject(i).getString("seq") + "-" + exectorJson.getJSONObject(i).getString("total");
-                StateMemory.getInstance().offer(workerID.split("\\_")[0], key, exectorID, exectorJson.getJSONObject(i).toJSONString());
-            }
-        }
-    }
 
     /**
      * 在zookeeper集群中, 获取application的运行参数信息, 然后保存到内容中用于调度提供参数
@@ -87,6 +73,26 @@ public class LocalOptions {
         DefaultScheduler.checkWorkerLocation(category);
         DefaultScheduler.rebalanceWorkers(category);
     }
+
+    /**
+     * 接收本机器的各个worker上报的状态信息, 并缓存到StateMemory中, 可以进行查询信息
+     */
+    public static void acceptState(String workerID, JSONObject state) throws Exception {
+        for (String component : state.keySet()) {
+            acceptState(workerID.split("\\_")[0], component, state.getJSONArray(component));
+        }
+    }
+
+    /**
+     * 接收本机器的各个worker上报的状态信息, 并缓存到StateMemory中, 可以进行查询信息
+     */
+    public static void acceptState(String applicationID, String componentID, JSONArray state) throws Exception {
+        for (int i = 0; i < state.size(); i++) {
+            StateMemory.getInstance().offer(applicationID, componentID, state.getJSONObject(i));
+        }
+    }
+
+
     /**
      * 日志定义 Logger
      */

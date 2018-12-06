@@ -21,10 +21,6 @@ public class AppStore {
      */
     public static void main(String[] args) throws Exception {
         /**
-         * 负责启动连接zookeeper,传入zookeeper地址
-         */
-        ZkCurator.getInstance().init(Configuration.getInstance().getString(Environment.ZK_CONNECT));
-        /**
          * 构建本集群的Master节点的zookeeper路径信息
          */
         UtilCommons.initAppstoreDir();
@@ -33,7 +29,7 @@ public class AppStore {
          */
         AppStoreRMI.init();
         logger.info("[Cluster] AppStore [" + Configuration.getInstance().getString(Environment.CLUSTER_HOST)
-                + ":" + Configuration.getInstance().getInteger(Environment.APPSTORE_PORT) + "] is bootup successfully.");
+                + ":" + Configuration.getInstance().getInteger(Environment.APPSTORE_PORT) + "] is Bootup successfully.");
     }
 
     /**

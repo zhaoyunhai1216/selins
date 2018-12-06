@@ -15,7 +15,6 @@ public class Test {
         /**
          * 负责启动连接zookeeper,传入zookeeper地址
          */
-        ZkCurator.getInstance().init(Configuration.getInstance().getString(Environment.ZK_CONNECT));
 
        //DefaultScheduler.getAssetsState("default");
 

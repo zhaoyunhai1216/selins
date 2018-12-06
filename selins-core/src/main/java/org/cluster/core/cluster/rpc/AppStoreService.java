@@ -12,20 +12,20 @@ public interface AppStoreService extends Remote {
     /**
      * 提交指定的app到集群Master中进行调度分发
      */
-    void deploy(String jvmOpts, String appMain, int numWorkers, String category, byte[] b) throws Exception;
+    void deploy(String jvmOpts, String clazz, int numWorkers, String category, byte[] repo) throws Exception;
 
     /**
      * 销毁指定得application 应用
      */
-    void destroy(String appID) throws Exception;
+    void destroy(String applicationID) throws Exception;
 
     /**
      * 同步获取指定的应用执行文件夹
      */
-    byte[] getResources(String appID) throws Exception;
+    byte[] getResources(String applicationID) throws Exception;
 
     /**
      * application 应用更新状态
      */
-    void updateState(String appID, int state) throws Exception;
+    void updateState(String applicationID, int state) throws Exception;
 }

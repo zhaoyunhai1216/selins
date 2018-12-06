@@ -35,40 +35,6 @@ import java.util.zip.ZipOutputStream;
  * @Description: TODO
  */
 public class UtilCommons {
-    /*
-     * 压缩数据 (Snappy)
-     */
-    public static byte[] compress(byte[] arg0) throws IOException {
-        return Snappy.compress(arg0);
-    }
-
-    /*
-     * 解压缩数据 (Snappy)
-     */
-    public static byte[] uncompress(byte[] arg0) throws IOException {
-        return Snappy.uncompress(arg0);
-    }
-
-    /*
-     * 压缩数据 (Kryo)
-     */
-    public static <T> byte[] serialize(T arg0) {
-        @SuppressWarnings("unchecked")
-        Schema<T> schema = RuntimeSchema.getSchema((Class<T>) arg0.getClass());
-        LinkedBuffer buffer = LinkedBuffer.allocate(4096);
-        return ProtostuffIOUtil.toByteArray(arg0, schema, buffer);
-    }
-
-    /*
-     * 解压缩数据 (Kryo)
-     */
-    public static <T> T unserialize(byte[] arg0, T arg1) throws Exception {
-        @SuppressWarnings("unchecked")
-        Schema<T> schema = RuntimeSchema.getSchema((Class<T>) Object.class.getClass());
-        ProtostuffIOUtil.mergeFrom(arg0, arg1, schema);
-        return arg1;
-    }
-
 
     /**
      * 压缩文件夹里的文件
@@ -168,31 +134,8 @@ public class UtilCommons {
                 .fluentPut(Environment.HDD_USED.key(), EnvCommons.getUsedFileSystemStat()).toJSONString();
     }
 
-    /**
-     * 读取配置文件
-     */
-    public static Properties getProperties(String args) {
-        InputStream inputStream = null;
-        try {
-            inputStream = new BufferedInputStream(new FileInputStream(args));
-            Properties properties = new Properties();
-            properties.load(inputStream);
-            return properties;
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        } finally {
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
 
-    public static void startCommand(String workId, String[] args) throws Exception {
+    public static void startCommand(String workerId, String[] args) throws Exception {
         // Set the necessary command to execute the application master
         Vector<CharSequence> vargs = new Vector<CharSequence>(30);
         vargs.add("cd " + Configuration.getProjectDir() + "/bin;");
@@ -209,11 +152,11 @@ public class UtilCommons {
         });
         thread.setDaemon(true);
         thread.start();
-        while (thread.isAlive() && !ZkUtils.checkWorkerExists(ZkCurator.getInstance().getZkCurator(), workId)) {
+        while (thread.isAlive() && !ZkUtils.checkWorkerExists(ZkCurator.getInstance().getZkCurator(), workerId)) {
             TimeUnit.SECONDS.sleep(1);
-            logger.info("[Env] Worker <" + workId + "> is starting, please wait.");
+            logger.info("[Env] Worker <" + workerId + "> is starting, please wait.");
         }
-        logger.info("[Env] Worker <" + workId + "> is start finish.");
+        logger.info("[Env] Worker <" + workerId + "> is start finish.");
     }
 
     public static void killCommand(String processID) throws Exception {
@@ -251,12 +194,14 @@ public class UtilCommons {
         }
     }
 
-    public static String[] getWorkerParameters(String appID, int seq, int total) throws Exception {
-        String workDir = Configuration.getInstance().getString(Environment.WORKER_DIR);
-        AppResource res = ZkUtils.getAppZkResource(appID);
+
+    public static String[] getWorkerParameters(String applicationID, int seq, int total) throws Exception {
+        String workerDir = Configuration.getInstance().getString(Environment.WORKER_DIR);
+        AppResource resource = ZkUtils.getAppZkResource(applicationID);
         String host = Configuration.getInstance().getString(Environment.CLUSTER_HOST);
-        return new String[]{workDir, appID + "_" + seq + "_" + total, res.getString(AppResource.Fileds.JVM_OPTS), "--host=" + host, "--appID=" + res.getString(AppResource.Fileds.ID)
-                , "--class=" + res.getString(AppResource.Fileds.CLASS), "--seq=" + seq, "--total=" + total, "--category=" + res.getString(AppResource.Fileds.CATEGORY), "--yaml=" + Configuration.getProjectDir() + "/etc"};
+        return new String[]{workerDir, applicationID + "_" + seq + "_" + total, resource.getString(AppResource.Fileds.JVM_OPTS), "--host=" + host
+                , "--appID=" + resource.getString(AppResource.Fileds.ID), "--class=" + resource.getString(AppResource.Fileds.CLASS)
+                , "--seq=" + seq, "--total=" + total, "--category=" + resource.getString(AppResource.Fileds.CATEGORY), "--yaml=" + Configuration.getProjectDir() + "/etc"};
     }
 
     /**

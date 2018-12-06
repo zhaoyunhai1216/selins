@@ -18,10 +18,6 @@ import java.net.URLDecoder;
 public class Commands {
     public static void main(String[] args) throws Exception {
         /**
-         * 负责启动连接zookeeper,传入zookeeper地址
-         */
-        ZkCurator.getInstance().init(Configuration.getInstance().getString(Environment.ZK_CONNECT));
-        /**
          * 执行命令
          */
         switch (args[0]) {

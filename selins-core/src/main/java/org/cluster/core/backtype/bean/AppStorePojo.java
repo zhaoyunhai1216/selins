@@ -28,6 +28,7 @@ public class AppStorePojo {
     private JSONObject var;
 
     public AppStorePojo() {
+        this.var = new JSONObject();
         this.put(Fileds.HOST, Configuration.getInstance().getString(Environment.CLUSTER_HOST));
         this.put(Fileds.PORT, Configuration.getInstance().getInteger(Environment.APPSTORE_PORT));
         this.put(Fileds.START_TIMESTAMP, System.currentTimeMillis());

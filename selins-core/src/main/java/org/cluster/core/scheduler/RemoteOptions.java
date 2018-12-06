@@ -23,35 +23,35 @@ public class RemoteOptions {
     /**
      * 重新启动worker,调用远程Broker接口,调度重启worker
      */
-    public static void startWorker(String appID, int seq, int total, AssetsState assets) throws Exception {
-        RemoteOptions.getBrokerService(assets.getHost(), assets.getPort()).start(appID, seq, total);
+    public static void startWorker(String applicationID, int seq, int total, AssetsState assets) throws Exception {
+        RemoteOptions.getBrokerService(assets.getHost(), assets.getPort()).start(applicationID, seq, total);
     }
 
     /**
      * 重新启动worker,调用远程Broker接口,调度重启worker
      */
-    public static void killWorker(String host, String appID, int seq, int total) throws Exception {
-        RemoteOptions.getBrokerService(host, ZkUtils.getMapping(host)).kill(appID, seq, total);
+    public static void killWorker(String host, String applicationID, int seq, int total) throws Exception {
+        RemoteOptions.getBrokerService(host, ZkUtils.getMapping(host)).kill(applicationID, seq, total);
     }
 
     /**
      * 在集群的appstore中, 同步application的运行文件信息,然后解压存储到本地用于启动运行
      */
-    public static byte[] getAppResources(String appID) throws Exception {
+    public static byte[] getAppResources(String applicationID) throws Exception {
         AppStorePojo appStore = ZkUtils.getAppStore(ZkCurator.getInstance().getZkCurator());
-        return getAppstoreService(appStore.getString(AppStorePojo.Fileds.HOST), appStore.getInteger(AppStorePojo.Fileds.PORT)).getResources(appID);
+        return getAppstoreService(appStore.getString(AppStorePojo.Fileds.HOST), appStore.getInteger(AppStorePojo.Fileds.PORT)).getResources(applicationID);
     }
 
     /**
      * 更新状态信息
      *
-     * @param appID
+     * @param applicationID
      * @param state
      * @throws Exception
      */
-    public static void updateState(String appID, int state) throws Exception {
-        AppStorePojo metaNode = ZkUtils.getAppStore(ZkCurator.getInstance().getZkCurator());
-        getAppstoreService(metaNode.getString(AppStorePojo.Fileds.HOST), metaNode.getInteger(AppStorePojo.Fileds.PORT)).updateState(appID, state);
+    public static void updateState(String applicationID, int state) throws Exception {
+        AppStorePojo appStore = ZkUtils.getAppStore(ZkCurator.getInstance().getZkCurator());
+        getAppstoreService(appStore.getString(AppStorePojo.Fileds.HOST), appStore.getInteger(AppStorePojo.Fileds.PORT)).updateState(applicationID, state);
     }
 
     /**

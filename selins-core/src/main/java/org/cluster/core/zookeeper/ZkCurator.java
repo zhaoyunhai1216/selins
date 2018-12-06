@@ -4,6 +4,8 @@ import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.state.ConnectionState;
 import org.apache.curator.retry.ExponentialBackoffRetry;
+import org.cluster.core.commons.Configuration;
+import org.cluster.core.commons.Environment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,12 +16,22 @@ import org.slf4j.LoggerFactory;
  * @Description: TODO
  */
 public enum ZkCurator {
-    INSTANCE; //枚举实现单例模式, 此为当前对象的单例
+    INSTANCE(Configuration.getInstance().getString(Environment.ZK_CONNECT));
 
     /**
      * zookeeper Curator 连接
      */
     private CuratorFramework curator;
+
+    /**
+     * 构造方法
+     */
+    ZkCurator(String zkConnect) {
+        curator = CuratorFrameworkFactory.newClient(zkConnect, 90 * 1000, 30 * 1000, new ExponentialBackoffRetry(500, 10, 3000));
+        curator.start();
+        expire();
+        logger.info("[Zk] init the connection to zk, " + zkConnect);
+    }
 
     /**
      * 获得zookeeper连接
@@ -28,15 +40,6 @@ public enum ZkCurator {
         return curator;
     }
 
-    /**
-     * 初始化与zk的连接信息
-     */
-    public void init(String zkConnect) {
-        curator = CuratorFrameworkFactory.newClient(zkConnect, 90 * 1000, 30 * 1000, new ExponentialBackoffRetry(500, 10, 3000));
-        curator.start();
-        expire();
-        logger.info("[Zk] init the connection to zk, " + zkConnect);
-    }
 
     /**
      * 初始化与zk的连接信息
@@ -44,7 +47,7 @@ public enum ZkCurator {
     public void expire() {
         curator.getConnectionStateListenable().addListener((x, y) -> {
             if (y == ConnectionState.LOST) {
-                logger.error("[Zk] zookeeper sessions expire and applications exit.");
+                logger.error("[Zk] zookeeper sessions expire and broker exit.");
                 System.exit(0);
             }
         });
@@ -60,5 +63,5 @@ public enum ZkCurator {
     /**
      * 日志定义 Logger
      */
-    public static Logger logger = LoggerFactory.getLogger(ZkCurator.class);
+    public Logger logger = LoggerFactory.getLogger(ZkCurator.class);
 }

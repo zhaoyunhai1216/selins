@@ -20,13 +20,13 @@ fi
  
 if [ "x$1" == "xbroker" ]; then
     jvmOpts="-Xmx256M -Xms256M -Xss256k -XX:MaxTenuringThreshold=7 -XX:+UseParNewGC -XX:ParallelGCThreads=8 -XX:+UseConcMarkSweepGC"
-    nohup java $jvmOpts $log4j_opts -Dlog4j.log.parent=logs -Dlog4j.log.app=Broker -classpath ${classpath} org.cluster.core.Broker $2>/dev/null 2>&1 &
+    nohup java $jvmOpts $log4j_opts -Dlog4j.log.parent=logs -Dlog4j.log.app=broker -classpath ${classpath} org.cluster.core.Broker $2>broker.log 2>&1 &
     echo "broker server is started"
 elif [ "x$1" == "xappstore" ]; then
     jvmOpts="-Xmx256M -Xms256M -Xss256k -XX:MaxTenuringThreshold=7 -XX:+UseParNewGC -XX:ParallelGCThreads=8 -XX:+UseConcMarkSweepGC"
-    nohup java $jvmOpts $log4j_opts -Dlog4j.log.parent=logs -Dlog4j.log.app=AppStore -classpath ${classpath} org.cluster.appstore.AppStore $2>/dev/null 2>&1 &
+    nohup java $jvmOpts $log4j_opts -Dlog4j.log.parent=logs -Dlog4j.log.app=appstore -classpath ${classpath} org.cluster.appstore.AppStore $2>appstore.log 2>&1 &
     echo "appstore server is started"
 else
-	jvmOpts="-Xmx64M -Xms64M -Xss256k -XX:MaxTenuringThreshold=7 -XX:+UseParNewGC -XX:ParallelGCThreads=8 -XX:+UseConcMarkSweepGC"
-	java $jvmOpts $log4j_opts $log4j_opts -Dlog4j.log.parent=logs -Dlog4j.log.app=Shell -classpath ${classpath} org.cluster.shell.Commands $*
+	jvmOpts="-Xmx256M -Xms256M -Xss256k -XX:MaxTenuringThreshold=7 -XX:+UseParNewGC -XX:ParallelGCThreads=8 -XX:+UseConcMarkSweepGC"
+	java $jvmOpts $log4j_opts $log4j_opts -Dlog4j.log.parent=logs -Dlog4j.log.app=shell -classpath ${classpath} org.cluster.shell.Commands $*
 fi

@@ -22,7 +22,7 @@ public enum StateMemory {
     public Map<String, Map<String, Map<String, String>>> targets;
 
     StateMemory() {
-        targets = new ConcurrentHashMap<String, Map<String, Map<String, String>>>();
+        targets = new ConcurrentHashMap<>();
     }
 
     /**
@@ -35,23 +35,25 @@ public enum StateMemory {
     /**
      * 存储
      */
-    public void offer(String appID, String componentID, String exectorID, String state) {
-        targets.computeIfAbsent(appID, x -> new ConcurrentHashMap<>()).computeIfAbsent(componentID, x -> new ConcurrentHashMap<>()).put(exectorID, state);
+    public void offer(String applicationID, String componentID, JSONObject state) {
+        String exectorID = state.getString("seq") + "-" + state.getString("total");
+        targets.computeIfAbsent(applicationID, x -> new ConcurrentHashMap<>()).computeIfAbsent(componentID, x -> new ConcurrentHashMap<>()).put(exectorID, state.toJSONString());
     }
 
     /**
      * 删除
      */
-    public void remove(String appID) {
-        targets.remove(appID);
+    public void remove(String applicationID) {
+        targets.remove(applicationID);
     }
 
     /**
      * 获取
      */
-    public String poll(){
+    public String poll() {
         return JSONObject.toJSON(targets).toString();
     }
+
     /**
      * 日志定义 Logger
      */

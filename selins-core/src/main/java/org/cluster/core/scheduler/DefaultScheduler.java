@@ -41,7 +41,7 @@ public class DefaultScheduler {
      */
     public static void checkStartWorker() throws Exception {
         List<AppResource> applications = ZkUtils.getRunningApplications(ZkCurator.getInstance().getZkCurator());
-        List<String> workerList = ZkUtils.getWorkerID(ZkCurator.getInstance().getZkCurator());
+        List<String> workerList = ZkUtils.getWorkersID(ZkCurator.getInstance().getZkCurator());
         for (AppResource res : applications) {
             for (int i = 0; i < res.getInteger(AppResource.Fileds.NUM_WORKERS); i++) {
                 if (!workerList.contains(res.getString(AppResource.Fileds.ID) + "_" + i + "_" + +res.getInteger(AppResource.Fileds.NUM_WORKERS))) {
@@ -90,7 +90,7 @@ public class DefaultScheduler {
         Map<String, BrokerState> nodeMaps = ZkUtils.getNodeMaps(ZkCurator.getInstance().getZkCurator());
         List<WorkerState> workersState = ZkUtils.getWorkers(ZkCurator.getInstance().getZkCurator());
         for (int i = 0; i < workersState.size() && workersState.get(i).getString(WorkerState.Fileds.CATEGORY).equals(category); i++) {
-            if (nodeMaps.containsKey(workersState.get(i).getString(WorkerState.Fileds.HOST)) && !workersState.get(i).getString(WorkerState.Fileds.CATEGORY).equals(nodeMaps.get(workersState.get(i).getString(WorkerState.Fileds.HOST)).getString(Environment.CLUSTER_CATEGORY))) {
+            if (nodeMaps.containsKey(workersState.get(i).getString(WorkerState.Fileds.HOST)) && !workersState.get(i).getString(WorkerState.Fileds.CATEGORY).equals(nodeMaps.get(workersState.get(i).getString(WorkerState.Fileds.HOST)).getString(Environment.DEPLOY_CATEGORY))) {
                 RemoteOptions.killWorker(workersState.get(i).getString(WorkerState.Fileds.HOST), workersState.get(i).getAppID(), workersState.get(i).getSeq(), workersState.get(i).getTotal());
                 logger.info("[Tracker] Check position error worker <" + workersState.get(i).getString(WorkerState.Fileds.WORKER_ID) + "> was found and the kill was completed");
             }

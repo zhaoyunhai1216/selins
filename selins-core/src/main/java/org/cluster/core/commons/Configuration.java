@@ -2,22 +2,16 @@ package org.cluster.core.commons;
 
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.io.FileUtils;
-import org.cluster.core.Broker;
-import org.cluster.core.scheduler.LocalOptions;
 import org.cluster.core.utils.EnvCommons;
-import org.hyperic.sigar.SigarException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Map;
-import java.util.UUID;
-
 /**
  * @Auther: 赵云海
- * @Date: 2018/9/26 10:43
+ * @Date: 2018/9/26 10:43是
  * @Version: 1.0
  * @Description: TODO
  */
@@ -62,7 +56,7 @@ public enum Configuration {
      * 根据Environment枚举内容, 获取上下文环境中的内容.
      */
     public String getString(Environment env) {
-        return String.valueOf(var.getString(env.key()));
+        return var.getString(env.key());
     }
 
     /**

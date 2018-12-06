@@ -11,7 +11,6 @@ public class ApplicationTrackerTest {
 
     @Test
     public void tracker() throws Exception {
-        ZkCurator.getInstance().init(Configuration.getInstance().getString(Environment.ZK_CONNECT));
         DefaultScheduler.checkLegacyWorker();
         DefaultScheduler.checkShutdownWorker();
         DefaultScheduler.checkStartWorker();

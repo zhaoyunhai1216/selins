@@ -11,7 +11,6 @@ public class UtilCommonsTest {
 
     @Test
     public void getWorkerParameters() throws Exception {
-        ZkCurator.getInstance().init(Configuration.getInstance().getString(Environment.ZK_CONNECT));
         UtilCommons.getWorkerParameters("ApplicationTest-1", 1, 3);
     }
 }

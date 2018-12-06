@@ -16,13 +16,11 @@ public class ZkCuratorTest {
 
     @Test
     public void getZkCurator() {
-        ZkCurator.getInstance().init(Configuration.getInstance().getString(Environment.ZK_CONNECT));
         ZkCurator.getInstance().getZkCurator();
     }
 
     @Test
     public void init() {
-        ZkCurator.getInstance().init(Configuration.getInstance().getString(Environment.ZK_CONNECT));
     }
 
     @Test

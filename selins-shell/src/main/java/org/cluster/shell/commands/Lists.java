@@ -88,18 +88,13 @@ public class Lists {
         for (String child : childs) {
             BrokerState state = BrokerState.parse(new String(ZkCurator.getInstance().getZkCurator().getData().forPath(zkDir + "/" + child)));
             columnValues.add(new String[]{state.getString(Environment.CLUSTER_HOST), state.getString(Environment.CLUSTER_PORT), state.getString(Environment.START_TIMESTAMP)
-                    , state.getString(Environment.CLUSTER_RACK), state.getString(Environment.CLUSTER_CATEGORY), state.getString(Environment.VCORES_USED)+"%/"+state.getString(Environment.VCORES_TOTAL)
+                    , state.getString(Environment.CLUSTER_RACK), state.getString(Environment.DEPLOY_CATEGORY), state.getString(Environment.VCORES_USED)+"%/"+state.getString(Environment.VCORES_TOTAL)
                     , state.getString(Environment.MEMOTY_USED)+"/"+ state.getString(Environment.MEMOTY_TOTAL)+ "G", state.getString(Environment.HDD_USED) + "/" +state.getString(Environment.HDD_TOTAL) + "G", state.getString(Environment.JAVA_VERSION)});
         }
         logger.info("Brokers\n" + new TabCommons(columnValues).toString());
     }
 
     public static void main(String[] args) throws Exception {
-        /**
-         * 负责启动连接zookeeper,传入zookeeper地址
-         */
-        ZkCurator.getInstance().init(Configuration.getInstance().getString(Environment.ZK_CONNECT));
-
         new Lists().worker(args);
     }
 

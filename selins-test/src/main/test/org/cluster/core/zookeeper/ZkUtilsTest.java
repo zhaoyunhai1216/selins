@@ -13,7 +13,6 @@ public class ZkUtilsTest {
 
     @Before
     public void setUp() throws Exception {
-        ZkCurator.getInstance().init(Configuration.getInstance().getString(Environment.ZK_CONNECT));
     }
 
     @Test
